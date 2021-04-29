@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(/\s/g)[1];
   let decodedToken = "";
   try {
     decodedToken = jwt.verify(token, SECRET);
