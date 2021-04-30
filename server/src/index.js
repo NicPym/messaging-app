@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cors = require("cors");
 const path = require("path");
@@ -31,7 +30,8 @@ mongoose
     return;
   });
 
-app.use(bodyParser.json({ limit: "10mb" }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(
   cors({
