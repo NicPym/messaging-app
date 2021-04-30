@@ -4,8 +4,8 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cors = require("cors");
 const path = require("path");
-const root = require("../util/root");
-const logger = require(path.join("..", "util", "winston"));
+const root = require("./util/root");
+const logger = require("./util/winston");
 const port = 3000;
 
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -20,10 +20,8 @@ app.use(
 
 app.use("/", express.static(path.join(root, "..", "app", "dist", "app")));
 
-const TestRoutes = require(path.join(root, "routes", "testRoutes"));
+const TestRoutes = require("./routes/testRoutes");
 app.use("/tr", TestRoutes);
-
-// app.use("/api/", (req, res) => res.send("Hello, World!"));
 
 // Last 'use' call
 app.use((error, req, res, next) => {

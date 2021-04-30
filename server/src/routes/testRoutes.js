@@ -2,8 +2,8 @@ const api = require("express").Router();
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const root = require("../util/root");
-const authenticated = require(path.join(root, "util", "isAuth"));
-const { SECRET } = require(path.join(root, "util", "constants"));
+const authenticated = require("../util/isAuth")
+const { SECRET } = require("../util/constants");
 
 api.get("/", (req, res, next) => {
   res
