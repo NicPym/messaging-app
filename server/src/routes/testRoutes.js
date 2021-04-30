@@ -1,18 +1,16 @@
 const api = require("express").Router();
 const jwt = require("jsonwebtoken");
-const path = require("path");
-const root = require("../util/root");
-const authenticated = require("../util/isAuth")
+const mongoose = require("mongoose");
+const message = require("../models/message");
+const authenticated = require("../util/isAuth");
 const { SECRET } = require("../util/constants");
 
 api.get("/", (req, res, next) => {
-  res
-    .status(200)
-    .json({
-      message: "[testRoutes.js] Hello From The API",
-      success: true,
-      data: null,
-    });
+  res.status(200).json({
+    message: "[testRoutes.js] Hello From The API",
+    success: true,
+    data: null,
+  });
 });
 
 api.post("/auth", authenticated, (req, res, next) => {
