@@ -23,13 +23,9 @@ class LoggerService {
           })
         ),
         transports: [
-          new transports.File({
-            filename: path.join(root, "logfiles", "error.log"),
-            maxsize: 5242880, // 5MB
-            maxFiles: 7,
-            colorize: false,
+          new transports.Console({
             handleExceptions: true,
-            zippedArchive: true,
+            colorize: true,
           }),
         ],
         exitOnError: false,
@@ -46,14 +42,6 @@ class LoggerService {
           })
         ),
         transports: [
-          new transports.File({
-            filename: path.join(root, "logfiles", "info.log"),
-            maxsize: 5242880, // 5MB
-            maxFiles: 7,
-            colorize: false,
-            handleExceptions: true,
-            zippedArchive: true,
-          }),
           new transports.Console({
             handleExceptions: true,
             colorize: true,
@@ -73,13 +61,9 @@ class LoggerService {
           })
         ),
         transports: [
-          new transports.File({
-            filename: path.join(root, "logfiles", "warning.log"),
-            maxsize: 5242880, // 5MB
-            maxFiles: 7,
-            colorize: false,
+          new transports.Console({
             handleExceptions: true,
-            zippedArchive: true,
+            colorize: true,
           }),
         ],
         exitOnError: false,
