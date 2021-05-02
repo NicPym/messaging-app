@@ -8,27 +8,27 @@ const logger = require("./util/winston");
 const mongoose = require("mongoose");
 const port = 3000;
 
-mongoose
-  .connect(
-    "mongodb+srv://HTMLLevelUp:WiOyjKXZnn7Mi3Hy@cluster0.4yqqn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
-  .then(() => {
-    logger.log({
-      logger: "info",
-      message: `[Index.js]\tDB Connected`,
-    });
-  })
-  .catch((err) => {
-    logger.log({
-      logger: "error",
-      message: `[Index.js]\tDB Connection Error - ${err.message}`,
-    });
-    return;
-  });
+// mongoose
+//   .connect(
+//     "mongodb+srv://HTMLLevelUp:WiOyjKXZnn7Mi3Hy@cluster0.4yqqn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+//     {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     }
+//   )
+//   .then(() => {
+//     logger.log({
+//       logger: "info",
+//       message: `[Index.js]\tDB Connected`,
+//     });
+//   })
+//   .catch((err) => {
+//     logger.log({
+//       logger: "error",
+//       message: `[Index.js]\tDB Connection Error - ${err.message}`,
+//     });
+//     return;
+//   });
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
