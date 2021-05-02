@@ -1,7 +1,5 @@
 const api = require("express").Router();
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const message = require("../models/message");
 const authenticated = require("../util/isAuth");
 const { SECRET } = require("../util/constants");
 const Message = require("../models/message");
