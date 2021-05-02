@@ -1,7 +1,5 @@
 runtime: nodejs14
 
-entrypoint: cd server && npm start
-
 manual_scaling:
     instances: 1
 resources:
