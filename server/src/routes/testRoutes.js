@@ -1,9 +1,8 @@
 const api = require("express").Router();
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const message = require("../models/message");
 const authenticated = require("../util/isAuth");
 const { SECRET } = require("../util/constants");
+const Message = require("../models/message");
 
 api.get("/", (req, res, next) => {
   res.status(200).json({
@@ -38,6 +37,16 @@ api.get("/getToken", (req, res, next) => {
     success: true,
     data: { token: token },
   });
+});
+
+api.post("/postMessage", async (req, res, next) => {
+  const message = new Message({
+    description: req.body.description,
+    sender: req.body.sender
+  });
+
+  await message.save();
+  res.send(message);
 });
 
 module.exports = api;

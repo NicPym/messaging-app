@@ -41,7 +41,7 @@ app.use(
   })
 );
 
-app.use("/", express.static(path.join(root, "..", "app", "dist", "app")));
+app.use("/", express.static(path.join(root, "public")));
 
 const TestRoutes = require("./routes/testRoutes");
 app.use("/tr", TestRoutes);
