@@ -6,7 +6,7 @@ const path = require("path");
 const root = require("./util/root");
 const logger = require("./util/winston");
 const mongoose = require("mongoose");
-const port = 3000;
+const port = 8080;
 
 // mongoose
 //   .connect(
@@ -41,7 +41,7 @@ app.use(
   })
 );
 
-app.use("/", express.static(path.join(root, "..", "app", "dist", "app")));
+app.use("/", express.static(path.join(__dirname, "..", "public")));
 
 const TestRoutes = require("./routes/testRoutes");
 app.use("/tr", TestRoutes);
