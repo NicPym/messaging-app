@@ -58,11 +58,13 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data, success: false });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.log({
     logger: "info",
     message: `[Index.js]\tServer listening at http://localhost:${port}.`,
   });
 });
+
+const io = require("./routes/sockets")(server);
 
 module.exports = app;
