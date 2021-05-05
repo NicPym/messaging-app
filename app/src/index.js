@@ -1,20 +1,13 @@
-import { io } from 'socket.io-client';
+import socketManager from './utils/socketManager';
+import converationService from './utils/converationService';
 
-let socket = io('http://localhost:8080', {
-    auth: {
-        token: "BBDMESSAGING12341"
-    }
-});
+function setInnerHTML(id, innerHTML) {
+    document.getElementById(id).innerHTML = innerHTML;
+}
 
-if (socket)
-    socket.on("connect_error", (err) => {
-        console.log(err.message);
-    });
+socketManager.connect();
+socketManager.registerEvent("new message", message => setInnerHTML('messageText', message));
 
-    socket.emit('send message', { message: "Hello, World!" });
-
-document.getElementById("testButton").onclick = test;
-
-function test() {
-    console.log("Hello, World!");
-};
+document.getElementById("testButton").onclick = () => {
+    socketManager.sendMessage(document.getElementById("messageInput").value);
+}

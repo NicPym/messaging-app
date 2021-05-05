@@ -1,6 +1,6 @@
 const logger = require("../util/winston");
 const { Server } = require("socket.io");
-// const { SECRET } = require("./constants");
+const { SECRET } = require("../util/constants");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -12,17 +12,17 @@ module.exports = (server) => {
   });
 
   // TODO: Add auth middleware
-  // io.use((socket, next) => {
-  //   const token = socket.handshake.auth.token;
-  //   const authenticated = token === SECRET;
+  io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+    const authenticated = token === SECRET;
 
-  //   if (authenticated) {
-  //     next();
-  //   }
-  //   else {
-  //     next(new Error('Authentication error'));
-  //   }
-  // });
+    if (authenticated) {
+      next();
+    }
+    else {
+      next(new Error('Authentication error'));
+    }
+  });
 
   io.on("connect", (socket) => {
     logger.log({
@@ -42,6 +42,7 @@ module.exports = (server) => {
         logger: "info",
         message: `[sockets.js]\tMessage Received from websocket: ${message.message}`,
       });
+      socket.broadcast.emit("new message", message);
     });
   });
 
