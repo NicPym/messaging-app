@@ -1,5 +1,5 @@
 import socketManager from './utils/socketManager';
-import converationService from './utils/converationService';
+import conversationService from './utils/conversationService';
 
 function setInnerHTML(id, innerHTML) {
     document.getElementById(id).innerHTML = innerHTML;
