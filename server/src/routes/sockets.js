@@ -1,5 +1,6 @@
 const logger = require("../util/winston");
 const { Server } = require("socket.io");
+// const { SECRET } = require("./constants");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -9,6 +10,19 @@ module.exports = (server) => {
       allowedHeaders: ["Content-Type", "Authorization"],
     },
   });
+
+  // TODO: Add auth middleware
+  // io.use((socket, next) => {
+  //   const token = socket.handshake.auth.token;
+  //   const authenticated = token === SECRET;
+
+  //   if (authenticated) {
+  //     next();
+  //   }
+  //   else {
+  //     next(new Error('Authentication error'));
+  //   }
+  // });
 
   io.on("connect", (socket) => {
     logger.log({
