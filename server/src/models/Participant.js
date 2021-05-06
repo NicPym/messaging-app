@@ -2,46 +2,31 @@
 
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Message extends Model {
+  class Participant extends Model {
     static associate(models) {
       /**
-       * Belong Association, fk on this
+       * Belong Association
        */
-
-      this.belongsTo(models.User, {
-        foreignKey: "fkMessage",
-        targetKey: "pkMessage",
-      });
-
-      this.belongsTo(models.Conversation, {
-        foreignKey: "fkMessage",
-        targetKey: "pkMessage",
-      });
-
       /**
-       * Has Association, fk on other
+       * Has Association
        */
     }
   }
-  Message.init(
+  Participant.init(
     {
-      pkMessage: {
+      pkParticipant: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
-      },
-      cBody: {
-        type: DataTypes.STRING,
-        allowNull: false,
       },
       createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
       updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
     },
     {
       sequelize,
-      modelName: "Message",
+      modelName: "Participant",
     }
   );
-  return Message;
+  return Participant;
 };
