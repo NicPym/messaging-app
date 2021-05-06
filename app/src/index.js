@@ -6,7 +6,7 @@ function setInnerHTML(id, innerHTML) {
 }
 
 socketManager.connect();
-socketManager.registerEvent("new message", message => setInnerHTML('messageText', message));
+socketManager.registerEvent("new message", message => document.getElementById("messageDiv").innerHTML += `<h3>${message}</h3>`);
 
 document.getElementById("testButton").onclick = () => {
     socketManager.sendMessage(document.getElementById("messageInput").value);
