@@ -1,4 +1,5 @@
 import { displayChat } from './ui';
+import { formatDate } from './helpers';
 import socketManager from './socketManager';
 
 class ChatService {
@@ -32,7 +33,7 @@ class ChatService {
         console.log(`sending message: ${message}`);
         socketManager.sendMessage(messageObj);
 
-        displayMessage(messageObj);
+        // displayMessage(messageObj);
     }
 }
 

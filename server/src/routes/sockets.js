@@ -40,7 +40,7 @@ module.exports = (server) => {
     socket.on("send message", (message) => {
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from websocket: ${message.message}`,
+        message: `[sockets.js]\tMessage Received from websocket: ${message.description}`,
       });
       socket.broadcast.emit("new message", message);
     });
