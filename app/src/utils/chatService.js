@@ -7,8 +7,8 @@ class ChatService {
         this.currentChatId = null; // TODO:
     }
 
-    messageReceived(message, chatId) {
-        this.chats.find(chat => chat.id === chatId).messages.append({
+    messageReceived(message) {
+        this.chats.find(chat => chat.id === message.chatId).messages.append({
             sender: message.sender,
             description: message.description,
             timestamp: message.timestamp
