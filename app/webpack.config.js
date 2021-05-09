@@ -12,4 +12,7 @@ module.exports = {
     compress: true,
     port: 4200,
   },  
+  experiments: {
+    topLevelAwait: true,
+  }
 };
