@@ -1,5 +1,6 @@
 const logger = require("../util/winston");
 const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 
 module.exports = (server) => {
@@ -11,15 +12,14 @@ module.exports = (server) => {
     },
   });
 
-  // TODO: Add auth middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
-    const authenticated = token === SECRET;
+    let decodedToken = "";
 
-    if (authenticated) {
+    try {
+      decodedToken = jwt.verify(token, SECRET);
       next();
-    }
-    else {
+    } catch (err) {
       next(new Error('Authentication error'));
     }
   });

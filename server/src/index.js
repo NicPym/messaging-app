@@ -6,6 +6,8 @@ const path = require("path");
 const root = require("./util/root");
 const logger = require("./util/winston");
 const mongoose = require("mongoose");
+const passport = require('passport');
+const cookieSession = require("cookie-session");
 const port = 8080;
 
 mongoose
@@ -41,10 +43,22 @@ app.use(
   })
 );
 
+app.use(cookieSession({
+  name: 'session',
+  secret: 'secret',
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/", express.static(path.join(root, "public")));
+app.use("/", express.static(path.join(root, "..", "app", "dist")));
 
 const TestRoutes = require("./routes/testRoutes");
 app.use("/tr", TestRoutes);
+app.use("/auth", require("./routes/auth")(passport));
+
 
 // Last 'use' call
 app.use((error, req, res, next) => {
