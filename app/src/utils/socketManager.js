@@ -5,10 +5,10 @@ class SocketManager {
         this.socket = null;
     }
 
-    connect() {
+    connect(token) {
         this.socket = io('http://localhost:8080', {
             auth: {
-                token: "BBDMESSAGING12345"
+                token: token
             }
         });
     }
