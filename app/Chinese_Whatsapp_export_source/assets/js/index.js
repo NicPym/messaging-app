@@ -6,6 +6,8 @@ function init() {
 
     let token = getCookie("token");
     let username = getCookie("username");
+    disableMessage()
+    disableSearch()
     if (token && username) {
         setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Chat to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`);
         loadChats()
@@ -16,6 +18,7 @@ function init() {
 }
 
 function loadMessages(chatId) {
+    enableMessage()
     currentChat = chatId;
     console.log(`Loading Messages with chatId: ${chatId}`)
     let messageArr = [];
@@ -55,7 +58,7 @@ function displayMessage(message){
                 <div class="d-flex flex-row flex-grow-1 align-items-end align-content-start" style="width:100%;">
                     <div class="card d-flex flex-column" style="margin:20px;max-width:50%;box-shadow:1px 1px 5px grey;">
                         <div class="d-flex flex-row" style="padding:10px;width:100%;height:90%;">
-                            <p style="margin:0px;">${message.description}</p>
+                            <p style="margin:0px;">Sample long text message from myself to demonstrate text wrap</p>
                         </div>
                         <div class="d-flex flex-row justify-content-end align-items-start" style="width:100%;height:10%;padding:5px;">
                             <p style="font-size:12px;margin:2px 10px;">${message.timestamp}</p>
@@ -94,6 +97,7 @@ function displayChat(chat){
 }
 function loadChats() {
     console.log("Loading Chats")
+    enableSearch();
     //Todo: api call to server
     let chat = {
         chatId: 1,
@@ -155,8 +159,26 @@ function toggleLogin() {
         setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see chats and messsages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Login</label></div>`)
         clearChats();
         clearMessages();
+        disableMessage();
+        disableSearch();
     }
 
+}
+
+function disableSearch(){
+    document.getElementById("search").disabled = true;
+}
+
+function enableSearch(){
+    document.getElementById("search").disabled = false;
+}
+
+function disableMessage(){
+    document.getElementById("messageToSend").disabled = true;
+}
+
+function enableMessage(){
+    document.getElementById("messageToSend").disabled = false;
 }
 
 function clearMessages() {
@@ -179,6 +201,8 @@ function googleAuth() {
 }
 
 function addSmiley() {
+    if(document.getElementById("messageToSend").disabled)
+        return;
     document.getElementById("messageToSend").value += ":)";
 }
 
@@ -208,10 +232,15 @@ function recieve_chat(chat){
 }
 
 function send_chat(){
+    if(document.getElementById("search").disabled);
+        return;
 
+    //Todo create new chat and send to server
 }
 
 function send_message() {
+    if(document.getElementById("messageToSend").disabled)
+        return;
     let currentChatId = currentChat;
     let message = document.getElementById("messageToSend").value;
     let username = getCookie("username");
