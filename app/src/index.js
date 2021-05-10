@@ -1,7 +1,7 @@
 import socketManager from './utils/socketManager';
 import chatService from './utils/chatService';
 import { setInnerHtml, prependHtml, setCookie, setOnClick } from './utils/helpers';
-import { addSmiley, displayMessage } from './utils/ui';
+import { addSmiley } from './utils/ui';
 
 async function init() {
     try {

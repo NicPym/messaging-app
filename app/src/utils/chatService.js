@@ -9,19 +9,19 @@ class ChatService {
     }
 
     messageReceived(message) {
-        this.chats.find(chat => chat.id === message.chatId).messages.append({
-            sender: message.sender,
-            description: message.description,
-            timestamp: message.timestamp
-        });
+        console.log(message);
+        // this.chats.find(chat => chat.id === message.chatId).messages.append({
+        //     sender: message.sender,
+        //     description: message.description,
+        //     timestamp: message.timestamp
+        // });
 
-        this.chats.forEach(chat => {
-            displayChat(chat);
-        });
+        // this.chats.forEach(chat => {
+        //     displayChat(chat);
+        // });
     }
 
     sendMessage(description) {
-        let message = document.getElementById("messageToSend").value;
         let date = formatDate(new Date());
         
         let messageObj = {
