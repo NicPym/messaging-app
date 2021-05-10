@@ -58,7 +58,7 @@ function displayMessage(message){
                 <div class="d-flex flex-row flex-grow-1 align-items-end align-content-start" style="width:100%;">
                     <div class="card d-flex flex-column" style="margin:20px;max-width:50%;box-shadow:1px 1px 5px grey;">
                         <div class="d-flex flex-row" style="padding:10px;width:100%;height:90%;">
-                            <p style="margin:0px;">Sample long text message from myself to demonstrate text wrap</p>
+                            <p style="margin:0px;">${message.description}</p>
                         </div>
                         <div class="d-flex flex-row justify-content-end align-items-start" style="width:100%;height:10%;padding:5px;">
                             <p style="font-size:12px;margin:2px 10px;">${message.timestamp}</p>
@@ -256,7 +256,7 @@ function send_message() {
     }
     chats.forEach(chat => {
         if(chat.chatId === currentChatId){
-            chat.messages.push(message)
+            chat.messages.push(messageObj)
         }
     })
     displayMessage(messageObj);
