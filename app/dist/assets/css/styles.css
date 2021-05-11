@@ -42,6 +42,10 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
 }
 
+.body {
+  margin: 0px;
+}
+
 .flex-row {
   display: flex;
   flex-direction: row;
@@ -49,7 +53,7 @@
 
 .flex-column {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .flex-grow {
@@ -95,6 +99,7 @@
 }
 
 .dashboard {
+  position: relative;
   box-shadow:2px 2px 5px grey;
   height:90vh;
   top:5vh;
