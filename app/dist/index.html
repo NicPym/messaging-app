@@ -5,53 +5,50 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chinese Whatsapp</title>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>
 
-    <div class="d-flex flex-column align-items-center">
-        <div class="d-flex flex-row justify-content-center" style="width:100%;height:25vh;background-color:rgb(0,150,136);">
-            <div class="card align-items-center" style="box-shadow:2px 2px 5px grey;height:90vh;top:5vh;width:90%;">
-                <div class="d-flex flex-row" style="height:100%;width:100%;">
-                    <div class="d-flex flex-column" style="width:300px;">
-                        <div class="d-flex flex-row align-items-center" style="border-radius:10px 0 0 0;height:60px;background-color:rgb(238,238,238);">
-                            <img src="assets/img/whatsapp_logo.png" style="width:50px;margin:0 10px;">
-                            <label style="margin:0;font-size:20px;">Chinese Whatsapp</label>
+    <div class="flex-column align-items-center">
+        <div class="flex-row justify-center span-width green-background-bar">
+            <div class="card align-items-center dashboard">
+                <div class="flex-row span-width span-height">
+                    <div class="flex-column left-column">
+                        <div class="flex-row align-items-center left-top-corner main-bar">
+                            <img src="assets/img/whatsapp_logo.png" class="logo">
+                            <label class="title">Chinese Whatsapp</label>
                         </div>
-                        <div class="d-flex flex-row justify-content-between align-items-center" style="height:50px;">
-                            <i class="fa fa-search" style="font-size:20px;margin:0 0 0 20px;"></i>
-                            <input type="text" placeholder="Search or start new chat" style="width:80%;margin:0 20px;padding:0 10px;">
+                        <div class="flex-row justify-content-between align-items-center search-bar">
+                            <i class="fa search-icon"></i>
+                            <input type="text" placeholder="Search or start new chat" class="search-input">
                         </div>
-                        <div id="conversations" class="d-flex flex-column flex-grow-1" style="overflow-y:scroll;">
+                        <div id="conversations" class="flex-column flex-grow y-scroll">
                             <!-- Conversations come in here -->                        
                         </div>
-                        <div style="height:0px;"></div> <!-- this needs to be here to allow for the scroller to grow -->
                     </div>
-                    <div class="d-flex flex-row flex-grow-1">
-                        <div class="d-flex flex-column" style="width:100%;">
-                            <div id="personTo" class="d-flex align-items-center" style="border-radius:0 10px 0 0;height:60px;background-color:rgb(238,238,238);">
-                                <img src="assets/img/profile_picture.png" style="width:40px;height:40px;margin:0 10px 0 20px;">
-                                <label style="margin:0 10px;font-size:20px;">Name Surname</label>
-                                <div class="d-flex flex-fill"></div>
-                                <a id="loginBtn" style="margin:0 30px;font-size:20px;text-decoration:none;color:black" href="http://localhost:8080/auth/login">Login</a> <!-- TODO: make this not hardcoded -->
+                    <div class="flex-row flex-grow">
+                        <div class="flex-column span-width">
+                            <div id="personTo" class="flex-row align-items-center right-top-corner main-bar">
+                                <img src="assets/img/profile_picture.png" class="active-profile-pic">
+                                <label class="active-conversation-name">Name Surname</label>
+                                <div class="flex-fill"></div>
+                                <a id="loginBtn" class="login-button" href="http://localhost:8080/auth/login">Login</a> <!-- TODO: make this not hardcoded -->
                             </div>
-                            <div id="messages" class="d-flex flex-column flex-grow-1" style="background-color:rgb(230,223,217);overflow-y:scroll;">
+                            <div id="messages" class="flex-column flex-grow y-scroll messages">
                                 <!-- Messages come in here -->
                             </div>
-                            <div class="d-flex align-items-center" style="border-radius:0 0 10px 0;height:60px;background-color:rgb(238,238,238);">
-                                <i id="emojiButton" class="fa fa-smile-o" style="font-size:25px;color:rgb(135,135,135);margin:0 20px;"></i>
-                                <input id="messageToSend" class="d-flex flex-fill" type="text">
-                                <i id="sendMessageButton" class="fa fa-send" style="font-size:25px;color:rgb(135,135,135);margin:0 20px;"></i>
+                            <div class="flex-row align-items-center main-bar right-bottom-corner">
+                                <i id="emojiButton" class="fa emoji-icon"></i>
+                                <input id="messageToSend" class="flex-fill" type="text">
+                                <i id="sendMessageButton" class="fa send-icon"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div style="width:100%;height:75vh;background-color:rgb(233,233,233);">
+        <div class="span-width grey-background-bar">
     </div>
 
     <script src="assets/js/jquery.min.js"></script> <!-- TODO: get rid of this -->
