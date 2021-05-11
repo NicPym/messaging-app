@@ -58,6 +58,7 @@ app.use("/", express.static(path.join(root, "..", "app", "dist")));
 const TestRoutes = require("./routes/testRoutes");
 app.use("/tr", TestRoutes);
 app.use("/auth", require("./routes/auth")(passport));
+// app.use("/messages", require("./routes/messages"));
 
 
 // Last 'use' call
