@@ -7,11 +7,11 @@ function init() {
     let token = getCookie("token");
     let username = getCookie("username");
     if (token && username) {
-        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`);
+        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`); // TODO: this is old html
         loadConversations()
     }
     else{
-        prependHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see conversations and messsages!</label>`)
+        prependHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see conversations and messsages!</label>`); // TODO: this is old html
     }
 }
 
@@ -29,12 +29,12 @@ function loadMessages(conversationId) {
     });
 
     let login = getInnerHtml("loginBtn");
-    setInnerHtml("personTo", `<div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">${login}</label></div>`)
+    setInnerHtml("personTo", `<div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">${login}</label></div>`); // TODO: this is old html
 
     if(personTo === ""){
-        prependHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label>`)
+        prependHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label>`); // TODO: this is old html
     }else{
-        prependHtml("personTo",`<img src="assets/img/profile_picture.png" style="width:40px;height:40px;margin:0 10px 0 20px;"><label style="margin:0 10px;font-size:20px;">${personTo}</label>`)
+        prependHtml("personTo",`<img src="assets/img/profile_picture.png" style="width:40px;height:40px;margin:0 10px 0 20px;"><label style="margin:0 10px;font-size:20px;">${personTo}</label>`); // TODO: this is old html
     }
 
     setInnerHtml("messages","");
@@ -46,14 +46,14 @@ function loadMessages(conversationId) {
 
 function getMessageReceivedHtml(body, timestamp) {
     return `
-        <div class="d-flex flex-column">
-            <div class="d-flex flex-row flex-grow-1 align-items-end align-content-start">
-                <div class="card d-flex flex-column" style="margin:20px;max-width:50%;box-shadow:1px 1px 5px grey;">
-                    <div class="d-flex flex-row" style="padding:10px;height:90%;">
-                        <p style="margin:0px;">${body}</p>
+        <div class="flex-column">
+            <div class="flex-row flex-grow align-items-end align-content-start">
+                <div class="card flex-column message-received-card">
+                    <div class="flex-row message-body-container">
+                        <p class="message-body">${body}</p>
                     </div>
-                    <div class="d-flex flex-row justify-content-end align-items-start" style="height:10%;padding:5px;">
-                        <p style="font-size:12px;margin:2px 10px;">${timestamp}</p>
+                    <div class="flex-row justify-content-end align-items-start message-timestamp-container">
+                        <p class="message-timestamp">${timestamp}</p>
                     </div>
                 </div>
             </div>
@@ -62,14 +62,14 @@ function getMessageReceivedHtml(body, timestamp) {
 
 function getMessageSentHtml(body, timestamp) {
     return `
-        <div class="d-flex flex-column">
-            <div class="d-flex flex-row justify-content-end align-items-end">
-                <div class="card d-flex flex-column" style="margin:20px;max-width:50%;background-color:rgb(220,248,198);box-shadow:1px 1px 5px grey;">
-                    <div class="d-flex flex-row" style="padding:10px;height:90%;">
-                        <p style="margin:0px;">${body}</p>
+        <div class="flex-column">
+            <div class="flex-row justify-content-end align-items-end">
+                <div class="card flex-column message-sent-card">
+                    <div class="flex-row message-body-container">
+                        <p class="message-body">${body}</p>
                     </div>
-                    <div class="d-flex flex-row justify-content-end align-items-start" style="height:10%;padding:5px;">
-                        <p style="font-size:12px;margin:2px 10px;">${timestamp}</p>
+                    <div class="flex-row justify-content-end align-items-start message-timestamp-container">
+                        <p class="message-timestamp">${timestamp}</p>
                     </div>
                 </div>
             </div>
@@ -78,9 +78,9 @@ function getMessageSentHtml(body, timestamp) {
 
 function getConversationHtml(id, name) {
     return `
-        <div class="d-flex align-items-center" style="height:60px;" onclick="loadMessages(${id})">
-            <img src="assets/img/profile_picture2.png" style="width:50px;height:50px;margin:0 10px 0 20px;">
-            <label style="margin:0 10px;font-size:18px;">${name}</label>
+        <div class="flex-row align-items-center conversation-container" onclick="loadMessages(${id})">
+            <img src="assets/img/profile_picture2.png" class="conversation-profile-pic">
+            <label class="conversation-profile-name">${name}</label>
         </div>
         <hr>`;
 }
@@ -158,12 +158,12 @@ function loadConversations() {
 function toggleLogin() {
     if (getInnerHtml("loginBtn") === "Login") {
         googleAuth()
-        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`);
+        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`); // TODO: this is old html
         loadConversations();
     } else {
         deleteCookie("token");
         deleteCookie("username");
-        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see conversations and messsages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Login</label></div>`)
+        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see conversations and messsages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Login</label></div>`); // TODO: this is old html
         clearConversations();
         clearMessages();
     }
