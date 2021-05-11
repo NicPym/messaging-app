@@ -48,5 +48,5 @@ export function displayChat(chat) {
 }
 
 export function addSmiley() {
-    document.getElementById("messageToSend").value += ":)";
+    document.getElementById("messageToSend").value +=  String.fromCodePoint("0X1F600");
 }

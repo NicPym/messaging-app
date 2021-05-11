@@ -169,11 +169,24 @@
   background-color:rgb(230,223,217);
 }
 
-.emoji-icon {
-  height:25px;
-  width:25px;
+.icon-box{
+  border-color: firebrick;
+  border: 2px;
+  border-radius: 6px;
+}
+
+.icon-box:active {
+  opacity: 0.6;
+}
+
+.emoji-icon::before {
+  content: "\01F600";
+  font-style: normal;
+  font-size:25px;
+  color:rgb(135,135,135);
   margin:0 20px;
 }
+
 
 .send-icon {
   height:25px;
