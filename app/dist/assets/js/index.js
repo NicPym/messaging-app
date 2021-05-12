@@ -7,11 +7,11 @@ function init() {
     let token = getCookie("token");
     let username = getCookie("username");
     if (token && username) {
-        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`); // TODO: this is old html
+        setInnerHtml("personTo",  getHeaderWithoutUserHtml("Select a Conversation to see the messages!", "Logout"));
         loadConversations()
     }
     else{
-        prependHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see conversations and messsages!</label>`); // TODO: this is old html
+        setInnerHtml("personTo", getHeaderWithoutUserHtml("Login to see conversations and messages!", "Login")); // TODO: this is old html
     }
 }
 
@@ -29,12 +29,11 @@ function loadMessages(conversationId) {
     });
 
     let login = getInnerHtml("loginBtn");
-    setInnerHtml("personTo", `<div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">${login}</label></div>`); // TODO: this is old html
 
     if(personTo === ""){
-        prependHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label>`); // TODO: this is old html
+        setInnerHtml("personTo", getHeaderWithoutUserHtml("Select a Conversation to see the messages!", login));
     }else{
-        prependHtml("personTo",`<img src="assets/img/profile_picture.png" style="width:40px;height:40px;margin:0 10px 0 20px;"><label style="margin:0 10px;font-size:20px;">${personTo}</label>`); // TODO: this is old html
+        setInnerHtml("personTo",getHeaderWithUsername(personTo, login));
     }
 
     setInnerHtml("messages","");
@@ -90,7 +89,7 @@ function displayMessage(message) {
     let username = getCookie("username");
     if (message.sender !== username) {
         messageHtml += getMessageReceivedHtml(message.description, message.timestamp);
-            
+
     } else {
         messageHtml += getMessageSentHtml(message.description, message.timestamp);
     }
@@ -158,16 +157,33 @@ function loadConversations() {
 function toggleLogin() {
     if (getInnerHtml("loginBtn") === "Login") {
         googleAuth()
-        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Conversation to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`); // TODO: this is old html
+        setInnerHtml("personTo", getHeaderWithoutUserHtml("Select a Conversation to see the messages!", "Logout"));
         loadConversations();
     } else {
         deleteCookie("token");
         deleteCookie("username");
-        setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Login to see conversations and messsages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Login</label></div>`); // TODO: this is old html
+        setInnerHtml("personTo", getHeaderWithoutUserHtml("Login to see conversations and messages!", "Login"));
         clearConversations();
         clearMessages();
     }
 
+}
+
+function getHeaderWithoutUserHtml(message, login){
+    return `
+    <label class="active-profile-name">${message}</label>
+    <div class="flex-fill"></div>
+    <a id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</a>
+    `;
+}
+
+function getHeaderWithUsername(username, login){
+    return `
+    <img src="assets/img/profile_picture.png" class="active-profile-pic">
+    <label class="active-profile-name">${username}</label>
+    <div class="flex-fill"></div>
+    <a id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</a> 
+    `;
 }
 
 function clearMessages() {
@@ -182,7 +198,7 @@ function clearConversations() {
 
 function googleAuth() {
     // TODO: google auth here set token and username
-
+    //href="http://localhost:8080/auth/login"
     let token = "1234"
     let username = "Duncan"
     setCookie("token", token);
