@@ -74,8 +74,13 @@ function loadConversations() {
 
     setInnerHtml("conversations","<hr>");
     let username = getCookie("username");
-    conversations.forEach(c => {
-        displayConversation(c);
+    conversations.forEach(conversation => {
+        displayConversation(conversation);
+    });
+    // have to set callback afterwards else appendHtml erases them
+    conversations.forEach(conversation => {
+        let id = `conversation-${conversation.conversationId}`
+        setOnClick(id, () => loadMessages(conversation.conversationId));
     });
 
 }
@@ -86,7 +91,6 @@ function displayConversation(conversation) {
     let id = `conversation-${conversation.conversationId}`
     //let id = conversation.conversationId;
     appendHtml("conversations", getConversationHtml(id, person));
-    setOnClick(id, () => loadMessages(conversation.conversationId));
 }
 
 function getConversationHtml(id, name) {
