@@ -5,32 +5,12 @@ const cors = require("cors");
 const path = require("path");
 const root = require("./util/root");
 const logger = require("./util/winston");
-const mongoose = require("mongoose");
+const { sequelize } = require("./models");
 const passport = require('passport');
 const cookieSession = require("cookie-session");
 const port = 8080;
 
-mongoose
-  .connect(
-    "mongodb+srv://HTMLLevelUp:WiOyjKXZnn7Mi3Hy@cluster0.4yqqn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
-  .then(() => {
-    logger.log({
-      logger: "info",
-      message: `[Index.js]\tDB Connected`,
-    });
-  })
-  .catch((err) => {
-    logger.log({
-      logger: "error",
-      message: `[Index.js]\tDB Connection Error - ${err.message}`,
-    });
-    return;
-  });
+require("dotenv").config({ path: path.join(root, ".env") });
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -73,13 +53,24 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data, success: false });
 });
 
-const server = app.listen(port, () => {
-  logger.log({
-    logger: "info",
-    message: `[Index.js]\tServer listening at http://localhost:${port}.`,
+// Syncs tables to the db
+sequelize
+  // .sync({ alter: true })
+  .sync()
+  .then(() => {
+    const server = app.listen(port, () => {
+      logger.log({
+        logger: "info",
+        message: `[Index.js]\tServer listening at http://localhost:${port}.`,
+      });
+    });
+
+    const io = require("./routes/sockets")(server);
+  })
+  .catch((error) => {
+    logger.log({
+      logger: "error",
+      message: "[Index]\t" + error,
+    });
   });
-});
-
-const io = require("./routes/sockets")(server);
-
 module.exports = app;

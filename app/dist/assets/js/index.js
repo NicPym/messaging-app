@@ -7,6 +7,7 @@ function init() {
     let token = getCookie("token");
     let username = getCookie("username");
     if (token && username) {
+
         setInnerHtml("personTo", `<label style="margin:0 10px;font-size:20px;">Select a Chat to see the messages!</label><div class="d-flex flex-fill" style="width:0;"></div><label style="margin:0 30px;font-size:20px;" onclick="toggleLogin()" id="loginBtn">Logout</label></div>`);
         loadChats()
     }
@@ -42,8 +43,6 @@ function loadMessages(chatId) {
     messageArr.forEach(message => {
         displayMessage(message)
     });
-
-
 }
 
 function displayMessage(message){

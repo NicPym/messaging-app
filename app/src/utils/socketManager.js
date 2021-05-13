@@ -1,9 +1,9 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 
 class SocketManager {
-    constructor() {
-        this.socket = null;
-    }
+  constructor() {
+    this.socket = null;
+  }
 
     connect(token) {
         this.socket = io('http://localhost:8080', {
@@ -13,13 +13,13 @@ class SocketManager {
         });
     }
 
-    sendMessage(message) {
-        this.socket?.emit('send message', message);
-    }
-    
-    registerEvent(eventName, callback) {
-        this.socket?.on(eventName, callback);
-    }
+  sendMessage(message) {
+    this.socket?.emit("send message", message);
+  }
+
+  registerEvent(eventName, callback) {
+    this.socket?.on(eventName, callback);
+  }
 }
 
 export default new SocketManager();
