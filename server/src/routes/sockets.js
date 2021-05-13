@@ -18,9 +18,8 @@ module.exports = (server) => {
 
     if (authenticated) {
       next();
-    }
-    else {
-      next(new Error('Authentication error'));
+    } else {
+      next(new Error("Authentication error"));
     }
   });
 

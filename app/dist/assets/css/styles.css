@@ -1,0 +1,167 @@
+.body {
+  margin: 0px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.y-scroll {
+  overflow-y:scroll;
+}
+
+.flex-fill {
+  flex: 1 1 auto;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.span-width {
+  width:100%;
+}
+
+.span-height {
+  height:100%;
+}
+
+.green-background-bar {
+  height:25vh;
+  background-color:rgb(0,150,136);
+}
+
+.grey-background-bar {
+  height:75vh;
+  background-color:rgb(233,233,233);
+}
+
+.dashboard {
+  position: relative;
+  box-shadow:2px 2px 5px rgb(135,135,135);;
+  height:90vh;
+  top:5vh;
+  width:90%;
+}
+
+.card {
+  border-radius:10px;
+}
+
+
+.left-column {
+  width:300px;
+}
+
+.main-bar {
+  height:60px;
+  background-color:rgb(238,238,238);
+}
+
+.right-top-corner {
+  border-radius:0 10px 0 0;
+}
+
+.right-bottom-corner {
+  border-radius:0 0 10px 0;
+}
+
+.left-top-corner {
+  border-radius:10px 0 0 0;
+}
+
+.left-bottom-corner {
+  border-radius:0 0 0 10px;
+}
+
+.logo {
+  width:50px;
+  margin:0 10px;
+}
+
+.title {
+  font-family: FontAwesome;
+  font-size:20px;
+}
+
+.search-bar {
+  height:50px;
+  background-color:rgb(255,255,255);
+}
+
+.search-icon {
+  font-family: FontAwesome;
+  content: "\f002";
+  font-size:20px;
+  margin:0 0 0 20px;
+}
+
+.search-input {
+  font-family: FontAwesome;
+  width:80%;
+  margin:0 20px;
+  padding:0 10px;
+}
+
+.conversations-bar {
+  background-color:rgb(255,255,255);
+}
+
+.active-profile-pic {
+  width:40px;
+  height:40px;
+  margin:0 10px 0 20px;
+}
+
+.active-conversation-name {
+  font-family: FontAwesome;
+  margin:0 10px;
+  font-size:20px;
+}
+
+.login-button {
+  font-family: FontAwesome;
+  margin:0 30px;
+  font-size:20px;
+  text-decoration:none;
+  color:black
+}
+
+.messages {
+  background-color:rgb(230,223,217);
+}
+
+.emoji-icon {
+  font-family: FontAwesome;
+  content: "\f118";
+  font-size:25px;
+  color:rgb(135,135,135);
+  margin:0 20px;
+}
+
+.send-icon {
+  font-family: FontAwesome;
+  content: "\f1d8";
+  font-size:25px;
+  color:rgb(135,135,135);
+  margin:0 20px;
+}
+

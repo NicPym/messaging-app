@@ -3,14 +3,7 @@
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Participant extends Model {
-    static associate(models) {
-      /**
-       * Belong Association
-       */
-      /**
-       * Has Association
-       */
-    }
+    static associate(models) {}
   }
   Participant.init(
     {

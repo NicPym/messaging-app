@@ -4,14 +4,10 @@ const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      /**
-       * Belong Association, fk on this
-       */
-
-      /**
-       * Has Association, fk on other
-       */
-
+      this.belongsToMany(models.Conversation, {
+        foreignKey: "fkUser",
+        through: models.Participant,
+      });
       this.hasMany(models.Message, {
         foreignKey: "fkUser",
         targetKey: "pkUser",
