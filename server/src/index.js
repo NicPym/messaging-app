@@ -7,7 +7,6 @@ const root = require("./util/root");
 const logger = require("./util/winston");
 const { sequelize } = require("./models");
 const passport = require("passport");
-const cookieSession = require("cookie-session");
 const port = 8080;
 
 require("dotenv").config({ path: path.join(root, ".env") });
@@ -20,14 +19,6 @@ app.use(
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-app.use(
-  cookieSession({
-    name: "session",
-    secret: "secret",
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours,
   })
 );
 
@@ -74,4 +65,5 @@ sequelize
       message: "[Index]\t" + error,
     });
   });
+
 module.exports = app;
