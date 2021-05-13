@@ -30,15 +30,11 @@ module.exports = (passport) => {
 
   auth.get('/login', passport.authenticate('google', { scope : ['profile', 'email'] }));
   
-  auth.get('/google/callback', 
+  auth.get('/google/callback',
     passport.authenticate('google', {
       failureRedirect: '/error',
-      successRedirect: '/'
-    })
-  );
-
-  auth.get('/getAccessToken', (req, res, next) => {
-    if (req.user) {
+    }),
+    (req, res, next) => {
       const token = jwt.sign(
         {
           user: req.user
@@ -48,20 +44,10 @@ module.exports = (passport) => {
           expiresIn: "12h",
         }
       );
-      
-      res.json({ token: token })
+      res.cookie('token', token);
+      res.redirect('/');
     }
-    else{
-      res.json({ token: null })
-    }
-  });
-
-  auth.use("/logout", (req, res, next) => {
-    req.session = null;
-    req.logOut();
-    res.redirect("/");
-  });
-  
+  );
 
   return auth;
 }
