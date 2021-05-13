@@ -134,4 +134,38 @@ chats.get("/conversations/:userId", authenticate, (req, res, next) => {
     });
 });
 
+chats.get("/test", (req, res, next) => {
+  models.User.findAll({ where: { cEmail: "stuartb@bbd.co.za" } })
+    .then((user) => {
+      if (user.length === 1) {
+        // Found user
+        user = user[0];
+        user.cFirstName = "Stuart";
+        return user.save();
+      } else {
+        const user = {
+          cFirstName: "Stuart",
+          cLastName: "Barclay",
+          cEmail: "stuartb@bbd.co.za",
+        };
+
+        return models.User.create(user);
+      }
+    })
+    .then((e) => {
+      const { rows } = dataCleaner(e);
+      res.status(200).json({
+        message: "Found/Created User",
+        success: true,
+        data: rows,
+      });
+    })
+    .catch((reason) => {
+      if (!reason.statusCode) {
+        reason.statusCode = 500;
+      }
+      next(reason);
+    });
+});
+
 module.exports = chats;
