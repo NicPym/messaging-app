@@ -6,7 +6,7 @@ const path = require("path");
 const root = require("./util/root");
 const logger = require("./util/winston");
 const { sequelize } = require("./models");
-const passport = require('passport');
+const passport = require("passport");
 const cookieSession = require("cookie-session");
 const port = 8080;
 
@@ -23,11 +23,13 @@ app.use(
   })
 );
 
-app.use(cookieSession({
-  name: 'session',
-  secret: 'secret',
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours,
-}));
+app.use(
+  cookieSession({
+    name: "session",
+    secret: "secret",
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours,
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -38,8 +40,7 @@ app.use("/", express.static(path.join(root, "..", "app", "dist")));
 const TestRoutes = require("./routes/testRoutes");
 app.use("/tr", TestRoutes);
 app.use("/auth", require("./routes/auth")(passport));
-// app.use("/messages", require("./routes/messages"));
-
+app.use("/chats", require("./routes/chats"));
 
 // Last 'use' call
 app.use((error, req, res, next) => {

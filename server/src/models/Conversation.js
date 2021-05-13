@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
+      iMessageCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
       createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
       updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
     },
