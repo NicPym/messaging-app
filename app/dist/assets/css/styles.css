@@ -17,7 +17,7 @@
 }
 
 .y-scroll {
-  overflow-y:scroll;
+  overflow-y: scroll;
 }
 
 .flex-fill {
@@ -28,12 +28,20 @@
   justify-content: center;
 }
 
+.justify-content-start {
+  justify-content: flex-start;
+}
+
 .justify-content-between {
   justify-content: space-between;
 }
 
+.justify-content-end {
+  justify-content: flex-end;
+}
+
 .align-items-start {
-  align-items:flex-start;
+  align-items: flex-start;
 }
 
 .align-items-center {
@@ -41,132 +49,132 @@
 }
 
 .align-items-end {
-  align-items:flex-end;
+  align-items: flex-end;
 }
 
 .align-content-start {
-  align-content:flex-start;
+  align-content: flex-start;
 }
 
 .align-content-end {
-  align-content:flex-end;
+  align-content: flex-end;
 }
 
 .span-width {
-  width:100%;
+  width: 100%;
 }
 
 .span-height {
-  height:100%;
+  height: 100%;
 }
 
 .green-background-bar {
-  height:25vh;
-  background-color:rgb(0,150,136);
+  height: 25vh;
+  background-color: rgb(0,150,136);
 }
 
 .grey-background-bar {
-  height:75vh;
-  background-color:rgb(233,233,233);
+  height: 75vh;
+  background-color: rgb(233,233,233);
 }
 
 .dashboard {
   position: relative;
-  box-shadow:2px 2px 5px rgb(135,135,135);
-  height:90vh;
-  top:5vh;
-  width:90%;
+  box-shadow: 2px 2px 5px rgb(135,135,135);
+  height: 90vh;
+  top: 5vh;
+  width: 90%;
 }
 
 .card {
-  border-radius:10px;
+  border-radius: 10px;
 }
 
 .left-column {
-  width:300px;
+  width: 300px;
 }
 
 .main-bar {
-  height:60px;
-  background-color:rgb(238,238,238);
+  height: 60px;
+  background-color: rgb(238,238,238);
 }
 
 .right-top-corner {
-  border-radius:0 10px 0 0;
+  border-radius: 0 10px 0 0;
 }
 
 .right-bottom-corner {
-  border-radius:0 0 10px 0;
+  border-radius: 0 0 10px 0;
 }
 
 .left-top-corner {
-  border-radius:10px 0 0 0;
+  border-radius: 10px 0 0 0;
 }
 
 .left-bottom-corner {
-  border-radius:0 0 0 10px;
+  border-radius: 0 0 0 10px;
 }
 
 .logo {
-  width:50px;
-  margin:0 10px;
+  width: 50px;
+  margin: 0 10px;
 }
 
 .title {
   font-family: RobotoRegular;
-  font-size:20px;
+  font-size: 20px;
 }
 
 .search-bar {
-  height:50px;
-  background-color:rgb(255,255,255);
+  height: 50px;
+  background-color: rgb(255,255,255);
 }
 
 .search-icon {
-  height:20px;
-  width:20px;
-  margin:0 0 0 20px;
+  height: 20px;
+  width: 20px;
+  margin: 0 0 0 20px;
 }
 
 .search-input {
   font-family: RobotoRegular;
-  width:80%;
-  margin:0 20px;
-  padding:0 10px;
+  width: 80%;
+  margin: 0 20px;
+  padding: 0 10px;
 }
 
 .plus-icon {
-  height:20px;
-  width:20px;
-  margin:0 20px 0 0;
+  height: 20px;
+  width: 20px;
+  margin: 0 20px 0 0;
 }
 
 .conversations-bar {
-  background-color:rgb(255,255,255);
+  background-color: rgb(255,255,255);
 }
 
 .active-profile-pic {
-  width:40px;
-  height:40px;
-  margin:0 10px 0 20px;
+  width: 40px;
+  height: 40px;
+  margin: 0 10px 0 20px;
 }
 
 .active-profile-name {
   font-family: RobotoRegular;
-  margin:0 10px;
-  font-size:20px;
+  margin: 0 10px;
+  font-size: 20px;
 }
 
 .login-button {
   font-family: RobotoLight;
-  margin:0 30px;
-  font-size:20px;
-  text-decoration:none;
-  color:black
+  margin: 0 30px;
+  font-size: 20px;
+  text-decoration: none;
+  color: black
 }
 
 .messages {
-  background-color:rgb(230,223,217);
+  background-color: rgb(230,223,217);
 }
 
 .icon-box{
@@ -175,72 +183,72 @@
   border-radius: 6px;
 }
 
-.icon-box:active {
+.icon-box: active {
   opacity: 0.6;
 }
 
-.emoji-icon::before {
+.emoji-icon: : before {
   content: "\01F600";
   font-style: normal;
-  font-size:25px;
-  color:rgb(135,135,135);
-  margin:0 20px;
+  font-size: 25px;
+  color: rgb(135,135,135);
+  margin: 0 20px;
 }
 
 
 .send-icon {
-  height:25px;
-  width:25px;
-  margin:0 20px;
+  height: 25px;
+  width: 25px;
+  margin: 0 20px;
 }
 
 .message-received-card {
-  margin:20px;
-  max-width:50%;
-  background-color:rgb(255,255,255);
-  box-shadow:1px 1px 5px rgb(135,135,135);
+  margin: 20px;
+  max-width: 50%;
+  background-color: rgb(255,255,255);
+  box-shadow: 1px 1px 5px rgb(135,135,135);
 }
 
 .message-sent-card {
-  margin:20px;
-  max-width:50%;
-  background-color:rgb(220,248,198);
-  box-shadow:1px 1px 5px rgb(135,135,135)
+  margin: 20px;
+  max-width: 50%;
+  background-color: rgb(220,248,198);
+  box-shadow: 1px 1px 5px rgb(135,135,135)
 }
 
 .message-body-container {
-  padding:10px;
-  height:90%;
+  padding: 10px;
+  height: 90%;
 }
 
 .message-timestamp-container {
-  height:10%;
-  padding:5px;
+  height: 10%;
+  padding: 5px;
 }
 
 .message-body {
   font-family: RobotoRegular;
-  font-size:15px;
+  font-size: 15px;
 }
 
 .message-timestamp {
   font-family: RobotoLight;
-  font-size:12px;
-  margin:2px 10px;
+  font-size: 12px;
+  margin: 2px 10px;
 }
 
 .conversation-container {
-  height:60px;
+  height: 60px;
 }
 
 .conversation-profile-pic {
-  width:50px;
-  height:50px;
-  margin:0 10px 0 20px;
+  width: 50px;
+  height: 50px;
+  margin: 0 10px 0 20px;
 }
 
 .conversation-profile-name {
   font-family: RobotoRegular;
-  margin:0 10px;
-  font-size:18px;
+  margin: 0 10px;
+  font-size: 18px;
 }
