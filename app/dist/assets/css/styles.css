@@ -183,11 +183,11 @@
   border-radius: 6px;
 }
 
-.icon-box: active {
+.icon-box:active {
   opacity: 0.6;
 }
 
-.emoji-icon: : before {
+.emoji-icon:before {
   content: "\01F600";
   font-style: normal;
   font-size: 25px;
