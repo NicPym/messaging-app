@@ -3,7 +3,8 @@ const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const socketManager = require("../util/socketManager");
-const db = require("../models");
+const { sequelize } = require("../models");
+const models = sequelize.models;
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -20,10 +21,10 @@ module.exports = (server) => {
 
     try {
       decodedToken = jwt.verify(token, SECRET);
-      socketManager.addSocket(socket.id, decodedToken.email);
+      socketManager.addSocket(socket.id, decodedToken.id);
       next();
     } catch (err) {
-      next(new Error('Authentication error'));
+      next(new Error("Authentication error"));
     }
   });
 
@@ -43,31 +44,57 @@ module.exports = (server) => {
     });
 
     socket.on("send message", (message) => {
+      const senderId = socketManager.getSocketClientId(socket.id);
+
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from socket ${socket.id}: ${message.description}`,
+        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.description}`,
       });
+      
+      //TODO - Check if user is in the chat with chatID sent.
 
-      let messageObj = {
-        chatId: message.chatId,
-        description: message.description,
-        timestamp: message.timestamp,
-        sourceClientId: socketManager.getSocketClientId(socket.id)
-      };
-
-      db["User"].findAll({
-        where: {
-          cEmail: socketManager.getSocketClientId(socket.id)
-        }
+      models.Message.create({
+        cBody: message.description,
+        fkConversation: message.chatId,
+        fkUser: senderId,
       })
-      .then(users => {
-        if (users.length > 0) {
-          const destinationSocketId = socketManager.getDestinationSocket(users[0].cEmail);
-          console.log(destinationSocketId);
-          if (destinationSocketId != null) 
-            socket.broadcast.to(destinationSocketId).emit("new message", messageObj);
-        }
-      });
+        .then((message) =>
+          models.Participant.findAll({
+            where: {
+              fkConversation: message.fkConversation,
+            },
+          })
+        )
+        .then((participants) => {
+          if (participants.length == 2) {
+            let destinationClientId = null;
+
+            if (participants[0].fkUser == senderId) {
+              destinationClientId = participants[1].fkUser;
+            } else if (participants[1].fkUser == senderId) {
+              destinationClientId = participants[0].fkUser;
+            }
+
+            if (destinationClientId) {
+              const destinationSocketId =
+                socketManager.getDestinationSocket(destinationClientId);
+              
+              if (destinationSocketId != undefined) {
+                socket.broadcast.to(destinationSocketId).emit("new message", {
+                  chatId: message.chatId,
+                  description: message.description,
+                  timestamp: message.timestamp, // TODO
+                });
+              }
+            }
+          }
+        })
+        .catch((err) =>
+          logger.log({
+            logger: "error",
+            message: `[sockets.js]\tError adding new message with reason: ${err}`,
+          })
+        );
     });
   });
 

@@ -38,7 +38,7 @@ module.exports = (passport) => {
           .then(createdUser => {
             console.log(`Created new user with email ${createdUser.cEmail}`);
             return done(null, {
-              email: createdUser.cEmail
+              id: createdUser.pkUser
             });
           });
         }
@@ -46,7 +46,7 @@ module.exports = (passport) => {
         {
           console.log(`${loggedInUser.email} logged in`);
           return done(null, {
-            email: loggedInUser.email
+            id: users[0].pkUser
           });
         }
       });
@@ -60,7 +60,7 @@ module.exports = (passport) => {
   passport.deserializeUser(function(user, done) {
     db["User"].findAll({
       where: {
-        cEmail: user.email
+        pkUser: user.id
       }
     })
     .then(users => {
