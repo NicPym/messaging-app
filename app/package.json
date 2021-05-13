@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
     "dev": "npx webpack serve",
+    "build": "webpack",
+    "build_prod": "webpack && mv dist/ ../server/public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

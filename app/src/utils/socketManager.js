@@ -5,13 +5,13 @@ class SocketManager {
     this.socket = null;
   }
 
-  connect(token) {
-    this.socket = io("http://localhost:8080", {
-      auth: {
-        token: token,
-      },
-    });
-  }
+    connect(token) {
+        this.socket = io('http://localhost:8080', {
+            auth: {
+                token: token
+            }
+        });
+    }
 
   sendMessage(message) {
     this.socket?.emit("send message", message);

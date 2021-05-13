@@ -1,6 +1,8 @@
 const logger = require("../util/winston");
 const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
+const socketManager = require("../util/socketManager");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -11,15 +13,16 @@ module.exports = (server) => {
     },
   });
 
-  // TODO: Add auth middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
-    const authenticated = token === SECRET;
+    let decodedToken = "";
 
-    if (authenticated) {
+    try {
+      decodedToken = jwt.verify(token, SECRET);
+      socketManager.addSocket(socket.id, decodedToken.user.id);
       next();
-    } else {
-      next(new Error("Authentication error"));
+    } catch (err) {
+      next(new Error('Authentication error'));
     }
   });
 
@@ -30,6 +33,8 @@ module.exports = (server) => {
     });
 
     socket.on("disconnect", () => {
+      socketManager.deleteSocket(socket.id);
+
       logger.log({
         logger: "info",
         message: `[sockets.js]\tClient disconnected from websocket`,
@@ -39,9 +44,22 @@ module.exports = (server) => {
     socket.on("send message", (message) => {
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from websocket: ${message.message}`,
+        message: `[sockets.js]\tMessage Received from socket ${socket.id}: ${message.description}`,
       });
-      socket.broadcast.emit("new message", message);
+
+      let messageObj = {
+        chatId: message.chatId,
+        description: message.description,
+        timestamp: message.timestamp,
+        sourceClientId: socketManager.getSocketClientId(socket.id)
+      };
+
+      let destinationSocketId = socketManager.getDestinationSocket(
+        "100226275741937190336" != socketManager.getSocketClientId(socket.id) ? 
+        "100226275741937190336" : "112922689231400104588");
+
+      if (destinationSocketId != null) 
+        socket.broadcast.to(destinationSocketId).emit("new message", messageObj);
     });
   });
 
