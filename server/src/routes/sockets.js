@@ -3,6 +3,7 @@ const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const socketManager = require("../util/socketManager");
+const db = require("../models");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -19,7 +20,7 @@ module.exports = (server) => {
 
     try {
       decodedToken = jwt.verify(token, SECRET);
-      socketManager.addSocket(socket.id, decodedToken.user.id);
+      socketManager.addSocket(socket.id, decodedToken.email);
       next();
     } catch (err) {
       next(new Error('Authentication error'));
@@ -54,12 +55,19 @@ module.exports = (server) => {
         sourceClientId: socketManager.getSocketClientId(socket.id)
       };
 
-      let destinationSocketId = socketManager.getDestinationSocket(
-        "100226275741937190336" != socketManager.getSocketClientId(socket.id) ? 
-        "100226275741937190336" : "112922689231400104588");
-
-      if (destinationSocketId != null) 
-        socket.broadcast.to(destinationSocketId).emit("new message", messageObj);
+      db["User"].findAll({
+        where: {
+          cEmail: socketManager.getSocketClientId(socket.id)
+        }
+      })
+      .then(users => {
+        if (users.length > 0) {
+          const destinationSocketId = socketManager.getDestinationSocket(users[0].cEmail);
+          console.log(destinationSocketId);
+          if (destinationSocketId != null) 
+            socket.broadcast.to(destinationSocketId).emit("new message", messageObj);
+        }
+      });
     });
   });
 

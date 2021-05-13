@@ -30,7 +30,7 @@ class ChatService {
             timestamp: date
         }
 
-        console.log(`sending message: ${message}`);
+        console.log(`sending message: ${description}`);
         socketManager.sendMessage(messageObj);
 
         // displayMessage(messageObj);

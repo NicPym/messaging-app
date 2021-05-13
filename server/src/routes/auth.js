@@ -17,35 +17,39 @@ module.exports = (passport) => {
       callbackURL: "http://localhost:8080/auth/google/callback",
     },
     (accessToken, refreshToken, profile, done) => {
-      const user = {
-        name: profile.name.givenName,
-        surname: profile.name.familyName,
+      const loggedInUser = {
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
         email: profile.emails[0].value
       }
 
       db["User"].findAll({
         where: {
-          cEmail: user.email
+          cEmail: loggedInUser.email
         }
       })
       .then(users => {
         if (users.length == 0) {
           db["User"].create({
-            cFirstName: user.name,
-            cLastName: user.surname,
-            cEmail: user.email
+            cFirstName: loggedInUser.firstName,
+            cLastName: loggedInUser.lastName,
+            cEmail: loggedInUser.email
           })
-          .then(user => {
-            console.log(`Created new user with email ${user.cEmail}`);
+          .then(createdUser => {
+            console.log(`Created new user with email ${createdUser.cEmail}`);
+            return done(null, {
+              email: createdUser.cEmail
+            });
           });
         }
         else
         {
-          console.log(`${user.email} logged in`);
+          console.log(`${loggedInUser.email} logged in`);
+          return done(null, {
+            email: loggedInUser.email
+          });
         }
-      })
-
-      return done(null, user);
+      });
     }
   ));
 
@@ -74,9 +78,7 @@ module.exports = (passport) => {
     }),
     (req, res, next) => {
       const token = jwt.sign(
-        {
-          user: req.user
-        },
+        req.user,
         SECRET,
         {
           expiresIn: "12h",
