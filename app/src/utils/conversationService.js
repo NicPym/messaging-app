@@ -12,8 +12,7 @@ class ConversationService {
     this.conversations = [];
   }
 
-  loadConversations() {
-    const token = getCookie("token");
+  loadConversations(token) {
     // TODO: Make API call to get conversations from the server.
     loadConversations(this.conversations);
   }

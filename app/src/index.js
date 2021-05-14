@@ -31,7 +31,7 @@ async function init() {
     socketManager.registerEvent("new message", (message) =>
       conversationService.messageReceived(message)
     );
-    conversationService.loadConversations();
+    conversationService.loadConversations(token);
   } else {
     setInnerHtml(
       "personTo",
