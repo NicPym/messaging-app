@@ -54,6 +54,15 @@ function formatDate(date) {
   return ret;
 }
 
+function login() {
+  document.location.href = "/auth/login";
+}
+
+function logout() {
+  deleteAllCookies();
+  document.location.href = "/";
+}
+
 module.exports = {
   getInnerHtml,
   setInnerHtml,
@@ -63,4 +72,6 @@ module.exports = {
   appendHtml,
   setOnClick,
   formatDate,
+  login,
+  logout
 };

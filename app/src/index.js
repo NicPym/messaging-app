@@ -4,7 +4,8 @@ import {
   setInnerHtml,
   setOnClick,
   getCookie,
-  deleteAllCookies,
+  login,
+  logout
 } from "./utils/helpers";
 import {
   addSmiley,
@@ -42,15 +43,6 @@ async function init() {
     setInnerHtml("loginBtn", "Login");
     setOnClick("loginBtn", login);
   }
-}
-
-function logout() {
-  deleteAllCookies();
-  document.location.href = "/";
-}
-
-function login() {
-  document.location.href = "/auth/login";
 }
 
 function sendMessage() {

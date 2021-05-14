@@ -1,5 +1,5 @@
 import { displayConversation, loadConversations } from "./ui";
-import { formatDate, deleteAllCookies } from "./helpers";
+import { formatDate, deleteAllCookies, logout } from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
@@ -13,7 +13,7 @@ class ConversationService {
   }
 
   loadConversations(token) {
-    fetch("http://localhost:8080/chats/conversations", {
+    fetch("/chats/conversations", {
       headers: new Headers({
         Authorization: "Bearer " + token,
       }),
@@ -23,10 +23,7 @@ class ConversationService {
         // this.conversations = data;
         loadConversations(this.conversations);
       })
-      .catch((_) => {
-        deleteAllCookies();
-        document.location.href = "/";
-      });
+      .catch((_) => logout());
   }
 
   messageReceived(message) {
