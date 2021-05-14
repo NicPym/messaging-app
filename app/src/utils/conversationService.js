@@ -4,7 +4,7 @@ import socketManager from "./socketManager";
 
 class ConversationService {
   constructor() {
-    this.conversations = null;
+    this.conversations = [];
     this.currentConversationId = null; // TODO:
   }
 
@@ -20,11 +20,10 @@ class ConversationService {
     })
       .then((res) => res.json())
       .then((data) => {
-        this.conversations = data;
+        // this.conversations = data;
         loadConversations(this.conversations);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((_) => {
         deleteAllCookies();
         document.location.href = "/";
       });
