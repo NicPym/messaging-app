@@ -1,7 +1,5 @@
 import { getCookie, setCookie, deleteCookie, appendHtml, setOnClick, setInnerHtml, getInnerHtml} from './helpers';
-let conversations = [];
-let messages = [];
-let currentConversation = null;
+import conversationService from './conversationService';
 
 export function toggleLogin() {
     console.log("Toggling login");
@@ -50,7 +48,7 @@ function loadConversations() {
             }
         ]
     }
-    conversations.push(conversation);
+    conversationService.conversations.push(conversation);
     conversation = {
         conversationId: 2,
         user1: "Raymond",
@@ -70,45 +68,41 @@ function loadConversations() {
             }
         ]
     }
-    conversations.push(conversation);
+    conversationService.conversations.push(conversation);
 
-    setInnerHtml("conversations","<hr>");
+    setInnerHtml("conversations", "");
     let username = getCookie("username");
-    conversations.forEach(conversation => {
+    conversationService.conversations.forEach(conversation => {
         displayConversation(conversation);
     });
     // have to set callback afterwards else appendHtml erases them
-    conversations.forEach(conversation => {
+    conversationService.conversations.forEach(conversation => {
         let id = `conversation-${conversation.conversationId}`
         setOnClick(id, () => loadMessages(conversation.conversationId));
     });
-
 }
 
-function displayConversation(conversation) {
-    let username = getCookie("username")
+export function displayConversation(conversation) {
+    let username = getCookie("username");
     let person = username === conversation.user1 ? conversation.user2 : conversation.user1;
-    let id = `conversation-${conversation.conversationId}`
-    //let id = conversation.conversationId;
+    let id = `conversation-${conversation.conversationId}`;
     appendHtml("conversations", getConversationHtml(id, person));
 }
 
 function getConversationHtml(id, name) {
     return `
-        <div class="flex-row align-items-center conversation-container" id="${id}">
-            <img src="assets/img/profile_picture2.png" class="conversation-profile-pic">
+        <li id="${id}" class="flex-row align-items-center conversation-container">
+            <img src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
-        </div>
-        <hr>`;
+        </li>`;
 }
 
 function loadMessages(conversationId) {
-    currentConversation = conversationId;
     console.log(`Loading Messages with conversationId: ${conversationId}`)
     let messageArr = [];
     let personTo = ""
     let username = getCookie("username");
-    conversations.forEach(conversation => {
+    conversationService.conversations.forEach(conversation => {
         if (conversation.conversationId === conversationId) {
             messageArr = conversation.messages;
             personTo = conversation.user1 === username ? conversation.user2 : conversation.user1;
@@ -130,55 +124,51 @@ function loadMessages(conversationId) {
     });
 }
 
-
 export function getHeaderWithoutUserHtml(message, login){
     return `
-    <label class="active-profile-name">${message}</label>
-    <div class="flex-fill"></div>
-    <a id="loginBtn" class="login-button"">${login}</a>
-    `;
+        <label class="active-profile-name">${message}</label>
+        <fill></fill>
+        <button id="loginBtn" class="login-button"">${login}</button>`;
 }
 
 function getHeaderWithUsername(username, login){
     return `
-    <img src="assets/img/profile_picture.png" class="active-profile-pic">
-    <label class="active-profile-name">${username}</label>
-    <div class="flex-fill"></div>
-    <a id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</a> 
-    `;
+        <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
+        <label class="active-profile-name">${username}</label>
+        <fill></fill>
+        <button id="loginBtn" class="login-button">${login}</button>`;
 }
-
 
 function getMessageReceivedHtml(body, timestamp) {
     return `
-        <div class="flex-column">
-            <div class="flex-row flex-grow align-items-end align-content-start">
-                <div class="card flex-column message-received-card">
-                    <div class="flex-row message-body-container">
+        <li class="flex-column">
+            <message class="flex-row flex-grow align-items-end align-content-start">
+                <card class="flex-column message-received-card">
+                    <content class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </div>
-                    <div class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </content>
+                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </div>
-                </div>
-            </div>
-        </div>`;
+                    </timestamp>
+                </card>
+            </message>
+        </li>`;
 }
 
 function getMessageSentHtml(body, timestamp) {
     return `
-        <div class="flex-column">
-            <div class="flex-row justify-content-end align-items-end">
-                <div class="card flex-column message-sent-card">
-                    <div class="flex-row message-body-container">
+        <li class="flex-column">
+            <message class="flex-row justify-content-end align-items-end">
+                <card class="flex-column message-sent-card">
+                    <content class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </div>
-                    <div class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </content>
+                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </div>
-                </div>
-            </div>
-        </div>`;
+                    </timestamp>
+                </card>
+            </message>
+        </li>`;
 }
 
 export function displayMessage(message) {
@@ -193,28 +183,16 @@ export function displayMessage(message) {
     appendHtml("messages", messageHtml)
 }
 
-export function displayChat(chat) {
-    let username = getCookie("username")
-    let person = username === chat.user1 ? chat.user2 : chat.user1;
-    let chatHtml = `
-        <div class="d-flex align-items-center" style="height:10%;width:100%;" onclick="loadMessages(${chat.chatId})">
-            <img src="assets/img/profile_picture2.png" style="width:40px;height:40px;margin:0 10px 0 20px;">
-            <label style="margin:0 10px;font-size:20px;">${person}</label>
-       </div>
-    <hr>`
-    appendHtml("chats", chatHtml);
-}
-
 export function addSmiley() {
     document.getElementById("messageToSend").value +=  String.fromCodePoint("0X1F600");
 }
 
 function clearMessages() {
-    messages = [];
+    // TODO: where are the messages?
     setInnerHtml("messages", "")
 }
 
 function clearConversations() {
-    conversations = [];
+    conversationService.clearConversations();
     setInnerHtml("conversations", "")
 }

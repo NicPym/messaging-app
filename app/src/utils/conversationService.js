@@ -1,22 +1,26 @@
-import { displayChat } from './ui';
+import { displayConversation } from './ui';
 import { formatDate } from './helpers';
 import socketManager from './socketManager';
 
-class ChatService {
+class ConversationService {
     constructor() {
-        this.chats = []; 
-        this.currentChatId = null; // TODO:
+        this.conversations = []; 
+        this.currentConversationId = null; // TODO:
+    }
+
+    clearConversations() {
+        this.conversations = [];
     }
 
     messageReceived(message) {
-        this.chats.find(chat => chat.id === message.chatId).messages.append({
+        this.conversations.find(conversation => conversation.id === message.conversationId).messages.append({
             sender: message.sender,
             description: message.description,
             timestamp: message.timestamp
         });
 
-        this.chats.forEach(chat => {
-            displayChat(chat);
+        this.conversations.forEach(conversation => {
+            displayConversation(conversation);
         });
     }
 
@@ -25,7 +29,7 @@ class ChatService {
         let date = formatDate(new Date());
         
         let messageObj = {
-            chatId: this.currentChatId,
+            conversationId: this.currentConversationId,
             description: description,
             timestamp: date
         }
@@ -37,4 +41,4 @@ class ChatService {
     }
 }
 
-export default new ChatService();
+export default new ConversationService();

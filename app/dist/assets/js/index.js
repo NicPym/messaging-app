@@ -11,7 +11,7 @@ function init() {
         loadConversations()
     }
     else{
-        setInnerHtml("personTo", getHeaderWithoutUserHtml("Login to see conversations and messages!", "Login")); // TODO: this is old html
+        setInnerHtml("personTo", getHeaderWithoutUserHtml("Login to see conversations and messages!", "Login"));
     }
 }
 
@@ -45,43 +45,43 @@ function loadMessages(conversationId) {
 
 function getMessageReceivedHtml(body, timestamp) {
     return `
-        <div class="flex-column">
-            <div class="flex-row flex-grow align-items-end align-content-start">
-                <div class="card flex-column message-received-card">
-                    <div class="flex-row message-body-container">
+        <li class="flex-column">
+            <message class="flex-row flex-grow align-items-end align-content-start">
+                <card class="flex-column message-received-card">
+                    <content class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </div>
-                    <div class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </content>
+                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </div>
-                </div>
-            </div>
-        </div>`;
+                    </timestamp>
+                </card>
+            </message>
+        </li>`;
 }
 
 function getMessageSentHtml(body, timestamp) {
     return `
-        <div class="flex-column">
-            <div class="flex-row justify-content-end align-items-end">
-                <div class="card flex-column message-sent-card">
-                    <div class="flex-row message-body-container">
+        <li class="flex-column">
+            <message class="flex-row justify-content-end align-items-end">
+                <card class="flex-column message-sent-card">
+                    <content class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </div>
-                    <div class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </content>
+                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </div>
-                </div>
-            </div>
-        </div>`;
+                    </timestamp>
+                </card>
+            </message>
+        </li>`;
 }
 
 function getConversationHtml(id, name) {
     return `
-        <div class="flex-row align-items-center conversation-container" onclick="loadMessages(${id})">
-            <img src="assets/img/profile_picture2.png" class="conversation-profile-pic">
+        <li id="${id}" class="flex-row align-items-center conversation-container">
+            <img src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
-        </div>
-        <hr>`;
+        </li>`;
+        
 }
 
 function displayMessage(message) {
@@ -146,7 +146,7 @@ function loadConversations() {
     }
     conversations.push(conversation);
 
-    setInnerHtml("conversations","<hr>");
+    setInnerHtml("conversations", "");
     let username = getCookie("username");
     conversations.forEach(conversation => {
         displayConversation(conversation);
@@ -171,19 +171,17 @@ function toggleLogin() {
 
 function getHeaderWithoutUserHtml(message, login){
     return `
-    <label class="active-profile-name">${message}</label>
-    <div class="flex-fill"></div>
-    <a id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</a>
-    `;
+        <label class="active-profile-name">${message}</label>
+        <fill"></fill>
+        <button id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</button>`;
 }
 
 function getHeaderWithUsername(username, login){
     return `
-    <img src="assets/img/profile_picture.png" class="active-profile-pic">
-    <label class="active-profile-name">${username}</label>
-    <div class="flex-fill"></div>
-    <a id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</a> 
-    `;
+        <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
+        <label class="active-profile-name">${username}</label>
+        <fill"></fill>
+        <button id="loginBtn" class="login-button" onclick="toggleLogin()">${login}</button>`;
 }
 
 function clearMessages() {

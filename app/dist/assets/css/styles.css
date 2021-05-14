@@ -1,5 +1,19 @@
-.body {
+body {
+  padding: 0px;
   margin: 0px;
+}
+
+ul {
+  padding: 0px;
+  margin: 0px;
+}
+
+fill {
+  flex: 1 1 auto;
+}
+
+card {
+  border-radius: 10px;
 }
 
 .flex-row {
@@ -86,10 +100,6 @@
   width: 90%;
 }
 
-.card {
-  border-radius: 10px;
-}
-
 .left-column {
   width: 300px;
 }
@@ -139,7 +149,6 @@
   opacity: 0.6;
 }
 
-/* https://fontawesome.com/cheatsheet */
 .search-icon::before {
   font-family: "Font Awesome 5 Free Solid";
   height:20px;
@@ -245,7 +254,9 @@
 }
 
 .conversation-container {
-  height: 60px;
+  height: 70px;
+  background-color: rgb(255,255,255);
+  border: none;
 }
 
 .conversation-profile-pic {
