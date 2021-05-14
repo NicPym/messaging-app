@@ -1,10 +1,10 @@
 import { displayConversation, loadConversations } from "./ui";
-import { formatDate, getCookie } from "./helpers";
+import { formatDate, deleteAllCookies } from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
   constructor() {
-    this.conversations = [];
+    this.conversations = null;
     this.currentConversationId = null; // TODO:
   }
 
@@ -13,8 +13,21 @@ class ConversationService {
   }
 
   loadConversations(token) {
-    // TODO: Make API call to get conversations from the server.
-    loadConversations(this.conversations);
+    fetch("http://localhost:8080/chats/conversations", {
+      headers: new Headers({
+        Authorization: "Bearer " + token,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.conversations = data;
+        loadConversations(this.conversations);
+      })
+      .catch((err) => {
+        console.log(err);
+        deleteAllCookies();
+        document.location.href = "/";
+      });
   }
 
   messageReceived(message) {

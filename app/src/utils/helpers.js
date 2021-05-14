@@ -57,10 +57,8 @@ function formatDate(date) {
 module.exports = {
   getInnerHtml,
   setInnerHtml,
-  setCookie,
   getCookie,
   deleteAllCookies,
-  deleteCookie,
   prependHtml,
   appendHtml,
   setOnClick,
