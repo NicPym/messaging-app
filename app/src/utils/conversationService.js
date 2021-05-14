@@ -1,5 +1,5 @@
-import { displayConversation } from "./ui";
-import { formatDate } from "./helpers";
+import { displayConversation, loadConversations } from "./ui";
+import { formatDate, getCookie } from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
@@ -10,6 +10,12 @@ class ConversationService {
 
   clearConversations() {
     this.conversations = [];
+  }
+
+  loadConversations() {
+    const token = getCookie("token");
+    // TODO: Make API call to get conversations from the server.
+    loadConversations(this.conversations);
   }
 
   messageReceived(message) {

@@ -16,11 +16,6 @@ async function init() {
   const token = getCookie("token");
 
   if (token) {
-    socketManager.connect(token);
-    socketManager.registerEvent("new message", (message) =>
-      conversationService.messageReceived(message)
-    );
-
     setInnerHtml(
       "personTo",
       getHeaderWithoutUserHtml(
@@ -31,9 +26,12 @@ async function init() {
     setOnClick("loginBtn", logout);
     setOnClick("emojiButton", addSmiley);
     setOnClick("sendMessageButton", sendMessage);
-
-    const conversations = []; // TODO: Make API call to get data from server
-    loadConversations(conversations);
+    
+    socketManager.connect(token);
+    socketManager.registerEvent("new message", (message) =>
+      conversationService.messageReceived(message)
+    );
+    conversationService.loadConversations();
   } else {
     setInnerHtml(
       "personTo",
