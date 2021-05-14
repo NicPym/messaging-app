@@ -61,24 +61,19 @@ chats.get("/messages/:conversationId", authenticate, (req, res, next) => {
     });
 });
 
-chats.get("/conversations/:userId", authenticate, (req, res, next) => {
-  if (isNaN(req.params.userId)) {
-    let reason = new Error("'userId' not in correct data format");
-    reason.status = 400;
-    next(reason);
-    return;
-  }
+chats.get("/conversations/", authenticate, (req, res, next) => {
   logger.log({
     logger: "info",
     message: `Fetching conversations for user id [${req.token.id}]`,
   });
+
   models.Conversation.findAll({
     attributes: ["pkConversation"],
     include: [
       {
         model: models.User,
         through: models.Participant,
-        where: { pkUser: Number(req.params.userId) },
+        where: { pkUser: req.token.id },
       },
     ],
   })
@@ -117,7 +112,7 @@ chats.get("/conversations/:userId", authenticate, (req, res, next) => {
       const { rows } = dataCleaner(users);
       rows.forEach((element) => {
         element.Users.forEach((ele) => {
-          ele.currentUser = ele.userID === Number(req.params.userId);
+          ele.currentUser = ele.userID === req.token.id;
         });
       });
       res.status(200).json({
