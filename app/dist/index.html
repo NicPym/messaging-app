@@ -23,27 +23,30 @@
                         <bar class="flex-row justify-content-between align-items-center search-bar">
                             <p id="searchConversationsButton" class="search-icon icon-box"></p>
                             <input type="text" placeholder="Search or start new conversation" class="search-input">
-                            <p id="addConversationButton"  class="plus-icon icon-box"></p>
+                            <p id="addConversationButton" class="plus-icon icon-box"></p>
                         </bar>
-                        <ul id="conversations" class="flex-column flex-grow y-scroll left-bottom-corner conversations-bar">
-                            <!-- Conversations come in here -->    
+                        <ul id="conversations"
+                            class="flex-column flex-grow y-scroll left-bottom-corner conversations-bar">
+                            <!-- Conversations come in here -->
                         </ul>
                     </block>
                     <block class="flex-row flex-grow">
                         <block class="flex-column span-width">
-                            <nav id="personTo" class="flex-row align-items-center right-top-corner main-bar" aria-label="Active Profile">
-                                <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
+                            <nav id="personTo" class="flex-row align-items-center right-top-corner main-bar"
+                                aria-label="Active Profile">
+                                <img src="assets/img/profile_picture.png" class="active-profile-pic"
+                                    alt="Profile Picture">
                                 <label class="active-profile-name">Name Surname</label>
-                                <fill></fill> 
+                                <fill></fill>
                                 <button id="loginBtn" class="login-button">Login</button>
                             </nav>
                             <ul id="messages" class="flex-column flex-grow y-scroll messages">
                                 <!-- Messages come in here -->
                             </ul>
                             <bar class="flex-row align-items-center main-bar right-bottom-corner">
-                                <p id="emojiButton"  class="emoji-icon icon-box"></p>
+                                <p id="emojiButton" class="emoji-icon icon-box"></p>
                                 <input id="messageToSend" class="flex-fill" type="text">
-                                <p id="sendMessageButton"  class="send-icon icon-box"></p>
+                                <p id="sendMessageButton" class="send-icon icon-box"></p>
                             </bar>
                         </block>
                     </block>
@@ -53,7 +56,7 @@
         <bar class="span-width grey-background-bar"></bar>
     </screen>
 
-   <script src="bundle.js"></script>
+    <script src="bundle.js"></script>
 </body>
 
 </html>

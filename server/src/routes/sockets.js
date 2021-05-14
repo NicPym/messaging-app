@@ -50,7 +50,7 @@ module.exports = (server) => {
         logger: "info",
         message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.description}`,
       });
-      
+
       //TODO - Check if user is in the chat with chatID sent.
 
       models.Message.create({
@@ -78,7 +78,7 @@ module.exports = (server) => {
             if (destinationClientId) {
               const destinationSocketId =
                 socketManager.getDestinationSocket(destinationClientId);
-              
+
               if (destinationSocketId != undefined) {
                 socket.broadcast.to(destinationSocketId).emit("new message", {
                   chatId: message.chatId,
