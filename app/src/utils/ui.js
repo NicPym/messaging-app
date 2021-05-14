@@ -2,7 +2,7 @@ import { appendHtml, setInnerHtml, getInnerHtml } from "./helpers";
 import conversationService from "./conversationService";
 import { setOnClick } from "./helpers";
 
-export function loadConversations() {
+export function loadConversations(conversations) {
   console.log("Loading Conversations");
 
   // TODO: api call to server
@@ -113,19 +113,14 @@ export function loadMessages(conversationId) {
   });
 }
 
-export function getHeaderWithoutUserHtml(message, login) {
-  return `
-        <label class="active-profile-name">${message}</label>
-        <fill></fill>
-        <button id="loginBtn" class="login-button"">${login}</button>`;
+export function getHeaderWithoutUserHtml(message) {
+  return `<label class="active-profile-name">${message}</label>`;
 }
 
-export function getHeaderWithUsername(username, login) {
+export function getHeaderWithUsername(username) {
   return `
         <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
-        <label class="active-profile-name">${username}</label>
-        <fill></fill>
-        <button id="loginBtn" class="login-button">${login}</button>`;
+        <label class="active-profile-name">${username}</label>`;
 }
 
 export function getMessageReceivedHtml(body, timestamp) {

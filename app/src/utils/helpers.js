@@ -6,11 +6,6 @@ function setInnerHtml(id, html) {
   document.getElementById(id).innerHTML = html;
 }
 
-function setCookie(cname, object) {
-  object = JSON.stringify(object);
-  window.localStorage.setItem(cname, object);
-}
-
 function getCookie(cname) {
   var name = cname + "=";
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -36,10 +31,6 @@ function deleteAllCookies() {
     var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
   }
-}
-
-function deleteCookie(cname) {
-  window.localStorage.removeItem(cname);
 }
 
 function prependHtml(id, html) {

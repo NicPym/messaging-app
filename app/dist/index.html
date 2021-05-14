@@ -32,11 +32,13 @@
                     </block>
                     <block class="flex-row flex-grow">
                         <block class="flex-column span-width">
-                            <nav id="personTo" class="flex-row align-items-center right-top-corner main-bar"
+                            <nav class="flex-row align-items-center right-top-corner main-bar"
                                 aria-label="Active Profile">
-                                <img src="assets/img/profile_picture.png" class="active-profile-pic"
+                                <block id="personTo" class="flex-row align-items-center">
+                                    <img src="assets/img/profile_picture.png" class="active-profile-pic"
                                     alt="Profile Picture">
-                                <label class="active-profile-name">Name Surname</label>
+                                    <label class="active-profile-name">Name Surname</label>
+                                </block>
                                 <fill></fill>
                                 <button id="loginBtn" class="login-button">Login</button>
                             </nav>

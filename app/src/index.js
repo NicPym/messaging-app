@@ -20,25 +20,28 @@ async function init() {
     socketManager.registerEvent("new message", (message) =>
       conversationService.messageReceived(message)
     );
+
     setInnerHtml(
       "personTo",
       getHeaderWithoutUserHtml(
-        "Select a Conversation to see the messages!",
-        "Logout"
+        "Select a Conversation to see the messages!"
       )
     );
+    setInnerHtml("loginBtn", "Logout");
     setOnClick("loginBtn", logout);
     setOnClick("emojiButton", addSmiley);
     setOnClick("sendMessageButton", sendMessage);
-    loadConversations();
+
+    const conversations = []; // TODO: Make API call to get data from server
+    loadConversations(conversations);
   } else {
     setInnerHtml(
       "personTo",
       getHeaderWithoutUserHtml(
-        "Login to see conversations and messages!",
-        "Login"
+        "Login to see conversations and messages!"
       )
     );
+    setInnerHtml("loginBtn", "Login");
     setOnClick("loginBtn", login);
   }
 }
@@ -49,7 +52,6 @@ function logout() {
 }
 
 function login() {
-  console.log("hey");
   document.location.href = "/auth/login";
 }
 
