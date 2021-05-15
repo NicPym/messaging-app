@@ -48,13 +48,13 @@ module.exports = (server) => {
 
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.description}`,
+        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.body}`,
       });
 
       //TODO - Check if user is in the chat with chatID sent.
 
       models.Message.create({
-        cBody: message.description,
+        cBody: message.body,
         fkConversation: message.chatId,
         fkUser: senderId,
       })
@@ -82,7 +82,7 @@ module.exports = (server) => {
               if (destinationSocketId != undefined) {
                 socket.broadcast.to(destinationSocketId).emit("new message", {
                   chatId: message.chatId,
-                  description: message.description,
+                  body: message.body,
                   timestamp: message.timestamp, // TODO
                 });
               }
