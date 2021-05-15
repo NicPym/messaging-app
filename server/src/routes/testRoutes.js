@@ -2,7 +2,7 @@ const api = require("express").Router();
 const jwt = require("jsonwebtoken");
 const authenticated = require("../util/isAuth");
 const { SECRET } = require("../util/constants");
-const Message = require("../models/message");
+const Message = require("../models/Message");
 
 api.get("/", (req, res, next) => {
   res.status(200).json({
@@ -42,7 +42,7 @@ api.get("/getToken", (req, res, next) => {
 api.post("/postMessage", async (req, res, next) => {
   const message = new Message({
     description: req.body.description,
-    sender: req.body.sender
+    sender: req.body.sender,
   });
 
   await message.save();

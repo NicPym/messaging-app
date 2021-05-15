@@ -2,37 +2,37 @@
 
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Message extends Model {
+  class Conversation extends Model {
     static associate(models) {
-      this.belongsTo(models.User, {
-        foreignKey: "fkUser",
-        targetKey: "pkUser",
+      this.belongsToMany(models.User, {
+        foreignKey: "fkConversation",
+        through: models.Participant,
       });
-      this.belongsTo(models.Conversation, {
+      this.hasMany(models.Message, {
         foreignKey: "fkConversation",
         targetKey: "pkConversation",
       });
     }
   }
-  Message.init(
+  Conversation.init(
     {
-      pkMessage: {
+      pkConversation: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
       },
-      cBody: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      iMessageCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
       createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
       updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
     },
     {
       sequelize,
-      modelName: "Message",
+      modelName: "Conversation",
     }
   );
-  return Message;
+  return Conversation;
 };

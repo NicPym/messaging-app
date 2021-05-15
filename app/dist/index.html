@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Whatsapp</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+    <screen class="flex-column align-items-center">
+        <bar class="flex-row justify-center span-width green-background-bar">
+            <card class="align-items-center dashboard">
+                <block class="flex-row span-width span-height">
+                    <block class="flex-column left-column">
+                        <bar class="flex-row align-items-center left-top-corner main-bar">
+                            <img src="assets/img/whatsapp_logo.png" class="logo" alt="Chinese Whatsapp Logo">
+                            <label class="title">Chinese Whatsapp</label>
+                        </bar>
+                        <bar class="flex-row justify-content-between align-items-center search-bar">
+                            <p id="searchConversationsButton" class="search-icon icon-box"></p>
+                            <input type="text" placeholder="Search or start new conversation" class="search-input">
+                            <p id="addConversationButton" class="plus-icon icon-box"></p>
+                        </bar>
+                        <ul id="conversations"
+                            class="flex-column flex-grow y-scroll left-bottom-corner conversations-bar">
+                            <!-- Conversations come in here -->
+                        </ul>
+                    </block>
+                    <block class="flex-row flex-grow">
+                        <block class="flex-column span-width">
+                            <nav class="flex-row align-items-center right-top-corner main-bar"
+                                aria-label="Active Profile">
+                                <block id="personTo" class="flex-row align-items-center">
+                                    <img src="assets/img/profile_picture.png" class="active-profile-pic"
+                                    alt="Profile Picture">
+                                    <label class="active-profile-name">Name Surname</label>
+                                </block>
+                                <fill></fill>
+                                <button id="loginBtn" class="login-button">Login</button>
+                            </nav>
+                            <ul id="messages" class="flex-column flex-grow y-scroll messages">
+                                <!-- Messages come in here -->
+                            </ul>
+                            <bar class="flex-row align-items-center main-bar right-bottom-corner">
+                                <p id="emojiButton" class="emoji-icon icon-box"></p>
+                                <input id="messageToSend" class="flex-fill" type="text">
+                                <p id="sendMessageButton" class="send-icon icon-box"></p>
+                            </bar>
+                        </block>
+                    </block>
+                </block>
+            </card>
+        </bar>
+        <bar class="span-width grey-background-bar"></bar>
+    </screen>
+
+    <script src="bundle.js"></script>
+</body>
+
+</html>

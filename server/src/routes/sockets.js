@@ -1,6 +1,10 @@
 const logger = require("../util/winston");
 const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
+const socketManager = require("../util/socketManager");
+const { sequelize } = require("../models");
+const models = sequelize.models;
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -11,16 +15,16 @@ module.exports = (server) => {
     },
   });
 
-  // TODO: Add auth middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
-    const authenticated = token === SECRET;
+    let decodedToken = "";
 
-    if (authenticated) {
+    try {
+      decodedToken = jwt.verify(token, SECRET);
+      socketManager.addSocket(socket.id, decodedToken.id);
       next();
-    }
-    else {
-      next(new Error('Authentication error'));
+    } catch (err) {
+      next(new Error("Authentication error"));
     }
   });
 
@@ -31,6 +35,8 @@ module.exports = (server) => {
     });
 
     socket.on("disconnect", () => {
+      socketManager.deleteSocket(socket.id);
+
       logger.log({
         logger: "info",
         message: `[sockets.js]\tClient disconnected from websocket`,
@@ -38,11 +44,57 @@ module.exports = (server) => {
     });
 
     socket.on("send message", (message) => {
+      const senderId = socketManager.getSocketClientId(socket.id);
+
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from websocket: ${message.message}`,
+        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.description}`,
       });
-      socket.broadcast.emit("new message", message);
+
+      //TODO - Check if user is in the chat with chatID sent.
+
+      models.Message.create({
+        cBody: message.description,
+        fkConversation: message.chatId,
+        fkUser: senderId,
+      })
+        .then((message) =>
+          models.Participant.findAll({
+            where: {
+              fkConversation: message.fkConversation,
+            },
+          })
+        )
+        .then((participants) => {
+          if (participants.length == 2) {
+            let destinationClientId = null;
+
+            if (participants[0].fkUser == senderId) {
+              destinationClientId = participants[1].fkUser;
+            } else if (participants[1].fkUser == senderId) {
+              destinationClientId = participants[0].fkUser;
+            }
+
+            if (destinationClientId) {
+              const destinationSocketId =
+                socketManager.getDestinationSocket(destinationClientId);
+
+              if (destinationSocketId != undefined) {
+                socket.broadcast.to(destinationSocketId).emit("new message", {
+                  chatId: message.chatId,
+                  description: message.description,
+                  timestamp: message.timestamp, // TODO
+                });
+              }
+            }
+          }
+        })
+        .catch((err) =>
+          logger.log({
+            logger: "error",
+            message: `[sockets.js]\tError adding new message with reason: ${err}`,
+          })
+        );
     });
   });
 
