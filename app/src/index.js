@@ -10,7 +10,6 @@ import {
 import {
   addSmiley,
   getHeaderWithoutUserHtml,
-  loadConversations,
 } from "./utils/ui";
 
 async function init() {
@@ -19,9 +18,7 @@ async function init() {
   if (token) {
     setInnerHtml(
       "personTo",
-      getHeaderWithoutUserHtml(
-        "Select a Conversation to see the messages!"
-      )
+      getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
     );
     setInnerHtml("loginBtn", "Logout");
     setOnClick("loginBtn", logout);
@@ -36,9 +33,7 @@ async function init() {
   } else {
     setInnerHtml(
       "personTo",
-      getHeaderWithoutUserHtml(
-        "Login to see conversations and messages!"
-      )
+      getHeaderWithoutUserHtml("Login to see conversations and messages!")
     );
     setInnerHtml("loginBtn", "Login");
     setOnClick("loginBtn", login);
