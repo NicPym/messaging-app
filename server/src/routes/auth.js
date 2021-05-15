@@ -10,13 +10,20 @@ require("dotenv").config(path.join(root, ".env"));
 const GOOGLE_CLIENT_ID = process.env.CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.CLIENT_SECRET;
 
+let API_URL = "";
+
+if (process.env.NODE_ENV === 'development')
+  API_URL = "http://localhost:8080";
+else if (process.env.NODE_ENV === 'production')
+  API_URL = "https://messaging-app-312521.ew.r.appspot.com";
+
 module.exports = (passport) => {
   passport.use(
     new GoogleStrategy(
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:8080/auth/google/callback",
+        callbackURL: `${API_URL}/auth/google/callback`,
       },
       (accessToken, refreshToken, profile, done) => {
         const loggedInUser = {

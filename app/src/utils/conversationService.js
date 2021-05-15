@@ -1,5 +1,5 @@
 import { displayConversation, loadConversations } from "./ui";
-import { formatDate, deleteAllCookies, logout } from "./helpers";
+import { formatDate, logout } from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
@@ -13,17 +13,17 @@ class ConversationService {
   }
 
   loadConversations(token) {
-    fetch("/chats/conversations", {
-      headers: new Headers({
-        Authorization: "Bearer " + token,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // this.conversations = data;
-        loadConversations(this.conversations);
-      })
-      .catch((_) => logout());
+    // fetch("/chats/conversations", {
+    //   headers: new Headers({
+    //     Authorization: "Bearer " + token,
+    //   }),
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     // this.conversations = data;
+    //     loadConversations(this.conversations);
+    //   })
+    //   .catch((_) => logout());
   }
 
   messageReceived(message) {
