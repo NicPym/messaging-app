@@ -10,7 +10,7 @@ import {
 import {
   addSmiley,
   getHeaderWithoutUserHtml,
-  setProfiePic,
+  setProfilePic,
   loadConversations,
 } from "./utils/ui";
 
@@ -34,7 +34,7 @@ async function init() {
       conversationService.messageReceived(message)
     );
     conversationService.loadConversations(token);
-    setProfiePic();
+    setProfilePic();
   } else {
     setInnerHtml(
       "personTo",
