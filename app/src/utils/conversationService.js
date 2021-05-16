@@ -19,17 +19,18 @@ class ConversationService {
   }
 
   loadConversations() {
-    // fetch("/chats/conversations", {
-    //   headers: new Headers({
-    //     Authorization: "Bearer " + getToken(),
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     // this.conversations = data;
-    //     loadConversations(this.conversations);
-    //   })
-    //   .catch((_) => logout());
+    fetch("/conversations/getConversations", {
+      headers: new Headers({
+        Authorization: "Bearer " + getToken(),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // this.conversations = data;
+        console.log(data);
+        // loadConversations(this.conversations);
+      })
+      .catch((err) => console.log(err));
   }
 
   createConversation(recipientEmail) {

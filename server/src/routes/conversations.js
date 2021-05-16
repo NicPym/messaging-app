@@ -8,59 +8,64 @@ const { Op } = require("sequelize");
 const models = sequelize.models;
 const logger = require("../util/winston");
 
-conversations.get("/messages/:conversationId", authenticate, (req, res, next) => {
-  if (isNaN(req.params.conversationId)) {
-    let reason = new Error("'userId' not in correct data format");
-    reason.status = 400;
-    next(reason);
-    return;
-  }
-  logger.log({
-    logger: "info",
-    message: `Fetching messages for user id [${req.token.id}]`,
-  });
-  models.Message.findAll({
-    where: { fkConversation: Number(req.params.conversationId) },
-    attributes: [
-      ["cBody", "message"],
-      ["createdAt", "messageTime"],
-    ],
-    include: [
-      {
-        model: models.User,
-        attributes: [
-          [
-            sequelize.fn(
-              "concat",
-              sequelize.col("cFirstName"),
-              " ",
-              sequelize.col("cLastName")
-            ),
-            "Name",
-          ],
-        ],
-      },
-    ],
-  })
-    .then((message) => {
-      const { rows, meta } = dataCleaner(message);
-      rows.forEach((ele) => {
-        ele.messageTime = formatDate(ele.messageTime, "dateTime");
-      });
-      res.status(200).json({
-        message: "Fetched Messages",
-        success: true,
-        data: rows,
-        meta: meta,
-      });
-    })
-    .catch((reason) => {
-      if (!reason.statusCode) {
-        reason.statusCode = 500;
-      }
+conversations.get(
+  "/messages/:conversationId",
+  authenticate,
+  (req, res, next) => {
+    if (isNaN(req.params.conversationId)) {
+      let reason = new Error("'userId' not in correct data format");
+      reason.status = 400;
       next(reason);
+      return;
+    }
+    logger.log({
+      logger: "info",
+      message: `Fetching messages for user id [${req.token.id}]`,
     });
-});
+
+    models.Message.findAll({
+      where: { fkConversation: Number(req.params.conversationId) },
+      attributes: [
+        ["cBody", "message"],
+        ["createdAt", "messageTime"],
+      ],
+      include: [
+        {
+          model: models.User,
+          attributes: [
+            [
+              sequelize.fn(
+                "concat",
+                sequelize.col("cFirstName"),
+                " ",
+                sequelize.col("cLastName")
+              ),
+              "Name",
+            ],
+          ],
+        },
+      ],
+    })
+      .then((message) => {
+        const { rows, meta } = dataCleaner(message);
+        rows.forEach((ele) => {
+          ele.messageTime = formatDate(ele.messageTime, "dateTime");
+        });
+        res.status(200).json({
+          message: "Fetched Messages",
+          success: true,
+          data: rows,
+          meta: meta,
+        });
+      })
+      .catch((reason) => {
+        if (!reason.statusCode) {
+          reason.statusCode = 500;
+        }
+        next(reason);
+      });
+  }
+);
 
 conversations.get("/conversations/", authenticate, (req, res, next) => {
   logger.log({
@@ -120,6 +125,108 @@ conversations.get("/conversations/", authenticate, (req, res, next) => {
         message: "Fetched Conversations",
         success: true,
         data: rows,
+      });
+    })
+    .catch((reason) => {
+      if (!reason.statusCode) {
+        reason.statusCode = 500;
+      }
+      next(reason);
+    });
+});
+
+conversations.get("/getConversations/", authenticate, (req, res, next) => {
+  let conversationIds = [];
+  let conversations = [];
+
+  models.Participant.findAll({
+    where: { fkUser: req.token.id },
+    attributes: ["fkConversation"],
+  })
+    .then((conversationIDs) => {
+      const { rows } = dataCleaner(conversationIDs);
+      let participantsPromises = [];
+
+      rows.forEach((row) => {
+        conversationIds.push(row.fkConversation);
+        participantsPromises.push(
+          models.Participant.findAll({
+            attributes: [],
+            where: {
+              fkConversation: row.fkConversation,
+              fkUser: {
+                [Op.ne]: [req.token.id],
+              },
+            },
+            include: [
+              {
+                model: models.User,
+                attributes: [
+                  [
+                    sequelize.fn(
+                      "concat",
+                      sequelize.col("cFirstName"),
+                      " ",
+                      sequelize.col("cLastName")
+                    ),
+                    "Name",
+                  ],
+                ],
+              },
+            ],
+          })
+        );
+      });
+
+      return Promise.all(participantsPromises);
+    })
+    .then((values) => {
+      let messagesPromises = [];
+
+      for (let i = 0; i < values.length; i++) {
+        const { rows } = dataCleaner(values[i]);
+
+        conversations.push({
+          conversationId: conversationIds[i],
+          conversationWith: rows[0].Name,
+          messages: [],
+        });
+
+        messagesPromises.push(
+          models.Message.findAll({
+            where: { fkConversation: conversationIds[i] },
+            attributes: [
+              ["cBody", "body"],
+              ["createdAt", "timestamp"],
+              ["fkUser", "userID"],
+            ],
+          })
+        );
+      }
+
+      return Promise.all(messagesPromises);
+    })
+    .then((values) => {
+      for (let i = 0; i < values.length; i++) {
+        if (values[i].length > 0) {
+          const { rows } = dataCleaner(values[i]);
+
+          conversations[i].messages = rows.map((row) => {
+            return {
+              body: row.body,
+              timestamp: formatDate(row.timestamp, "dateTime"),
+              received: row.userID != req.token.id,
+            };
+          });
+        }
+      }
+
+      res.status(200).json({
+        message: "Got all user conversations",
+        success: true,
+        data: conversations.filter(
+          (conversation) => conversation.messages.length > 0
+        ),
       });
     })
     .catch((reason) => {
