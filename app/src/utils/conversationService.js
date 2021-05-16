@@ -6,6 +6,7 @@ import {
   clearSearchInput,
   displayMessage,
   setHeaderWithUserHtml,
+  showNotification
 } from "./ui";
 import { formatDate, logout } from "./helpers";
 import socketManager from "./socketManager";
@@ -80,6 +81,9 @@ class ConversationService {
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
+    }
+    else {
+      showNotification(message.conversationId);
     }
   }
 
