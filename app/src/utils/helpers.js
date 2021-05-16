@@ -1,3 +1,5 @@
+import conversationService from "./conversationService";
+
 export function getInnerHtml(id) {
   return document.getElementById(id).innerHTML;
 }
@@ -59,4 +61,12 @@ export function login() {
 export function logout() {
   deleteAllCookies();
   document.location.href = "/";
+}
+
+export function sendMessage() {
+  let input = document.getElementById("messageToSend");
+  conversationService.sendMessage(
+    input.value
+  );
+  input.value = "";
 }

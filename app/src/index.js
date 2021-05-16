@@ -3,11 +3,10 @@ import conversationService from "./utils/conversationService";
 import {
   setInnerHtml,
   setOnClick,
-  getCookie,
   login,
   logout,
 } from "./utils/helpers";
-import { addSmiley, getHeaderWithoutUserHtml } from "./utils/ui";
+import { getHeaderWithoutUserHtml } from "./utils/ui";
 import getToken from "./utils/token";
 
 function init() {
@@ -20,8 +19,6 @@ function init() {
     );
     setInnerHtml("loginBtn", "Logout");
     setOnClick("loginBtn", logout);
-    setOnClick("emojiButton", addSmiley);
-    setOnClick("sendMessageButton", sendMessage);
     setOnClick("addConversationButton", () =>
       conversationService.createConversation(
         document.getElementById("searchOrCreateConversationInput").value
@@ -42,13 +39,6 @@ function init() {
     setInnerHtml("loginBtn", "Login");
     setOnClick("loginBtn", login);
   }
-}
-
-function sendMessage() {
-  conversationService.sendMessage(
-    document.getElementById("messageToSend").value
-  );
-  document.getElementById("messageToSend").value = "";
 }
 
 init();

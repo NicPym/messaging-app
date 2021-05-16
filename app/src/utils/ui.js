@@ -1,6 +1,5 @@
-import { appendHtml, setInnerHtml, getInnerHtml } from "./helpers";
+import { appendHtml, setInnerHtml, setOnClick, sendMessage } from "./helpers";
 import conversationService from "./conversationService";
-import { setOnClick } from "./helpers";
 
 export function loadConversations(conversations) {
   console.log("Loading Conversations");
@@ -16,6 +15,7 @@ export function loadConversations(conversations) {
     setOnClick(id, () => {
         conversationService.selectConversation(conversation.conversationId);
         hideNotification(conversation.conversationId);
+        enableSendMessageBar();
       }
     );
   });
@@ -40,13 +40,11 @@ export function getConversationHtml(id, name) {
 }
 
 export function showNotification(id) {
-  let icon = document.getElementById(`conversation-${id}-notification`);
-  icon.hidden = false;
+  document.getElementById(`conversation-${id}-notification`).hidden = false;
 }
 
 export function hideNotification(id) {
-  let icon = document.getElementById(`conversation-${id}-notification`);
-  icon.hidden = true;
+  document.getElementById(`conversation-${id}-notification`).hidden = true;
 }
 
 export function loadMessages(messages) {
@@ -58,7 +56,7 @@ export function loadMessages(messages) {
 }
 
 export function setHeaderWithUserHtml(personTo) {
-  setInnerHtml("personTo", getHeaderWithUsername(personTo));
+  setInnerHtml("personTo", getHeaderWithUsernameHtml(personTo));
 }
 
 export function getHeaderWithoutUserHtml(message) {
@@ -137,10 +135,21 @@ export function scrollToBottomOfMessages() {
 }
 
 export function invalidEmail() {
-  document.getElementById("searchOrCreateConversationInput").value =
-    "Not a valid email address";
+  let input = document.getElementById("searchOrCreateConversationInput");
+  input.value = "";
+  input.placeholder = "Not a valid email address";
 }
 
 export function clearSearchInput() {
   document.getElementById("searchOrCreateConversationInput").value = "";
+}
+
+export function enableSendMessageBar() {
+  setInnerHtml("sendMessageBar", `
+    <p id="emojiButton" class="emoji-icon icon-box"></p>
+    <input class="flex-fill" id="messageToSend" placeholder="Type your message here and press the plane icon to send" type="text">
+    <p id="sendMessageButton" class="send-icon icon-box"></p>`
+  );
+  setOnClick("emojiButton", addSmiley);
+  setOnClick("sendMessageButton", sendMessage);
 }

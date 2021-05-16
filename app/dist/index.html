@@ -35,9 +35,7 @@
                             <nav class="flex-row align-items-center right-top-corner main-bar"
                                 aria-label="Active Profile">
                                 <block id="personTo" class="flex-row align-items-center">
-                                    <img src="assets/img/profile_picture.png" class="active-profile-pic"
-                                        alt="Profile Picture">
-                                    <label class="active-profile-name">Name Surname</label>
+                                    <label class="active-profile-name">Select a Conversation to see the messages!</label>
                                 </block>
                                 <fill></fill>
                                 <button id="loginBtn" class="login-button">Login</button>
@@ -45,11 +43,7 @@
                             <ul id="messages" class="flex-column flex-grow y-scroll messages">
                                 <!-- Messages come in here -->
                             </ul>
-                            <bar class="flex-row align-items-center main-bar right-bottom-corner">
-                                <p id="emojiButton" class="emoji-icon icon-box"></p>
-                                <input class="flex-fill" id="messageToSend" placeholder="Type your message here and press the plane icon to send" type="text">
-                                <p id="sendMessageButton" class="send-icon icon-box"></p>
-                            </bar>
+                            <bar id="sendMessageBar" class="flex-row align-items-center main-bar right-bottom-corner"></bar>
                         </block>
                     </block>
                 </block>
