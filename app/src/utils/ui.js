@@ -1,4 +1,4 @@
-import { appendHtml, setInnerHtml, getInnerHtml, imgLoad} from "./helpers";
+import { appendHtml, setInnerHtml, getInnerHtml, imgLoad, getCookie} from "./helpers";
 import conversationService from "./conversationService";
 import { setOnClick } from "./helpers";
 

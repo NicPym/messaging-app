@@ -31,7 +31,7 @@ module.exports = (passport) => {
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
           photoURL: profile.photos[0].value,
-          id: profile.id
+          googleId: profile.id,
         };
 
         db["User"]
@@ -58,9 +58,8 @@ module.exports = (passport) => {
                 });
             } else {
               console.log(`${loggedInUser.email} logged in`);
-              return done(null, {
-                id: users[0].pkUser,
-              });
+              loggedInUser.id = users[0].pkUser;
+              return done(null, loggedInUser);
             }
           });
       }
