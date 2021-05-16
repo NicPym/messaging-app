@@ -81,9 +81,10 @@ module.exports = (server) => {
 
               if (destinationSocketId != undefined) {
                 socket.broadcast.to(destinationSocketId).emit("new message", {
-                  chatId: message.chatId,
+                  conversationId: message.conversationId,
                   body: message.body,
-                  timestamp: message.timestamp, // TODO
+                  timestamp: message.timestamp,
+                  received: true,
                 });
               }
             }

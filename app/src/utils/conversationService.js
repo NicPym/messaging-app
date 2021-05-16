@@ -63,17 +63,23 @@ class ConversationService {
   }
 
   messageReceived(message) {
-    this.conversations
-      .find((conversation) => conversation.id === message.conversationId)
-      .messages.push({
-        received: message.received,
-        body: message.body,
-        timestamp: message.timestamp,
-      });
+    console.log(`Message received - ${message.body}`);
 
-    this.conversations.forEach((conversation) => {
-      displayConversation(conversation);
-    });
+    const newMessage = {
+      body: message.body,
+      timestamp: message.timestamp,
+      received: message.received,
+    };
+
+    this.conversations
+      .find((conversation) => conversation.conversationId === message.conversationId)
+      .messages.push(newMessage);
+
+    loadConversations(this.conversations);
+
+    if (message.conversationId == this.currentConversationId) {
+      displayMessage(newMessage);
+    }
   }
 
   sendMessage(body) {
@@ -96,6 +102,14 @@ class ConversationService {
       .messages.push(messsage);
 
     displayMessage(messsage);
+  }
+
+  newConversation(conversation) {
+    this.conversations.push(conversation);
+
+    this.conversations.forEach((conversation) => {
+      displayConversation(conversation);
+    });
   }
 
   selectConversation(conversationId) {
