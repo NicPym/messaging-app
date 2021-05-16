@@ -13,13 +13,18 @@ export function loadConversations(conversations) {
   // have to set callback afterwards else appendHtml erases them
   conversations.forEach((conversation) => {
     let id = `conversation-${conversation.conversationId}`;
-    setOnClick(id, () => conversationService.selectConversation(conversation.conversationId));
+    setOnClick(id, () =>
+      conversationService.selectConversation(conversation.conversationId)
+    );
   });
 }
 
 export function displayConversation(conversation) {
   let id = `conversation-${conversation.conversationId}`;
-  appendHtml("conversations", getConversationHtml(id, conversation.conversationWith));
+  appendHtml(
+    "conversations",
+    getConversationHtml(id, conversation.conversationWith)
+  );
 }
 
 export function getConversationHtml(id, name) {
@@ -31,30 +36,6 @@ export function getConversationHtml(id, name) {
 }
 
 export function loadMessages(messages) {
-  // console.log(`Loading Messages with conversationId: ${conversationId}`);
-  // let messageArr = [];
-  // let personTo = "";
-  // let username = "Duncan"; // TODO: un-Duncan the JS
-
-  // // conversationService.conversations.forEach((conversation) => {
-  // //   if (conversation.conversationId === conversationId) {
-  // //     messageArr = conversation.messages;
-  // //     personTo =
-  // //       conversation.user1 === username
-  // //         ? conversation.user2
-  // //         : conversation.user1;
-  // //   }
-  // // });
-
-  // if (personTo === "") {
-  //   setInnerHtml(
-  //     "personTo",
-  //     getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
-  //   );
-  // } else {
-  //   setInnerHtml("personTo", getHeaderWithUsername(personTo));
-  // }
-
   setInnerHtml("messages", "");
 
   messages.forEach((message) => {
@@ -112,10 +93,7 @@ export function displayMessage(message) {
   let messageHtml = "";
 
   if (message.received) {
-    messageHtml += getMessageReceivedHtml(
-      message.body,
-      message.timestamp
-    );
+    messageHtml += getMessageReceivedHtml(message.body, message.timestamp);
   } else {
     messageHtml += getMessageSentHtml(message.body, message.timestamp);
   }
@@ -145,7 +123,8 @@ export function scrollToBottomOfMessages() {
 }
 
 export function invalidEmail() {
-  document.getElementById("searchOrCreateConversationInput").value = "Not a valid email address"
+  document.getElementById("searchOrCreateConversationInput").value =
+    "Not a valid email address";
 }
 
 export function clearSearchInput() {

@@ -5,7 +5,7 @@ import {
   invalidEmail,
   clearSearchInput,
   displayMessage,
-  setHeaderWithUserHtml
+  setHeaderWithUserHtml,
 } from "./ui";
 import { formatDate, logout } from "./helpers";
 import socketManager from "./socketManager";
@@ -88,14 +88,21 @@ class ConversationService {
     console.log(`sending message: ${body}`);
     socketManager.sendMessage(messsage);
 
-    this.conversations.find((conversation) => conversation.conversationId === this.currentConversationId).messages.push(messsage);
+    this.conversations
+      .find(
+        (conversation) =>
+          conversation.conversationId === this.currentConversationId
+      )
+      .messages.push(messsage);
 
     displayMessage(messsage);
   }
 
   selectConversation(conversationId) {
     this.currentConversationId = conversationId;
-    const conversation = this.conversations.find(conversation => conversation.conversationId === conversationId)
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === conversationId
+    );
     setHeaderWithUserHtml(conversation.conversationWith);
     loadMessages(conversation.messages);
   }
