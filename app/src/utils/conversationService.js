@@ -31,7 +31,7 @@ class ConversationService {
       .find((conversation) => conversation.id === message.conversationId)
       .messages.append({
         sender: message.sender,
-        description: message.description,
+        body: message.body,
         timestamp: message.timestamp,
       });
 
@@ -40,16 +40,16 @@ class ConversationService {
     });
   }
 
-  sendMessage(description) {
+  sendMessage(body) {
     let date = formatDate(new Date());
 
     let messageObj = {
       conversationId: this.currentConversationId,
-      description: description,
+      body: body,
       timestamp: date,
     };
 
-    console.log(`sending message: ${description}`);
+    console.log(`sending message: ${body}`);
     socketManager.sendMessage(messageObj);
 
     // displayMessage(messageObj);

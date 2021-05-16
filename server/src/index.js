@@ -37,8 +37,6 @@ app.use(passport.session());
 app.use("/", express.static(path.join(root, "public")));
 app.use("/", express.static(path.join(root, "..", "app", "dist")));
 
-const TestRoutes = require("./routes/testRoutes");
-app.use("/tr", TestRoutes);
 app.use("/auth", require("./routes/auth")(passport));
 app.use("/chats", require("./routes/chats"));
 

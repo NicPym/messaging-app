@@ -14,13 +14,13 @@ export function loadConversations(conversations) {
       {
         conversationId: 1,
         sender: "Duncan",
-        description: "Hi Stuart",
+        body: "Hi Stuart",
         timestamp: "2021-05-08 16:10",
       },
       {
         conversationId: 1,
         sender: "Stuart",
-        description: "Sup Duncan :)",
+        body: "Sup Duncan :)",
         timestamp: "2021-05-08 16:15",
       },
     ],
@@ -34,13 +34,13 @@ export function loadConversations(conversations) {
       {
         conversationId: 2,
         sender: "Raymond",
-        description: "olo Duncan",
+        body: "olo Duncan",
         timestamp: "2021-05-06 11:00",
       },
       {
         conversationId: 2,
         sender: "Duncan",
-        description: "Booiiiiii",
+        body: "Booiiiiii",
         timestamp: "2021-05-07 07:10",
       },
     ],
@@ -48,7 +48,6 @@ export function loadConversations(conversations) {
   conversationService.conversations.push(conversation);
 
   setInnerHtml("conversations", "");
-  let username = "Duncan";
   conversationService.conversations.forEach((conversation) => {
     displayConversation(conversation);
   });
@@ -61,7 +60,7 @@ export function loadConversations(conversations) {
 }
 
 export function displayConversation(conversation) {
-  let username = "Duncan";
+  let username = "Duncan"; // TODO: un-Duncan the JS
   let person =
     username === conversation.user1 ? conversation.user2 : conversation.user1;
   let id = `conversation-${conversation.conversationId}`;
@@ -80,7 +79,7 @@ export function loadMessages(conversationId) {
   console.log(`Loading Messages with conversationId: ${conversationId}`);
   let messageArr = [];
   let personTo = "";
-  let username = "Duncan";
+  let username = "Duncan"; // TODO: un-Duncan the JS
 
   conversationService.conversations.forEach((conversation) => {
     if (conversation.conversationId === conversationId) {
@@ -92,18 +91,13 @@ export function loadMessages(conversationId) {
     }
   });
 
-  let login = getInnerHtml("loginBtn");
-
   if (personTo === "") {
     setInnerHtml(
       "personTo",
-      getHeaderWithoutUserHtml(
-        "Select a Conversation to see the messages!",
-        login
-      )
+      getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
     );
   } else {
-    setInnerHtml("personTo", getHeaderWithUsername(personTo, login));
+    setInnerHtml("personTo", getHeaderWithUsername(personTo));
   }
 
   setInnerHtml("messages", "");
@@ -157,16 +151,17 @@ export function getMessageSentHtml(body, timestamp) {
 
 export function displayMessage(message) {
   let messageHtml = "";
-  let username = "Duncan";
+  let username = "Duncan"; // TODO: un-Duncan the JS
   if (message.sender !== username) {
     messageHtml += getMessageReceivedHtml(
-      message.description,
+      message.body,
       message.timestamp
     );
   } else {
-    messageHtml += getMessageSentHtml(message.description, message.timestamp);
+    messageHtml += getMessageSentHtml(message.body, message.timestamp);
   }
   appendHtml("messages", messageHtml);
+  scrollToBottomOfMessages();
 }
 
 export function addSmiley() {
@@ -196,4 +191,8 @@ export function setProfilePic(){
   }).catch(function(errorurl){
       console.log('Error loading ' + errorurl)
   })
+}
+export function scrollToBottomOfMessages(){
+  let element = document.getElementById("messages");
+  element.scrollTop = element.scrollHeight;
 }
