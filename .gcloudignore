@@ -22,7 +22,6 @@ node_modules/
 **/logfiles/
 **/public/
 
-**/dist/
 **/tmp
 **/out-tsc
 **/bazel-out

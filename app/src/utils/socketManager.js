@@ -6,7 +6,11 @@ class SocketManager {
   }
 
   connect(token) {
-    this.socket = io("http://localhost:8080", {
+    let url = location.hostname;
+    if (location.port.length > 0)
+      url += `:${location.port}`;
+
+    this.socket = io(url, {
       auth: {
         token: token,
       },
