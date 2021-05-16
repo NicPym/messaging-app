@@ -115,7 +115,7 @@ exports.formatDate = (date, type) => {
             ? `0${date.getMonth() + 1}/`
             : `${date.getMonth() + 1}/`;
         retVal +=
-          date.getDate() < 10 ? `0${date.getDate()}, ` : `${date.getDate()}, `;
+          date.getDate() < 10 ? `0${date.getDate()}, ` : `${date.getDate()} `;
         retVal +=
           date.getHours() < 10 ? `0${date.getHours()}:` : `${date.getHours()}:`;
         retVal +=

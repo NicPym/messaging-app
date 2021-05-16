@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const socketManager = require("../util/socketManager");
 const { sequelize } = require("../models");
-const { dataCleaner } = require("../util/helpers");
+const { dataCleaner, formatDate } = require("../util/helpers");
 const models = sequelize.models;
 
 module.exports = (server) => {
@@ -47,7 +47,8 @@ module.exports = (server) => {
     socket.on("send message", (message) => {
       const senderId = socketManager.getSocketClientId(socket.id);
       let destinationUserID;
-      let destinationUserName;
+      let senderUserName;
+      let messageTimestamp;
 
       logger.log({
         logger: "info",
@@ -78,18 +79,20 @@ module.exports = (server) => {
         .then((participants) => {
           if (participants.length > 0) {
             const { rows } = dataCleaner(participants);
+            console.log(rows);
 
             if (rows[0].fkUser == senderId) {
               destinationUserID = rows[1].fkUser;
-              destinationUserName = rows[1].Name;
+              senderUserName = rows[0].Name;
             } else if (rows[1].fkUser == senderId) {
               destinationUserID = rows[0].fkUser;
-              destinationUserName = rows[0].Name;
+              senderUserName = rows[1].Name;
             } else {
               throw new Error(
                 `User with ID ${senderId} is not in the conversation with ID ${message.conversationId}`
               );
             }
+
 
             return models.Message.create({
               cBody: message.body,
@@ -103,51 +106,42 @@ module.exports = (server) => {
           }
         })
         .then((message) => {
+          messageTimestamp = formatDate(new Date(), "dateTime")
+          console.log(messageTimestamp);
           return models.Conversation.increment("iMessageCount", {
             by: 1,
             where: { pkConversation: message.fkConversation },
           });
         })
-        .then(update => {
+        .then((update) => {
           return models.Conversation.findAll({
             where: { pkConversation: message.conversationId },
-          })
+          });
         })
-        .then(conversations => {
+        .then((conversations) => {
           const { rows } = dataCleaner(conversations);
 
           const destinationSocketId =
             socketManager.getDestinationSocket(destinationUserID);
-          
+
           if (destinationSocketId) {
             if (rows[0].iMessageCount > 1) {
               socket.broadcast.to(destinationSocketId).emit("new message", {
                 conversationId: message.conversationId,
                 body: message.body,
-                timestamp: message.timestamp,
+                timestamp: messageTimestamp,
                 received: true,
               });
             } else {
-              console.log({
-                conversationId: message.conversationId,
-                conversationWith: destinationUserName,
-                messages: [
-                  {
-                    body: message.body,
-                    timestamp: message.timestamp,
-                    received: true,
-                  },
-                ],
-              });
               socket.broadcast
                 .to(destinationSocketId)
                 .emit("new conversation", {
                   conversationId: message.conversationId,
-                  conversationWith: destinationUserName,
+                  conversationWith: senderUserName,
                   messages: [
                     {
                       body: message.body,
-                      timestamp: message.timestamp,
+                      timestamp: messageTimestamp,
                       received: true,
                     },
                   ],
