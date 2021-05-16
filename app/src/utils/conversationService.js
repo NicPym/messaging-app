@@ -1,6 +1,12 @@
-import { displayConversation, loadConversations } from "./ui";
+import {
+  displayConversation,
+  loadConversations,
+  invalidEmail,
+  clearSearchInput,
+} from "./ui";
 import { formatDate, logout } from "./helpers";
 import socketManager from "./socketManager";
+import getToken from "./token";
 
 class ConversationService {
   constructor() {
@@ -12,10 +18,10 @@ class ConversationService {
     this.conversations = [];
   }
 
-  loadConversations(token) {
+  loadConversations() {
     // fetch("/chats/conversations", {
     //   headers: new Headers({
-    //     Authorization: "Bearer " + token,
+    //     Authorization: "Bearer " + getToken(),
     //   }),
     // })
     //   .then((res) => res.json())
@@ -26,11 +32,33 @@ class ConversationService {
     //   .catch((_) => logout());
   }
 
+  createConversation(recipientEmail) {
+    fetch(`/conversations/createConversation/${recipientEmail}`, {
+      method: "POST",
+      headers: new Headers({
+        Authorization: "Bearer " + getToken(),
+      }),
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        else throw new Error(res.status);
+      })
+      .then((body) => {
+        console.log(body);
+        this.conversations.push(body.data);
+        clearSearchInput();
+      })
+      .catch((err) => {
+        console.log(err);
+        invalidEmail();
+      });
+  }
+
   messageReceived(message) {
     this.conversations
       .find((conversation) => conversation.id === message.conversationId)
-      .messages.append({
-        sender: message.sender,
+      .messages.push({
+        received: message.received,
         body: message.body,
         timestamp: message.timestamp,
       });

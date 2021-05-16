@@ -179,7 +179,15 @@ export function clearConversations() {
   setInnerHtml("conversations", "");
 }
 
-export function scrollToBottomOfMessages(){
+export function scrollToBottomOfMessages() {
   let element = document.getElementById("messages");
   element.scrollTop = element.scrollHeight;
+}
+
+export function invalidEmail() {
+  document.getElementById("searchOrCreateConversationInput").value = "Not a valid email address"
+}
+
+export function clearSearchInput() {
+  document.getElementById("searchOrCreateConversationInput").value = "";
 }

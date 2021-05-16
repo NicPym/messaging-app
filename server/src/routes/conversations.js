@@ -1,13 +1,14 @@
 //getting all conversations of user
 //checking if user email exists in
-const chats = require("express").Router();
+const conversations = require("express").Router();
 const { dataCleaner, formatDate } = require("../util/helpers");
 const authenticate = require("../util/isAuth");
 const { sequelize } = require("../models");
+const { Op } = require("sequelize");
 const models = sequelize.models;
 const logger = require("../util/winston");
 
-chats.get("/messages/:conversationId", authenticate, (req, res, next) => {
+conversations.get("/messages/:conversationId", authenticate, (req, res, next) => {
   if (isNaN(req.params.conversationId)) {
     let reason = new Error("'userId' not in correct data format");
     reason.status = 400;
@@ -61,7 +62,7 @@ chats.get("/messages/:conversationId", authenticate, (req, res, next) => {
     });
 });
 
-chats.get("/conversations/", authenticate, (req, res, next) => {
+conversations.get("/conversations/", authenticate, (req, res, next) => {
   logger.log({
     logger: "info",
     message: `Fetching conversations for user id [${req.token.id}]`,
@@ -129,7 +130,97 @@ chats.get("/conversations/", authenticate, (req, res, next) => {
     });
 });
 
-chats.get("/test", (req, res, next) => {
+conversations.post(
+  "/createConversation/:recipientEmail",
+  authenticate,
+  (req, res, next) => {
+    let conversationId;
+    let recipientId;
+    let recipientName;
+
+    models.User.findAll({
+      where: { cEmail: req.params.recipientEmail },
+      attributes: [
+        "pkUser",
+        [
+          sequelize.fn(
+            "concat",
+            sequelize.col("cFirstName"),
+            " ",
+            sequelize.col("cLastName")
+          ),
+          "Name",
+        ],
+      ],
+    })
+      .then((users) => {
+        const { rows } = dataCleaner(users);
+
+        if (users.length > 0 && rows[0].pkUser != req.token.id) {
+          recipientName = rows[0].Name;
+          recipientId = rows[0].pkUser;
+
+          return models.Participant.findAll({
+            attributes: [
+              "fkConversation",
+              [sequelize.fn("COUNT", "fkConversation"), "Count"],
+            ],
+            where: {
+              fkUser: {
+                [Op.or]: [rows[0].pkUser, req.token.id],
+              },
+            },
+            group: "fkConversation",
+            having: {
+              Count: {
+                [Op.gt]: 1,
+              },
+            },
+          });
+        } else {
+          throw new Error("Invalid email address");
+        }
+      })
+      .then((result) => {
+        if (result.length > 0) throw new Error("Conversation already exists");
+
+        return models.Conversation.create({});
+      })
+      .then((conversation) => {
+        conversationId = conversation.pkConversation;
+
+        return Promise.all([
+          models.Participant.create({
+            fkConversation: conversationId,
+            fkUser: req.token.id,
+          }),
+          models.Participant.create({
+            fkConversation: conversationId,
+            fkUser: recipientId,
+          }),
+        ]);
+      })
+      .then((results) => {
+        res.status(200).json({
+          message: "Created Conversation",
+          success: true,
+          data: {
+            conversationId: conversationId,
+            conversationWith: recipientName,
+            messages: [],
+          },
+        });
+      })
+      .catch((reason) => {
+        if (!reason.statusCode) {
+          reason.statusCode = 500;
+        }
+        next(reason);
+      });
+  }
+);
+
+conversations.get("/test", (req, res, next) => {
   models.User.findAll({ where: { cEmail: "stuartb@bbd.co.za" } })
     .then((user) => {
       if (user.length === 1) {
@@ -163,4 +254,4 @@ chats.get("/test", (req, res, next) => {
     });
 });
 
-module.exports = chats;
+module.exports = conversations;

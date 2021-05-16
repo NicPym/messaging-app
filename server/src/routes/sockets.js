@@ -48,7 +48,7 @@ module.exports = (server) => {
 
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.body}`,
+        message: `[sockets.js]\tMessage Received from user with ID - ${senderId}: ${message.body}`,
       });
 
       //TODO - Check if user is in the chat with chatID sent.
