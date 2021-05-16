@@ -1,4 +1,4 @@
-import { appendHtml, setInnerHtml, getInnerHtml } from "./helpers";
+import { appendHtml, setInnerHtml, getInnerHtml, imgLoad} from "./helpers";
 import conversationService from "./conversationService";
 import { setOnClick } from "./helpers";
 
@@ -182,4 +182,18 @@ export function clearMessages() {
 export function clearConversations() {
   conversationService.clearConversations();
   setInnerHtml("conversations", "");
+}
+
+export function setProfilePic(){
+  let userPhotoURL = getCookie("photo-url");
+  let firstName = getCookie("firstName");
+  imgLoad(userPhotoURL).then(function(response){
+    let imageURL = window.URL.createObjectURL(response);
+    let userPhoto = document.getElementById('user-photo');
+    userPhoto.src = imageURL;
+    userPhoto.alt = firstName;
+    document.getElementById('user-photo-caption').innerHTML = firstName;
+  }).catch(function(errorurl){
+      console.log('Error loading ' + errorurl)
+  })
 }

@@ -23,6 +23,8 @@ module.exports = (passport) => {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
+          photoURL: profile.photos[0].value,
+          id: profile.id
         };
 
         db["User"]
@@ -91,6 +93,8 @@ module.exports = (passport) => {
         expiresIn: "12h",
       });
       res.cookie("token", token);
+      res.cookie("photo-url", req.user.photoURL);
+      res.cookie("firstName", req.user.firstName);
       res.redirect("/");
     }
   );
