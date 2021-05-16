@@ -40,6 +40,7 @@ class ConversationService {
   }
 
   createConversation(recipientEmail) {
+    console.log('Create conversation', recipientEmail);
     fetch(`/conversations/createConversation/${recipientEmail}`, {
       method: "POST",
       headers: new Headers({

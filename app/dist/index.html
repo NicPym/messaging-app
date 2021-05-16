@@ -22,8 +22,7 @@
                         </bar>
                         <bar class="flex-row justify-content-between align-items-center search-bar">
                             <p id="searchConversationsButton" class="search-icon icon-box"></p>
-                            <input id="searchOrCreateConversationInput" type="text"
-                                placeholder="Search or start new conversation" class="search-input">
+                            <input class="flex-fill" id="searchOrCreateConversationInput" placeholder="Search or start new conversation" type="text">
                             <p id="addConversationButton" class="plus-icon icon-box"></p>
                         </bar>
                         <ul id="conversations"
@@ -36,9 +35,7 @@
                             <nav class="flex-row align-items-center right-top-corner main-bar"
                                 aria-label="Active Profile">
                                 <block id="personTo" class="flex-row align-items-center">
-                                    <img src="assets/img/profile_picture.png" class="active-profile-pic"
-                                        alt="Profile Picture">
-                                    <label class="active-profile-name">Name Surname</label>
+                                    <label class="active-profile-name">Select a Conversation to see the messages!</label>
                                 </block>
                                 <fill></fill>
                                 <button id="loginBtn" class="login-button">Login</button>
@@ -46,11 +43,7 @@
                             <ul id="messages" class="flex-column flex-grow y-scroll messages">
                                 <!-- Messages come in here -->
                             </ul>
-                            <bar class="flex-row align-items-center main-bar right-bottom-corner">
-                                <p id="emojiButton" class="emoji-icon icon-box"></p>
-                                <input id="messageToSend" class="flex-fill" type="text">
-                                <p id="sendMessageButton" class="send-icon icon-box"></p>
-                            </bar>
+                            <bar id="sendMessageBar" class="flex-row align-items-center main-bar right-bottom-corner"></bar>
                         </block>
                     </block>
                 </block>

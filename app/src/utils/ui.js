@@ -1,6 +1,5 @@
-import { appendHtml, setInnerHtml, getInnerHtml } from "./helpers";
+import { appendHtml, setInnerHtml, setOnClick, sendMessage } from "./helpers";
 import conversationService from "./conversationService";
-import { setOnClick } from "./helpers";
 
 export function loadConversations(conversations) {
   console.log("Loading Conversations");
@@ -13,8 +12,11 @@ export function loadConversations(conversations) {
   // have to set callback afterwards else appendHtml erases them
   conversations.forEach((conversation) => {
     let id = `conversation-${conversation.conversationId}`;
-    setOnClick(id, () =>
-      conversationService.selectConversation(conversation.conversationId)
+    setOnClick(id, () => {
+        conversationService.selectConversation(conversation.conversationId);
+        hideNotification(conversation.conversationId);
+        enableSendMessageBar();
+      }
     );
   });
 }
@@ -32,7 +34,17 @@ export function getConversationHtml(id, name) {
         <li id="${id}" class="flex-row align-items-center conversation-container">
             <img src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
+            <fill></fill>
+            <p id="${id}-notification" class="notification-icon" hidden></p>
         </li>`;
+}
+
+export function showNotification(id) {
+  document.getElementById(`conversation-${id}-notification`).hidden = false;
+}
+
+export function hideNotification(id) {
+  document.getElementById(`conversation-${id}-notification`).hidden = true;
 }
 
 export function loadMessages(messages) {
@@ -44,14 +56,14 @@ export function loadMessages(messages) {
 }
 
 export function setHeaderWithUserHtml(personTo) {
-  setInnerHtml("personTo", getHeaderWithUsername(personTo));
+  setInnerHtml("personTo", getHeaderWithUsernameHtml(personTo));
 }
 
 export function getHeaderWithoutUserHtml(message) {
   return `<label class="active-profile-name">${message}</label>`;
 }
 
-export function getHeaderWithUsername(username) {
+export function getHeaderWithUsernameHtml(username) {
   return `
         <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
         <label class="active-profile-name">${username}</label>`;
@@ -62,12 +74,12 @@ export function getMessageReceivedHtml(body, timestamp) {
         <li class="flex-column">
             <message class="flex-row flex-grow align-items-end align-content-start">
                 <card class="flex-column message-received-card">
-                    <content class="flex-row message-body-container">
+                    <block class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </content>
-                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </block>
+                    <block class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </timestamp>
+                    </block>
                 </card>
             </message>
         </li>`;
@@ -78,12 +90,12 @@ export function getMessageSentHtml(body, timestamp) {
         <li class="flex-column">
             <message class="flex-row justify-content-end align-items-end">
                 <card class="flex-column message-sent-card">
-                    <content class="flex-row message-body-container">
+                    <block class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </content>
-                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </block>
+                    <block class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </timestamp>
+                    </block>
                 </card>
             </message>
         </li>`;
@@ -104,7 +116,7 @@ export function displayMessage(message) {
 
 export function addSmiley() {
   document.getElementById("messageToSend").value +=
-    String.fromCodePoint("0X1F600");
+    String.fromCodePoint("0X1F600"); // TODO: may case problems with SQL
 }
 
 export function clearMessages() {
@@ -123,10 +135,21 @@ export function scrollToBottomOfMessages() {
 }
 
 export function invalidEmail() {
-  document.getElementById("searchOrCreateConversationInput").value =
-    "Not a valid email address";
+  let input = document.getElementById("searchOrCreateConversationInput");
+  input.value = "";
+  input.placeholder = "Not a valid email address";
 }
 
 export function clearSearchInput() {
   document.getElementById("searchOrCreateConversationInput").value = "";
+}
+
+export function enableSendMessageBar() {
+  setInnerHtml("sendMessageBar", `
+    <p id="emojiButton" class="emoji-icon icon-box"></p>
+    <input class="flex-fill" id="messageToSend" placeholder="Type your message here and press the plane icon to send" type="text">
+    <p id="sendMessageButton" class="send-icon icon-box"></p>`
+  );
+  setOnClick("emojiButton", addSmiley);
+  setOnClick("sendMessageButton", sendMessage);
 }

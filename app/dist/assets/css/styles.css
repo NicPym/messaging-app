@@ -13,6 +13,11 @@ ul {
   margin: 0px;
 }
 
+input {
+  font-family: RobotoRegular;
+  padding: 2px 5px;
+}
+
 fill {
   flex: 1 1 auto;
 }
@@ -106,7 +111,8 @@ card {
 }
 
 .left-column {
-  min-width: 300px;
+  min-width: 400px;
+  max-width: 400px;
 }
 
 .main-bar {
@@ -158,22 +164,15 @@ card {
   font-family: "Font Awesome 5 Free Solid";
   height:20px;
   width:20px;
-  margin:0 0 0 20px;
+  margin:0 20px;
   content: "\f002";
-}
-
-.search-input {
-  font-family: RobotoRegular;
-  width: 80%;
-  margin: 0 20px;
-  padding: 0 10px;
 }
 
 .plus-icon::before {
   font-family: "Font Awesome 5 Free Solid";
   height:20px;
   width:20px;
-  margin:0 20px 0 0;
+  margin:0 20px;
   content: "\f067";
 }
 
@@ -207,9 +206,6 @@ card {
 
 .emoji-icon::before {
   font-family: "Font Awesome 5 Free";
-  font-size:25px;
-  height:25px;
-  width:25px;
   margin:0 20px;
   content: "\f580";
   font-style: normal;
@@ -217,8 +213,6 @@ card {
 
 .send-icon::before {
   font-family: "Font Awesome 5 Free Solid";
-  height:25px;
-  width:25px;
   margin:0 20px;
   content: "\f1d8";
 }
@@ -265,11 +259,19 @@ card {
 .conversation-profile-pic {
   width: 50px;
   height: 50px;
-  margin: 0 10px 0 20px;
+  margin: 0 20px;
 }
 
 .conversation-profile-name {
   font-family: RobotoRegular;
-  margin: 0 10px;
   font-size: 18px;
+}
+
+.notification-icon::before {
+  font-family: "Font Awesome 5 Free Solid";
+  height:20px;
+  width:20px;
+  margin:0 20px;
+  content: "\f075";
+  color: rgb(228, 129, 0);
 }
