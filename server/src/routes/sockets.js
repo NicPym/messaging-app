@@ -55,7 +55,7 @@ module.exports = (server) => {
 
       models.Message.create({
         cBody: message.body,
-        fkConversation: message.chatId,
+        fkConversation: message.conversationId,
         fkUser: senderId,
       })
         .then((message) =>

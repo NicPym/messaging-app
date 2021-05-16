@@ -1,8 +1,11 @@
 import {
   displayConversation,
   loadConversations,
+  loadMessages,
   invalidEmail,
   clearSearchInput,
+  displayMessage,
+  setHeaderWithUserHtml
 } from "./ui";
 import { formatDate, logout } from "./helpers";
 import socketManager from "./socketManager";
@@ -11,11 +14,12 @@ import getToken from "./token";
 class ConversationService {
   constructor() {
     this.conversations = [];
-    this.currentConversationId = null; // TODO:
+    this.currentConversationId = null;
   }
 
   clearConversations() {
     this.conversations = [];
+    this.currentConversationId = null;
   }
 
   loadConversations() {
@@ -25,12 +29,14 @@ class ConversationService {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        // this.conversations = data;
-        console.log(data);
-        // loadConversations(this.conversations);
+      .then((body) => {
+        this.conversations = body.data;
+        loadConversations(this.conversations);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        logout();
+      });
   }
 
   createConversation(recipientEmail) {
@@ -48,6 +54,7 @@ class ConversationService {
         console.log(body);
         this.conversations.push(body.data);
         clearSearchInput();
+        loadConversations(this.conversations);
       })
       .catch((err) => {
         console.log(err);
@@ -72,16 +79,25 @@ class ConversationService {
   sendMessage(body) {
     let date = formatDate(new Date());
 
-    let messageObj = {
+    let messsage = {
       conversationId: this.currentConversationId,
       body: body,
       timestamp: date,
     };
 
     console.log(`sending message: ${body}`);
-    socketManager.sendMessage(messageObj);
+    socketManager.sendMessage(messsage);
 
-    // displayMessage(messageObj);
+    this.conversations.find((conversation) => conversation.conversationId === this.currentConversationId).messages.push(messsage);
+
+    displayMessage(messsage);
+  }
+
+  selectConversation(conversationId) {
+    this.currentConversationId = conversationId;
+    const conversation = this.conversations.find(conversation => conversation.conversationId === conversationId)
+    setHeaderWithUserHtml(conversation.conversationWith);
+    loadMessages(conversation.messages);
   }
 }
 
