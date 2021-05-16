@@ -153,3 +153,5 @@ export function enableSendMessageBar() {
   setOnClick("emojiButton", addSmiley);
   setOnClick("sendMessageButton", sendMessage);
 }
+
+// TODO: Fix search input on success.

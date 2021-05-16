@@ -98,22 +98,22 @@ exports.formatDate = (date, type) => {
     date = new Date(date);
     switch (type) {
       case "date":
-        retVal += `${date.getFullYear()}/`;
+        retVal += `${date.getFullYear()}-`;
         retVal +=
           date.getMonth() + 1 < 10
-            ? `0${date.getMonth() + 1}/`
-            : `${date.getMonth() + 1}/`;
+            ? `0${date.getMonth() + 1}-`
+            : `${date.getMonth() + 1}-`;
         retVal +=
           date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
 
         break;
 
       case "dateTime":
-        retVal += `${date.getFullYear()}/`;
+        retVal += `${date.getFullYear()}-`;
         retVal +=
           date.getMonth() + 1 < 10
-            ? `0${date.getMonth() + 1}/`
-            : `${date.getMonth() + 1}/`;
+            ? `0${date.getMonth() + 1}-`
+            : `${date.getMonth() + 1}-`;
         retVal +=
           date.getDate() < 10 ? `0${date.getDate()}, ` : `${date.getDate()} `;
         retVal +=
