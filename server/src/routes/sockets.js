@@ -106,8 +106,7 @@ module.exports = (server) => {
           }
         })
         .then((message) => {
-          messageTimestamp = formatDate(new Date(), "dateTime")
-          console.log(messageTimestamp);
+          messageTimestamp = formatDate(new Date(), "dateTime");
           return models.Conversation.increment("iMessageCount", {
             by: 1,
             where: { pkConversation: message.fkConversation },
