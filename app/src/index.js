@@ -5,11 +5,12 @@ import {
   setOnClick,
   getCookie,
   login,
-  logout
+  logout,
 } from "./utils/helpers";
 import {
   addSmiley,
   getHeaderWithoutUserHtml,
+  setProfilePic,
 } from "./utils/ui";
 
 async function init() {
@@ -30,6 +31,7 @@ async function init() {
       conversationService.messageReceived(message)
     );
     conversationService.loadConversations(token);
+    setProfilePic();
   } else {
     setInnerHtml(
       "personTo",

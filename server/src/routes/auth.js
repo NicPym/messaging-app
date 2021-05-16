@@ -30,6 +30,8 @@ module.exports = (passport) => {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
+          photoURL: profile.photos[0].value,
+          googleId: profile.id,
         };
 
         db["User"]
@@ -56,9 +58,8 @@ module.exports = (passport) => {
                 });
             } else {
               console.log(`${loggedInUser.email} logged in`);
-              return done(null, {
-                id: users[0].pkUser,
-              });
+              loggedInUser.id = users[0].pkUser;
+              return done(null, loggedInUser);
             }
           });
       }
@@ -97,7 +98,10 @@ module.exports = (passport) => {
       const token = jwt.sign(req.user, SECRET, {
         expiresIn: "12h",
       });
+      console.log(req.user);
       res.cookie("token", token);
+      res.cookie("photo-url", req.user.photoURL);
+      res.cookie("firstName", req.user.firstName);
       res.redirect("/");
     }
   );
