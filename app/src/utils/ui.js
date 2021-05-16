@@ -97,7 +97,7 @@ export function loadMessages(conversationId) {
       getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
     );
   } else {
-    setInnerHtml("personTo", getHeaderWithUsername(personTo));
+    setInnerHtml("personTo", getHeaderWithUsernameHtml(personTo));
   }
 
   setInnerHtml("messages", "");
@@ -111,7 +111,7 @@ export function getHeaderWithoutUserHtml(message) {
   return `<label class="active-profile-name">${message}</label>`;
 }
 
-export function getHeaderWithUsername(username) {
+export function getHeaderWithUsernameHtml(username) {
   return `
         <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
         <label class="active-profile-name">${username}</label>`;
@@ -122,12 +122,12 @@ export function getMessageReceivedHtml(body, timestamp) {
         <li class="flex-column">
             <message class="flex-row flex-grow align-items-end align-content-start">
                 <card class="flex-column message-received-card">
-                    <content class="flex-row message-body-container">
+                    <block class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </content>
-                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </block>
+                    <block class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </timestamp>
+                    </block>
                 </card>
             </message>
         </li>`;
@@ -138,12 +138,12 @@ export function getMessageSentHtml(body, timestamp) {
         <li class="flex-column">
             <message class="flex-row justify-content-end align-items-end">
                 <card class="flex-column message-sent-card">
-                    <content class="flex-row message-body-container">
+                    <block class="flex-row message-body-container">
                         <p class="message-body">${body}</p>
-                    </content>
-                    <timestamp class="flex-row justify-content-end align-items-start message-timestamp-container">
+                    </block>
+                    <block class="flex-row justify-content-end align-items-start message-timestamp-container">
                         <p class="message-timestamp">${timestamp}</p>
-                    </timestamp>
+                    </block>
                 </card>
             </message>
         </li>`;
@@ -166,7 +166,7 @@ export function displayMessage(message) {
 
 export function addSmiley() {
   document.getElementById("messageToSend").value +=
-    String.fromCodePoint("0X1F600");
+    String.fromCodePoint("0X1F600"); // TODO: may case problems with SQL
 }
 
 export function clearMessages() {

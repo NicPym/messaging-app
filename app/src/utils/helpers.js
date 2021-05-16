@@ -60,4 +60,3 @@ export function logout() {
   deleteAllCookies();
   document.location.href = "/";
 }
-
