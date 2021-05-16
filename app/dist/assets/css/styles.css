@@ -267,7 +267,7 @@ card {
   font-size: 18px;
 }
 
-.conversation-icon::before {
+.notification-icon::before {
   font-family: "Font Awesome 5 Free Solid";
   height:20px;
   width:20px;
