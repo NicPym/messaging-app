@@ -147,7 +147,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
       if (conversationIDs.length > 0) {
         const { rows } = dataCleaner(conversationIDs);
         let participantsPromises = [];
-  
+
         rows.forEach((row) => {
           conversationIds.push(row.fkConversation);
           participantsPromises.push(
@@ -178,7 +178,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
             })
           );
         });
-  
+
         return Promise.all(participantsPromises);
       }
     })
@@ -188,13 +188,13 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
 
         for (let i = 0; i < values.length; i++) {
           const { rows } = dataCleaner(values[i]);
-  
+
           conversations.push({
             conversationId: conversationIds[i],
             conversationWith: rows[0].Name,
             messages: [],
           });
-  
+
           messagesPromises.push(
             models.Message.findAll({
               where: { fkConversation: conversationIds[i] },
@@ -206,7 +206,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
             })
           );
         }
-  
+
         return Promise.all(messagesPromises);
       }
     })
@@ -215,7 +215,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
         for (let i = 0; i < values.length; i++) {
           if (values[i].length > 0) {
             const { rows } = dataCleaner(values[i]);
-  
+
             conversations[i].messages = rows.map((row) => {
               return {
                 body: row.body,
@@ -289,31 +289,44 @@ conversations.post(
                 [Op.gt]: 1,
               },
             },
+            include: [
+              {
+                model: models.Conversation,
+                attributes: ["iMessageCount"],
+              },
+            ],
           });
         } else {
           throw new Error("Invalid email address");
         }
       })
       .then((result) => {
-        if (result.length > 0) throw new Error("Conversation already exists");
+        const { rows } = dataCleaner(result);
+
+        if (result.length > 0 && rows[0].iMessageCount == 0)
+          return models.Conversation.findByPk(rows[0].fkConversation);
+        else if (result.length > 0)
+          throw new Error("Conversation already exists");
 
         return models.Conversation.create({});
       })
       .then((conversation) => {
         conversationId = conversation.pkConversation;
 
-        return Promise.all([
-          models.Participant.create({
-            fkConversation: conversationId,
-            fkUser: req.token.id,
-          }),
-          models.Participant.create({
-            fkConversation: conversationId,
-            fkUser: recipientId,
-          }),
-        ]);
+        if (conversation._options.isNewRecord) {
+          return Promise.all([
+            models.Participant.create({
+              fkConversation: conversationId,
+              fkUser: req.token.id,
+            }),
+            models.Participant.create({
+              fkConversation: conversationId,
+              fkUser: recipientId,
+            }),
+          ]);
+        }
       })
-      .then((results) => {
+      .then((_) => {
         res.status(200).json({
           message: "Created Conversation",
           success: true,
@@ -332,39 +345,5 @@ conversations.post(
       });
   }
 );
-
-conversations.get("/test", (req, res, next) => {
-  models.User.findAll({ where: { cEmail: "stuartb@bbd.co.za" } })
-    .then((user) => {
-      if (user.length === 1) {
-        // Found user
-        user = user[0];
-        user.cFirstName = "Stuart";
-        return user.save();
-      } else {
-        const user = {
-          cFirstName: "Stuart",
-          cLastName: "Barclay",
-          cEmail: "stuartb@bbd.co.za",
-        };
-
-        return models.User.create(user);
-      }
-    })
-    .then((e) => {
-      const { rows } = dataCleaner(e);
-      res.status(200).json({
-        message: "Found/Created User",
-        success: true,
-        data: rows,
-      });
-    })
-    .catch((reason) => {
-      if (!reason.statusCode) {
-        reason.statusCode = 500;
-      }
-      next(reason);
-    });
-});
 
 module.exports = conversations;
