@@ -61,17 +61,18 @@ export function loadConversations(conversations) {
 
 export function displayConversation(conversation) {
   let username = "Duncan"; // TODO: un-Duncan the JS
-  let person =
-    username === conversation.user1 ? conversation.user2 : conversation.user1;
+  let person = username === conversation.user1 ? conversation.user2 : conversation.user1;
   let id = `conversation-${conversation.conversationId}`;
-  appendHtml("conversations", getConversationHtml(id, person));
+  appendHtml("conversations", getConversationHtml(id, person, true));
 }
 
-export function getConversationHtml(id, name) {
+export function getConversationHtml(id, name, hasUnreadMessages) {
   return `
         <li id="${id}" class="flex-row align-items-center conversation-container">
             <img src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
+            <fill></fill>
+            ${hasUnreadMessages ? '<p class="conversation-icon"></p>' : ''}
         </li>`;
 }
 
