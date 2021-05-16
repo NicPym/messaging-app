@@ -106,10 +106,7 @@ class ConversationService {
 
   newConversation(conversation) {
     this.conversations.push(conversation);
-
-    this.conversations.forEach((conversation) => {
-      displayConversation(conversation);
-    });
+    loadConversations(this.conversations);
   }
 
   selectConversation(conversationId) {

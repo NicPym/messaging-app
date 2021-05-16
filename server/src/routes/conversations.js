@@ -144,80 +144,86 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
     attributes: ["fkConversation"],
   })
     .then((conversationIDs) => {
-      const { rows } = dataCleaner(conversationIDs);
-      let participantsPromises = [];
-
-      rows.forEach((row) => {
-        conversationIds.push(row.fkConversation);
-        participantsPromises.push(
-          models.Participant.findAll({
-            attributes: [],
-            where: {
-              fkConversation: row.fkConversation,
-              fkUser: {
-                [Op.ne]: [req.token.id],
+      if (conversationIDs.length > 0) {
+        const { rows } = dataCleaner(conversationIDs);
+        let participantsPromises = [];
+  
+        rows.forEach((row) => {
+          conversationIds.push(row.fkConversation);
+          participantsPromises.push(
+            models.Participant.findAll({
+              attributes: [],
+              where: {
+                fkConversation: row.fkConversation,
+                fkUser: {
+                  [Op.ne]: [req.token.id],
+                },
               },
-            },
-            include: [
-              {
-                model: models.User,
-                attributes: [
-                  [
-                    sequelize.fn(
-                      "concat",
-                      sequelize.col("cFirstName"),
-                      " ",
-                      sequelize.col("cLastName")
-                    ),
-                    "Name",
+              include: [
+                {
+                  model: models.User,
+                  attributes: [
+                    [
+                      sequelize.fn(
+                        "concat",
+                        sequelize.col("cFirstName"),
+                        " ",
+                        sequelize.col("cLastName")
+                      ),
+                      "Name",
+                    ],
                   ],
-                ],
-              },
-            ],
-          })
-        );
-      });
-
-      return Promise.all(participantsPromises);
-    })
-    .then((values) => {
-      let messagesPromises = [];
-
-      for (let i = 0; i < values.length; i++) {
-        const { rows } = dataCleaner(values[i]);
-
-        conversations.push({
-          conversationId: conversationIds[i],
-          conversationWith: rows[0].Name,
-          messages: [],
+                },
+              ],
+            })
+          );
         });
-
-        messagesPromises.push(
-          models.Message.findAll({
-            where: { fkConversation: conversationIds[i] },
-            attributes: [
-              ["cBody", "body"],
-              ["createdAt", "timestamp"],
-              ["fkUser", "userID"],
-            ],
-          })
-        );
+  
+        return Promise.all(participantsPromises);
       }
-
-      return Promise.all(messagesPromises);
     })
     .then((values) => {
-      for (let i = 0; i < values.length; i++) {
-        if (values[i].length > 0) {
-          const { rows } = dataCleaner(values[i]);
+      if (values) {
+        let messagesPromises = [];
 
-          conversations[i].messages = rows.map((row) => {
-            return {
-              body: row.body,
-              timestamp: formatDate(row.timestamp, "dateTime"),
-              received: row.userID != req.token.id,
-            };
+        for (let i = 0; i < values.length; i++) {
+          const { rows } = dataCleaner(values[i]);
+  
+          conversations.push({
+            conversationId: conversationIds[i],
+            conversationWith: rows[0].Name,
+            messages: [],
           });
+  
+          messagesPromises.push(
+            models.Message.findAll({
+              where: { fkConversation: conversationIds[i] },
+              attributes: [
+                ["cBody", "body"],
+                ["createdAt", "timestamp"],
+                ["fkUser", "userID"],
+              ],
+            })
+          );
+        }
+  
+        return Promise.all(messagesPromises);
+      }
+    })
+    .then((values) => {
+      if (values) {
+        for (let i = 0; i < values.length; i++) {
+          if (values[i].length > 0) {
+            const { rows } = dataCleaner(values[i]);
+  
+            conversations[i].messages = rows.map((row) => {
+              return {
+                body: row.body,
+                timestamp: formatDate(row.timestamp, "dateTime"),
+                received: row.userID != req.token.id,
+              };
+            });
+          }
         }
       }
 

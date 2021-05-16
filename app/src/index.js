@@ -32,6 +32,7 @@ function init() {
     socketManager.registerEvent("new message", (message) =>
       conversationService.messageReceived(message)
     );
+    socketManager.registerEvent("new conversation", (message) => conversationService.newConversation(message));
     conversationService.loadConversations();
   } else {
     setInnerHtml(
