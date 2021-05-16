@@ -5,15 +5,13 @@ import {
   setOnClick,
   getCookie,
   login,
-  logout
+  logout,
 } from "./utils/helpers";
-import {
-  addSmiley,
-  getHeaderWithoutUserHtml,
-} from "./utils/ui";
+import { addSmiley, getHeaderWithoutUserHtml } from "./utils/ui";
+import getToken from "./utils/token";
 
-async function init() {
-  const token = getCookie("token");
+function init() {
+  const token = getToken();
 
   if (token) {
     setInnerHtml(
@@ -24,12 +22,18 @@ async function init() {
     setOnClick("loginBtn", logout);
     setOnClick("emojiButton", addSmiley);
     setOnClick("sendMessageButton", sendMessage);
-    
-    socketManager.connect(token);
+    setOnClick("addConversationButton", () =>
+      conversationService.createConversation(
+        document.getElementById("searchOrCreateConversationInput").value
+      )
+    );
+
+    socketManager.connect();
     socketManager.registerEvent("new message", (message) =>
       conversationService.messageReceived(message)
     );
-    conversationService.loadConversations(token);
+    socketManager.registerEvent("new conversation", (message) => conversationService.newConversation(message));
+    conversationService.loadConversations();
   } else {
     setInnerHtml(
       "personTo",
@@ -47,4 +51,4 @@ function sendMessage() {
   document.getElementById("messageToSend").value = "";
 }
 
-await init();
+init();

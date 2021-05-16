@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const socketManager = require("../util/socketManager");
 const { sequelize } = require("../models");
+const { dataCleaner, formatDate } = require("../util/helpers");
 const models = sequelize.models;
 
 module.exports = (server) => {
@@ -45,47 +46,105 @@ module.exports = (server) => {
 
     socket.on("send message", (message) => {
       const senderId = socketManager.getSocketClientId(socket.id);
+      let destinationUserID;
+      let senderUserName;
+      let messageTimestamp;
 
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.body}`,
+        message: `[sockets.js]\tMessage Received from user with ID - ${senderId}: ${message.body}`,
       });
 
-      //TODO - Check if user is in the chat with chatID sent.
-
-      models.Message.create({
-        cBody: message.body,
-        fkConversation: message.chatId,
-        fkUser: senderId,
+      models.Participant.findAll({
+        where: {
+          fkConversation: message.conversationId,
+        },
+        include: [
+          {
+            model: models.User,
+            attributes: [
+              [
+                sequelize.fn(
+                  "concat",
+                  sequelize.col("cFirstName"),
+                  " ",
+                  sequelize.col("cLastName")
+                ),
+                "Name",
+              ],
+            ],
+          },
+        ],
       })
-        .then((message) =>
-          models.Participant.findAll({
-            where: {
-              fkConversation: message.fkConversation,
-            },
-          })
-        )
         .then((participants) => {
-          if (participants.length == 2) {
-            let destinationClientId = null;
+          if (participants.length > 0) {
+            const { rows } = dataCleaner(participants);
+            console.log(rows);
 
-            if (participants[0].fkUser == senderId) {
-              destinationClientId = participants[1].fkUser;
-            } else if (participants[1].fkUser == senderId) {
-              destinationClientId = participants[0].fkUser;
+            if (rows[0].fkUser == senderId) {
+              destinationUserID = rows[1].fkUser;
+              senderUserName = rows[0].Name;
+            } else if (rows[1].fkUser == senderId) {
+              destinationUserID = rows[0].fkUser;
+              senderUserName = rows[1].Name;
+            } else {
+              throw new Error(
+                `User with ID ${senderId} is not in the conversation with ID ${message.conversationId}`
+              );
             }
 
-            if (destinationClientId) {
-              const destinationSocketId =
-                socketManager.getDestinationSocket(destinationClientId);
 
-              if (destinationSocketId != undefined) {
-                socket.broadcast.to(destinationSocketId).emit("new message", {
-                  chatId: message.chatId,
-                  body: message.body,
-                  timestamp: message.timestamp, // TODO
+            return models.Message.create({
+              cBody: message.body,
+              fkConversation: message.conversationId,
+              fkUser: senderId,
+            });
+          } else {
+            throw new Error(
+              `Conversation ID ${message.conversationId} does not exist.`
+            );
+          }
+        })
+        .then((message) => {
+          messageTimestamp = formatDate(new Date(), "dateTime");
+          return models.Conversation.increment("iMessageCount", {
+            by: 1,
+            where: { pkConversation: message.fkConversation },
+          });
+        })
+        .then((update) => {
+          return models.Conversation.findAll({
+            where: { pkConversation: message.conversationId },
+          });
+        })
+        .then((conversations) => {
+          const { rows } = dataCleaner(conversations);
+
+          const destinationSocketId =
+            socketManager.getDestinationSocket(destinationUserID);
+
+          if (destinationSocketId) {
+            if (rows[0].iMessageCount > 1) {
+              socket.broadcast.to(destinationSocketId).emit("new message", {
+                conversationId: message.conversationId,
+                body: message.body,
+                timestamp: messageTimestamp,
+                received: true,
+              });
+            } else {
+              socket.broadcast
+                .to(destinationSocketId)
+                .emit("new conversation", {
+                  conversationId: message.conversationId,
+                  conversationWith: senderUserName,
+                  messages: [
+                    {
+                      body: message.body,
+                      timestamp: messageTimestamp,
+                      received: true,
+                    },
+                  ],
                 });
-              }
             }
           }
         })
