@@ -6,12 +6,11 @@ import {
   login,
   logout,
   getToken,
-  getCookie,
 } from "./utils/helpers";
 import { 
   getHeaderWithoutUserHtml,
-  setProfilePic,
   enableSearchBar,
+  setProfilePic,
 } from "./utils/ui";
 
 const token = getToken();
