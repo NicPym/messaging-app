@@ -15,9 +15,7 @@ export function loadConversations(conversations, filterValue) {
     conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
   }
 
-  console.log("before", conversations);
   conversations = conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
-  console.log("after", conversations);
 
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
@@ -206,10 +204,6 @@ export function enableSearchBar() {
 export function setProfilePic(){
   let userPhotoURL = getCookie("photo-url");
   let firstName = getCookie("firstName");
-  setInnerHtml("userPicture", `
-    <img id="userImage" src="assets/img/profile_picture.png" class="profile-photo" alt="profile photo">
-    <p class="image-caption" id="user-photo-caption"></p>`
-  );
   imgLoad(userPhotoURL).then(function(response){
     let imageURL = window.URL.createObjectURL(response);
     let userPhoto = document.getElementById('userImage');
