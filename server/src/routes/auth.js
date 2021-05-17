@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const path = require("path");
 const root = require("../util/root");
-const db = require("../models");
+const { sequelize } = require("../models");
+const models = sequelize.models;
 require("dotenv").config(path.join(root, ".env"));
 
 const GOOGLE_CLIENT_ID = process.env.CLIENT_ID;
@@ -32,35 +33,29 @@ module.exports = (passport) => {
           photoURL: profile.photos[0].value,
         };
 
-        db["User"]
-          .findAll({
-            where: {
+        models.User.findAll({
+          where: {
+            cEmail: loggedInUser.email,
+          },
+        }).then((users) => {
+          if (users.length == 0) {
+            models.User.create({
+              cFirstName: loggedInUser.firstName,
+              cLastName: loggedInUser.lastName,
               cEmail: loggedInUser.email,
-            },
-          })
-          .then((users) => {
-            if (users.length == 0) {
-              db["User"]
-                .create({
-                  cFirstName: loggedInUser.firstName,
-                  cLastName: loggedInUser.lastName,
-                  cEmail: loggedInUser.email,
-                  cProfilePicURL: loggedInUser.photoURL,
-                })
-                .then((createdUser) => {
-                  console.log(
-                    `Created new user with email ${createdUser.cEmail}`
-                  );
-                  return done(null, {
-                    id: createdUser.pkUser,
-                  });
-                });
-            } else {
-              console.log(`${loggedInUser.email} logged in`);
-              loggedInUser.id = users[0].pkUser;
-              return done(null, loggedInUser);
-            }
-          });
+              cProfilePicURL: loggedInUser.photoURL,
+            }).then((createdUser) => {
+              console.log(`Created new user with email ${createdUser.cEmail}`);
+              return done(null, {
+                id: createdUser.pkUser,
+              });
+            });
+          } else {
+            console.log(`${loggedInUser.email} logged in`);
+            loggedInUser.id = users[0].pkUser;
+            return done(null, loggedInUser);
+          }
+        });
       }
     )
   );
@@ -70,17 +65,15 @@ module.exports = (passport) => {
   });
 
   passport.deserializeUser(function (user, done) {
-    db["User"]
-      .findAll({
-        where: {
-          pkUser: user.id,
-        },
-      })
-      .then((users) => {
-        if (users.length > 0) {
-          done(null, user);
-        }
-      });
+    models.User.findAll({
+      where: {
+        pkUser: user.id,
+      },
+    }).then((users) => {
+      if (users.length > 0) {
+        done(null, user);
+      }
+    });
   });
 
   auth.get(
