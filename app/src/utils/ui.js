@@ -181,6 +181,11 @@ export function enableSendMessageBar() {
   );
   setOnClick("emojiButton", addSmiley);
   setOnClick("sendMessageButton", sendMessage);
+  document.querySelector("#messageToSend").addEventListener("keyup", event => {
+    if(event.key !== "Enter") return;
+    sendMessage(); 
+    event.preventDefault();
+});
 }
 
 export function enableSearchBar() {
@@ -209,6 +214,7 @@ export function setProfilePic(){
     let userPhoto = document.getElementById('userImage');
     userPhoto.src = imageURL;
     userPhoto.alt = firstName;
+    userPhoto.hidden = false;
     document.getElementById('user-photo-caption').innerHTML = firstName;
   }).catch(function(errorurl){
       console.log('Error loading ' + errorurl)
