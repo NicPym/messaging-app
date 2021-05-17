@@ -177,6 +177,7 @@ card {
 .icon-box{
   color: rgb(145,145,145);
   font-size:20px;
+  cursor: pointer;
 }
 
 .icon-box:active {
@@ -220,7 +221,8 @@ card {
   margin: 0 30px;
   font-size: 20px;
   text-decoration: none;
-  color: black
+  color: black;
+  cursor: pointer
 }
 
 .messages {
@@ -277,12 +279,18 @@ card {
 
 .conversation-container {
   padding: 15px 0;
+  cursor: pointer;
+}
+
+.conversation-container:hover {
+  backdrop-filter: brightness(94%);
 }
 
 .conversation-profile-pic {
   width: 50px;
   height: 50px;
   margin: 0 20px;
+  border-radius: 50%;
 }
 
 .conversation-profile-name {

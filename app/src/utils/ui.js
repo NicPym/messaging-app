@@ -8,8 +8,16 @@ import {
 } from "./helpers";
 import conversationService from "./conversationService";
 
-export function loadConversations(conversations) {
+export function loadConversations(conversations, filterValue) {
   console.log("Loading Conversations");
+
+  if (filterValue) {
+    conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
+  }
+
+  console.log("before", conversations);
+  conversations = conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
+  console.log("after", conversations);
 
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
@@ -188,7 +196,11 @@ export function enableSearchBar() {
       document.getElementById("searchOrCreateConversationInput").value
     )
   );
-  // TODO: search icon functionality
+  setOnClick("searchConversationsButton", () =>
+    conversationService.filterConversations(
+      document.getElementById("searchOrCreateConversationInput").value
+    )
+  );
 }
 
 export function setProfilePic(){
