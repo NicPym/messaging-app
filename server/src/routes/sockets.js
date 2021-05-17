@@ -48,6 +48,7 @@ module.exports = (server) => {
       const senderId = socketManager.getSocketClientId(socket.id);
       let destinationUserID;
       let senderUserName;
+      let senderProfilePicURL;
       let messageTimestamp;
 
       logger.log({
@@ -72,6 +73,7 @@ module.exports = (server) => {
                 ),
                 "Name",
               ],
+              "cProfilePicURL",
             ],
           },
         ],
@@ -79,20 +81,20 @@ module.exports = (server) => {
         .then((participants) => {
           if (participants.length > 0) {
             const { rows } = dataCleaner(participants);
-            console.log(rows);
 
             if (rows[0].fkUser == senderId) {
               destinationUserID = rows[1].fkUser;
               senderUserName = rows[0].Name;
+              senderProfilePicURL = rows[0].cProfilePicURL;
             } else if (rows[1].fkUser == senderId) {
               destinationUserID = rows[0].fkUser;
               senderUserName = rows[1].Name;
+              senderProfilePicURL = rows[1].cProfilePicURL;
             } else {
               throw new Error(
                 `User with ID ${senderId} is not in the conversation with ID ${message.conversationId}`
               );
             }
-
 
             return models.Message.create({
               cBody: message.body,
@@ -137,6 +139,7 @@ module.exports = (server) => {
                 .emit("new conversation", {
                   conversationId: message.conversationId,
                   conversationWith: senderUserName,
+                  conversationWithProfilePicURL: senderProfilePicURL,
                   messages: [
                     {
                       body: message.body,

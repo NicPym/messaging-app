@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
+      cProfilePicURL: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
       createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
       updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
     },

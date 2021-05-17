@@ -12,9 +12,8 @@ const GOOGLE_CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 let API_URL = "";
 
-if (process.env.NODE_ENV === 'development')
-  API_URL = "http://localhost:8080";
-else if (process.env.NODE_ENV === 'production')
+if (process.env.NODE_ENV === "development") API_URL = "http://localhost:8080";
+else if (process.env.NODE_ENV === "production")
   API_URL = "https://messaging-app-312521.ew.r.appspot.com";
 
 module.exports = (passport) => {
@@ -30,6 +29,7 @@ module.exports = (passport) => {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
+          photoURL: profile.photos[0].value,
         };
 
         db["User"]
@@ -45,6 +45,7 @@ module.exports = (passport) => {
                   cFirstName: loggedInUser.firstName,
                   cLastName: loggedInUser.lastName,
                   cEmail: loggedInUser.email,
+                  cProfilePicURL: loggedInUser.photoURL,
                 })
                 .then((createdUser) => {
                   console.log(
@@ -56,9 +57,8 @@ module.exports = (passport) => {
                 });
             } else {
               console.log(`${loggedInUser.email} logged in`);
-              return done(null, {
-                id: users[0].pkUser,
-              });
+              loggedInUser.id = users[0].pkUser;
+              return done(null, loggedInUser);
             }
           });
       }
@@ -98,6 +98,8 @@ module.exports = (passport) => {
         expiresIn: "12h",
       });
       res.cookie("token", token);
+      res.cookie("photo-url", req.user.photoURL);
+      res.cookie("firstName", req.user.firstName);
       res.redirect("/");
     }
   );

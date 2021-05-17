@@ -3,6 +3,8 @@ import {
   setInnerHtml, 
   setOnClick, 
   sendMessage,
+  imgLoad,
+  getCookie,
 } from "./helpers";
 import conversationService from "./conversationService";
 
@@ -13,9 +15,7 @@ export function loadConversations(conversations, filterValue) {
     conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
   }
 
-  console.log("before", conversations);
   conversations = conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
-  console.log("after", conversations);
 
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
@@ -200,3 +200,17 @@ export function enableSearchBar() {
     )
   );
 }
+
+export function setProfilePic(){
+  let userPhotoURL = getCookie("photo-url");
+  let firstName = getCookie("firstName");
+  imgLoad(userPhotoURL).then(function(response){
+    let imageURL = window.URL.createObjectURL(response);
+    let userPhoto = document.getElementById('userImage');
+    userPhoto.src = imageURL;
+    userPhoto.alt = firstName;
+    document.getElementById('user-photo-caption').innerHTML = firstName;
+  }).catch(function(errorurl){
+      console.log('Error loading ' + errorurl)
+  })
+} 

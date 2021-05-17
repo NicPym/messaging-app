@@ -13,7 +13,15 @@ require("dotenv").config({ path: path.join(root, ".env") });
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "connect-src": ["'self'", "lh3.googleusercontent.com"], // allow downloading user profile images
+      "img-src": ["'self'", "data:", "blob:"],
+    },
+  })
+);
 app.use(
   cors({
     origin: "*",

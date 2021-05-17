@@ -141,6 +141,14 @@ card {
   margin: 0 10px;
 }
 
+.profile-pic {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: 0 10px;
+  border-radius: 50%;
+}
+
 .title {
   font-family: RobotoRegular;
   font-size: 20px;
@@ -195,7 +203,7 @@ card {
 
 .login-button {
   font-family: RobotoLight;
-  margin: 0 30px;
+  margin: 0 10px;
   font-size: 20px;
   text-decoration: none;
   color: black;
@@ -264,8 +272,8 @@ card {
 }
 
 .conversation-profile-pic {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   margin: 0 20px;
   border-radius: 50%;
 }

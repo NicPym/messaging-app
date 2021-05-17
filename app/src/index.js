@@ -10,6 +10,7 @@ import {
 import { 
   getHeaderWithoutUserHtml,
   enableSearchBar,
+  setProfilePic,
 } from "./utils/ui";
 
 const token = getToken();
@@ -29,6 +30,7 @@ if (token) {
   );
   socketManager.registerEvent("new conversation", (conversation) => conversationService.newConversation(conversation));
   conversationService.loadConversations();
+  setProfilePic();
 } else {
   setInnerHtml(
     "personTo",
