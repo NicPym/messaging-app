@@ -30,7 +30,6 @@ module.exports = (passport) => {
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
           photoURL: profile.photos[0].value,
-          googleId: profile.id,
         };
 
         db["User"]
