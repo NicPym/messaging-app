@@ -194,9 +194,13 @@ export function enableSearchBar() {
 export function setProfilePic(){
   let userPhotoURL = getCookie("photo-url");
   let firstName = getCookie("firstName");
+  setInnerHtml("userPicture", `
+    <img id="userImage" src="assets/img/profile_picture.png" class="profile-photo" alt="profile photo">
+    <p class="image-caption" id="user-photo-caption"></p>`
+  );
   imgLoad(userPhotoURL).then(function(response){
     let imageURL = window.URL.createObjectURL(response);
-    let userPhoto = document.getElementById('user-photo');
+    let userPhoto = document.getElementById('userImage');
     userPhoto.src = imageURL;
     userPhoto.alt = firstName;
     document.getElementById('user-photo-caption').innerHTML = firstName;
