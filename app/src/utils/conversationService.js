@@ -5,13 +5,9 @@ import {
   validSearchOrEmail,
   displayMessage,
   setHeaderWithUserHtml,
-  showNotification
+  showNotification,
 } from "./ui";
-import { 
-  formatDate, 
-  logout, 
-  getToken,
-} from "./helpers";
+import { formatDate, logout, getToken } from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
@@ -34,6 +30,7 @@ class ConversationService {
       .then((res) => res.json())
       .then((body) => {
         this.conversations = body.data;
+        console.log(body.data);
         loadConversations(this.conversations);
       })
       .catch((err) => {
@@ -43,7 +40,7 @@ class ConversationService {
   }
 
   createConversation(recipientEmail) {
-    console.log('Create conversation', recipientEmail);
+    console.log("Create conversation", recipientEmail);
     fetch(`/conversations/createConversation/${recipientEmail}`, {
       method: "POST",
       headers: new Headers({
@@ -76,15 +73,16 @@ class ConversationService {
     };
 
     this.conversations
-      .find((conversation) => conversation.conversationId === message.conversationId)
+      .find(
+        (conversation) => conversation.conversationId === message.conversationId
+      )
       .messages.push(newMessage);
 
     loadConversations(this.conversations);
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
-    }
-    else {
+    } else {
       showNotification(message.conversationId);
     }
   }

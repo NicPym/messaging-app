@@ -12,9 +12,8 @@ const GOOGLE_CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 let API_URL = "";
 
-if (process.env.NODE_ENV === 'development')
-  API_URL = "http://localhost:8080";
-else if (process.env.NODE_ENV === 'production')
+if (process.env.NODE_ENV === "development") API_URL = "http://localhost:8080";
+else if (process.env.NODE_ENV === "production")
   API_URL = "https://messaging-app-312521.ew.r.appspot.com";
 
 module.exports = (passport) => {
@@ -47,6 +46,7 @@ module.exports = (passport) => {
                   cFirstName: loggedInUser.firstName,
                   cLastName: loggedInUser.lastName,
                   cEmail: loggedInUser.email,
+                  cProfilePicURL: loggedInUser.photoURL,
                 })
                 .then((createdUser) => {
                   console.log(
@@ -98,11 +98,9 @@ module.exports = (passport) => {
       const token = jwt.sign(req.user, SECRET, {
         expiresIn: "12h",
       });
-      console.log(req.user);
       res.cookie("token", token);
       res.cookie("photo-url", req.user.photoURL);
       res.cookie("firstName", req.user.firstName);
-      
       res.redirect("/");
     }
   );

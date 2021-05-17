@@ -172,6 +172,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
                       ),
                       "Name",
                     ],
+                    "cProfilePicURL",
                   ],
                 },
               ],
@@ -192,6 +193,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
           conversations.push({
             conversationId: conversationIds[i],
             conversationWith: rows[0].Name,
+            conversationWithProfilePicURL: rows[0].cProfilePicURL,
             messages: [],
           });
 
@@ -250,6 +252,7 @@ conversations.post(
     let conversationId;
     let recipientId;
     let recipientName;
+    let recipientProfilePicURL;
 
     models.User.findAll({
       where: { cEmail: req.params.recipientEmail },
@@ -264,6 +267,7 @@ conversations.post(
           ),
           "Name",
         ],
+        "cProfilePicURL",
       ],
     })
       .then((users) => {
@@ -272,6 +276,7 @@ conversations.post(
         if (users.length > 0 && rows[0].pkUser != req.token.id) {
           recipientName = rows[0].Name;
           recipientId = rows[0].pkUser;
+          recipientProfilePicURL = rows[0].cProfilePicURL;
 
           return models.Participant.findAll({
             attributes: [
@@ -333,6 +338,7 @@ conversations.post(
           data: {
             conversationId: conversationId,
             conversationWith: recipientName,
+            conversationWithProfilePicURL: recipientProfilePicURL,
             messages: [],
           },
         });
