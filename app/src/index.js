@@ -5,40 +5,36 @@ import {
   setOnClick,
   login,
   logout,
+  getToken
 } from "./utils/helpers";
 import { getHeaderWithoutUserHtml } from "./utils/ui";
-import getToken from "./utils/token";
 
-function init() {
-  const token = getToken();
+const token = getToken();
 
-  if (token) {
-    setInnerHtml(
-      "personTo",
-      getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
-    );
-    setInnerHtml("loginBtn", "Logout");
-    setOnClick("loginBtn", logout);
-    setOnClick("addConversationButton", () =>
-      conversationService.createConversation(
-        document.getElementById("searchOrCreateConversationInput").value
-      )
-    );
+if (token) {
+  setInnerHtml(
+    "personTo",
+    getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
+  );
+  setInnerHtml("loginBtn", "Logout");
+  setOnClick("loginBtn", logout);
+  setOnClick("addConversationButton", () =>
+    conversationService.createConversation(
+      document.getElementById("searchOrCreateConversationInput").value
+    )
+  );
 
-    socketManager.connect();
-    socketManager.registerEvent("new message", (message) =>
-      conversationService.messageReceived(message)
-    );
-    socketManager.registerEvent("new conversation", (conversation) => conversationService.newConversation(conversation));
-    conversationService.loadConversations();
-  } else {
-    setInnerHtml(
-      "personTo",
-      getHeaderWithoutUserHtml("Login to see conversations and messages!")
-    );
-    setInnerHtml("loginBtn", "Login");
-    setOnClick("loginBtn", login);
-  }
+  socketManager.connect();
+  socketManager.registerEvent("new message", (message) =>
+    conversationService.messageReceived(message)
+  );
+  socketManager.registerEvent("new conversation", (conversation) => conversationService.newConversation(conversation));
+  conversationService.loadConversations();
+} else {
+  setInnerHtml(
+    "personTo",
+    getHeaderWithoutUserHtml("Login to see conversations and messages!")
+  );
+  setInnerHtml("loginBtn", "Login");
+  setOnClick("loginBtn", login);
 }
-
-init();

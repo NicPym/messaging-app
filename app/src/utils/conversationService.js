@@ -1,16 +1,14 @@
 import {
-  displayConversation,
   loadConversations,
   loadMessages,
   invalidEmail,
-  clearSearchInput,
+  validSearchOrEmail,
   displayMessage,
   setHeaderWithUserHtml,
   showNotification
 } from "./ui";
-import { formatDate, logout } from "./helpers";
+import { formatDate, logout, getToken } from "./helpers";
 import socketManager from "./socketManager";
-import getToken from "./token";
 
 class ConversationService {
   constructor() {
@@ -55,7 +53,7 @@ class ConversationService {
       .then((body) => {
         console.log(body);
         this.conversations.push(body.data);
-        clearSearchInput();
+        validSearchOrEmail();
         loadConversations(this.conversations);
       })
       .catch((err) => {
@@ -90,23 +88,23 @@ class ConversationService {
   sendMessage(body) {
     let date = formatDate(new Date());
 
-    let messsage = {
+    let message = {
       conversationId: this.currentConversationId,
       body: body,
       timestamp: date,
     };
 
     console.log(`sending message: ${body}`);
-    socketManager.sendMessage(messsage);
+    socketManager.sendMessage(message);
 
     this.conversations
       .find(
         (conversation) =>
           conversation.conversationId === this.currentConversationId
       )
-      .messages.push(messsage);
+      .messages.push(message);
 
-    displayMessage(messsage);
+    displayMessage(message);
   }
 
   newConversation(conversation) {
@@ -122,6 +120,8 @@ class ConversationService {
     setHeaderWithUserHtml(conversation.conversationWith);
     loadMessages(conversation.messages);
   }
+
+  // TODO: search/filter conversations
 }
 
 export default new ConversationService();

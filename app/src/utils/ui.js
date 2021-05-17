@@ -22,29 +22,34 @@ export function loadConversations(conversations) {
 }
 
 export function displayConversation(conversation) {
-  let id = `conversation-${conversation.conversationId}`;
   appendHtml(
     "conversations",
-    getConversationHtml(id, conversation.conversationWith)
+    getConversationHtml(conversation.conversationId, conversation.conversationWith)
   );
 }
 
 export function getConversationHtml(id, name) {
   return `
-        <li id="${id}" class="flex-row align-items-center conversation-container">
+        <li id="conversation-${id}" class="flex-row align-items-center conversation-container">
             <img src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
             <fill></fill>
-            <p id="${id}-notification" class="notification-icon" hidden></p>
+            <p id="conversation-${id}-notification" class="notification-icon" hidden></p>
         </li>`;
 }
 
 export function showNotification(id) {
-  document.getElementById(`conversation-${id}-notification`).hidden = false;
+  let icon = document.getElementById(`conversation-${id}-notification`);
+  if (icon) {
+    icon.hidden = false;
+  }
 }
 
 export function hideNotification(id) {
-  document.getElementById(`conversation-${id}-notification`).hidden = true;
+  let icon = document.getElementById(`conversation-${id}-notification`);
+  if (icon) {
+    icon.hidden = true;
+  }
 }
 
 export function loadMessages(messages) {
@@ -115,8 +120,11 @@ export function displayMessage(message) {
 }
 
 export function addSmiley() {
-  document.getElementById("messageToSend").value +=
-    String.fromCodePoint("0X1F600"); // TODO: may case problems with SQL
+  let input = document.getElementById("messageToSend")
+  if (input) {
+    input.value += ":)";
+    // input.value += String.fromCodePoint("0X1F600"); // TODO: Smiley emoji causes problems with SQL
+  }
 }
 
 export function clearMessages() {
@@ -131,17 +139,25 @@ export function clearConversations() {
 
 export function scrollToBottomOfMessages() {
   let element = document.getElementById("messages");
-  element.scrollTop = element.scrollHeight;
+  if (element) {
+    element.scrollTop = element.scrollHeight;
+  }
 }
 
 export function invalidEmail() {
   let input = document.getElementById("searchOrCreateConversationInput");
-  input.value = "";
-  input.placeholder = "Not a valid email address";
+  if (input) {
+    input.value = "";
+    input.placeholder = "Not a valid email address";
+  }
 }
 
-export function clearSearchInput() {
-  document.getElementById("searchOrCreateConversationInput").value = "";
+export function validSearchOrEmail() {
+  let input = document.getElementById("searchOrCreateConversationInput");
+  if (input) {
+    input.value = "";
+    input.placeholder = "Search or start new conversation";
+  }
 }
 
 export function enableSendMessageBar() {
@@ -153,5 +169,3 @@ export function enableSendMessageBar() {
   setOnClick("emojiButton", addSmiley);
   setOnClick("sendMessageButton", sendMessage);
 }
-
-// TODO: Fix search input on success.

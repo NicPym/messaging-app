@@ -1,13 +1,5 @@
 import conversationService from "./conversationService";
 
-export function getInnerHtml(id) {
-  return document.getElementById(id).innerHTML;
-}
-
-export function setInnerHtml(id, html) {
-  document.getElementById(id).innerHTML = html;
-}
-
 export function getCookie(cname) {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
@@ -29,22 +21,36 @@ export function deleteAllCookies() {
   for (let cookie of cookies) {
     let eqPos = cookie.indexOf("=");
     let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT"; // omg lol
+  }
+}
+
+export function setInnerHtml(id, html) {
+  let element = document.getElementById(id);
+  if (element) {
+    element.innerHTML = html;
   }
 }
 
 export function prependHtml(id, html) {
-  document.getElementById(id).innerHTML =
-    html + document.getElementById(id).innerHTML;
+  let element = document.getElementById(id);
+  if (element && html) {
+    element.innerHTML = html + element.innerHTML;
+  }
 }
 
 export function appendHtml(id, html) {
-  document.getElementById(id).innerHTML =
-    document.getElementById(id).innerHTML + html;
+  let element = document.getElementById(id);
+  if (element && html) {
+    element.innerHTML = element.innerHTML + html;
+  }
 }
 
 export function setOnClick(id, callback) {
-  document.getElementById(id).onclick = callback;
+  let element = document.getElementById(id);
+  if (element && callback) {
+    element.onclick = callback;
+  }
 }
 
 export function formatDate(date) {
@@ -65,8 +71,14 @@ export function logout() {
 
 export function sendMessage() {
   let input = document.getElementById("messageToSend");
-  conversationService.sendMessage(
-    input.value
-  );
-  input.value = "";
+  if (input) {
+    conversationService.sendMessage(
+      input.value
+    );
+    input.value = "";
+  }
+}
+
+export function getToken() {
+  return getCookie("token");
 }

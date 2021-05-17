@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import getToken from "./token";
+import { getToken } from "./helpers";
 
 class SocketManager {
   constructor() {
