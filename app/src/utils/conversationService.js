@@ -7,7 +7,11 @@ import {
   setHeaderWithUserHtml,
   showNotification
 } from "./ui";
-import { formatDate, logout, getToken } from "./helpers";
+import { 
+  formatDate, 
+  logout, 
+  getToken,
+} from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {

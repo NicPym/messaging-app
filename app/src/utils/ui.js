@@ -1,4 +1,9 @@
-import { appendHtml, setInnerHtml, setOnClick, sendMessage } from "./helpers";
+import { 
+  appendHtml, 
+  setInnerHtml, 
+  setOnClick, 
+  sendMessage,
+} from "./helpers";
 import conversationService from "./conversationService";
 
 export function loadConversations(conversations) {
@@ -168,4 +173,18 @@ export function enableSendMessageBar() {
   );
   setOnClick("emojiButton", addSmiley);
   setOnClick("sendMessageButton", sendMessage);
+}
+
+export function enableSearchBar() {
+  setInnerHtml("searchBar", `
+    <p id="searchConversationsButton" class="search-icon icon-box"></p>
+    <input class="flex-fill" id="searchOrCreateConversationInput" placeholder="Search or start new conversation" type="text">
+    <p id="addConversationButton" class="plus-icon icon-box"></p>`
+  );
+  setOnClick("addConversationButton", () =>
+    conversationService.createConversation(
+      document.getElementById("searchOrCreateConversationInput").value
+    )
+  );
+  // TODO: search icon functionality
 }

@@ -5,9 +5,12 @@ import {
   setOnClick,
   login,
   logout,
-  getToken
+  getToken,
 } from "./utils/helpers";
-import { getHeaderWithoutUserHtml } from "./utils/ui";
+import { 
+  getHeaderWithoutUserHtml,
+  enableSearchBar,
+} from "./utils/ui";
 
 const token = getToken();
 
@@ -18,11 +21,7 @@ if (token) {
   );
   setInnerHtml("loginBtn", "Logout");
   setOnClick("loginBtn", logout);
-  setOnClick("addConversationButton", () =>
-    conversationService.createConversation(
-      document.getElementById("searchOrCreateConversationInput").value
-    )
-  );
+  enableSearchBar();
 
   socketManager.connect();
   socketManager.registerEvent("new message", (message) =>
