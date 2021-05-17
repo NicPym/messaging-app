@@ -81,7 +81,6 @@ module.exports = (server) => {
         .then((participants) => {
           if (participants.length > 0) {
             const { rows } = dataCleaner(participants);
-            console.log(rows);
 
             if (rows[0].fkUser == senderId) {
               destinationUserID = rows[1].fkUser;

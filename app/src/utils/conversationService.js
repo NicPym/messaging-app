@@ -30,7 +30,6 @@ class ConversationService {
       .then((res) => res.json())
       .then((body) => {
         this.conversations = body.data;
-        console.log(body.data);
         loadConversations(this.conversations);
       })
       .catch((err) => {
