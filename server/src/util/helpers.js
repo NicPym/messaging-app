@@ -98,24 +98,24 @@ exports.formatDate = (date, type) => {
     date = new Date(date);
     switch (type) {
       case "date":
-        retVal += `${date.getFullYear()}/`;
+        retVal += `${date.getFullYear()}-`;
         retVal +=
           date.getMonth() + 1 < 10
-            ? `0${date.getMonth() + 1}/`
-            : `${date.getMonth() + 1}/`;
+            ? `0${date.getMonth() + 1}-`
+            : `${date.getMonth() + 1}-`;
         retVal +=
           date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
 
         break;
 
       case "dateTime":
-        retVal += `${date.getFullYear()}/`;
+        retVal += `${date.getFullYear()}-`;
         retVal +=
           date.getMonth() + 1 < 10
-            ? `0${date.getMonth() + 1}/`
-            : `${date.getMonth() + 1}/`;
+            ? `0${date.getMonth() + 1}-`
+            : `${date.getMonth() + 1}-`;
         retVal +=
-          date.getDate() < 10 ? `0${date.getDate()}, ` : `${date.getDate()}, `;
+          date.getDate() < 10 ? `0${date.getDate()}, ` : `${date.getDate()} `;
         retVal +=
           date.getHours() < 10 ? `0${date.getHours()}:` : `${date.getHours()}:`;
         retVal +=
@@ -138,4 +138,24 @@ exports.formatDate = (date, type) => {
     }
   }
   return retVal;
+};
+
+exports.imgLoad2url = (url) => {
+  return new Promise(function(resolve, reject) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.responseType = 'blob';
+    request.onload = function() {
+      if (request.status === 200) {
+        resolve(request.response);
+      } else {
+        reject(Error('Image didn\'t load successfully; error code:' 
+                     + request.statusText));
+      }
+    };
+    request.onerror = function() {
+      reject(Error('There was a network error.'));
+    };
+    request.send();
+  });
 };

@@ -1,18 +1,19 @@
 import { io } from "socket.io-client";
+import { getToken } from "./helpers";
 
 class SocketManager {
   constructor() {
     this.socket = null;
   }
 
-  connect(token) {
+  connect() {
     let url = location.hostname;
     if (location.port.length > 0)
       url += `:${location.port}`;
 
     this.socket = io(url, {
       auth: {
-        token: token,
+        token: getToken(),
       },
     });
   }

@@ -102,6 +102,7 @@ module.exports = (passport) => {
       res.cookie("token", token);
       res.cookie("photo-url", req.user.photoURL);
       res.cookie("firstName", req.user.firstName);
+      
       res.redirect("/");
     }
   );

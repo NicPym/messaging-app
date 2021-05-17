@@ -37,7 +37,7 @@ app.use("/", express.static(path.join(root, "public")));
 app.use("/", express.static(path.join(root, "..", "app", "dist")));
 
 app.use("/auth", require("./routes/auth")(passport));
-app.use("/chats", require("./routes/chats"));
+app.use("/conversations", require("./routes/conversations"));
 
 // Last 'use' call
 app.use((error, req, res, next) => {
