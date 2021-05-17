@@ -123,7 +123,9 @@ class ConversationService {
     loadMessages(conversation.messages);
   }
 
-  // TODO: search/filter conversations
+  filterConversations(filterValue) {
+    loadConversations(this.conversations, filterValue);
+  }
 }
 
 export default new ConversationService();

@@ -8,8 +8,14 @@ import {
 } from "./helpers";
 import conversationService from "./conversationService";
 
-export function loadConversations(conversations) {
+export function loadConversations(conversations, filterValue) {
   console.log("Loading Conversations");
+
+  if (filterValue) {
+    conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
+  }
+
+  conversations = conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
 
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
@@ -188,16 +194,16 @@ export function enableSearchBar() {
       document.getElementById("searchOrCreateConversationInput").value
     )
   );
-  // TODO: search icon functionality
+  setOnClick("searchConversationsButton", () =>
+    conversationService.filterConversations(
+      document.getElementById("searchOrCreateConversationInput").value
+    )
+  );
 }
 
 export function setProfilePic(){
   let userPhotoURL = getCookie("photo-url");
   let firstName = getCookie("firstName");
-  setInnerHtml("userPicture", `
-    <img id="userImage" src="assets/img/profile_picture.png" class="profile-photo" alt="profile photo">
-    <p class="image-caption" id="user-photo-caption"></p>`
-  );
   imgLoad(userPhotoURL).then(function(response){
     let imageURL = window.URL.createObjectURL(response);
     let userPhoto = document.getElementById('userImage');
