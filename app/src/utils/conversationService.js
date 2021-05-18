@@ -6,6 +6,7 @@ import {
   displayMessage,
   setHeaderWithUserHtml,
   showNotification,
+  setActiveProfilePicture,
 } from "./ui";
 import { formatDate, logout, getToken } from "./helpers";
 import socketManager from "./socketManager";
@@ -120,6 +121,7 @@ class ConversationService {
     );
     setHeaderWithUserHtml(conversation.conversationWith);
     loadMessages(conversation.messages);
+    setActiveProfilePicture(conversation);
   }
 
   filterConversations(filterValue) {

@@ -6,11 +6,12 @@ import {
   login,
   logout,
   getToken,
+  getCookie,
 } from "./utils/helpers";
 import { 
   getHeaderWithoutUserHtml,
   enableSearchBar,
-  setProfilePic,
+  setProfilePicture,
 } from "./utils/ui";
 
 const token = getToken();
@@ -30,7 +31,8 @@ if (token) {
   );
   socketManager.registerEvent("new conversation", (conversation) => conversationService.newConversation(conversation));
   conversationService.loadConversations();
-  setProfilePic();
+  let profilePicUrl = getCookie("profilePicUrl"); 
+  setProfilePicture("userPicture", profilePicUrl, "me");
 } else {
   setInnerHtml(
     "personTo",
