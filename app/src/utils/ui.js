@@ -4,7 +4,6 @@ import {
   setOnClick, 
   sendMessage,
   imgLoad,
-  getCookie,
 } from "./helpers";
 import conversationService from "./conversationService";
 
@@ -20,6 +19,7 @@ export function loadConversations(conversations, filterValue) {
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
     displayConversation(conversation);
+    setConversationPicture(conversation);
   });
 
   // have to set callback afterwards else appendHtml erases them
@@ -44,7 +44,7 @@ export function displayConversation(conversation) {
 export function getConversationHtml(id, name) {
   return `
         <li id="conversation-${id}" class="flex-row align-items-center conversation-container">
-            <img src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
+            <img id="conversation-${id}-picture" src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
             <fill></fill>
             <p id="conversation-${id}-notification" class="notification-icon" hidden></p>
@@ -83,7 +83,7 @@ export function getHeaderWithoutUserHtml(message) {
 
 export function getHeaderWithUsernameHtml(username) {
   return `
-        <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
+        <img id="active-profile-pic" src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
         <label class="active-profile-name">${username}</label>`;
 }
 
@@ -206,17 +206,30 @@ export function enableSearchBar() {
   );
 }
 
-export function setProfilePic(){
-  let userPhotoURL = getCookie("photo-url");
-  let firstName = getCookie("firstName");
-  imgLoad(userPhotoURL).then(function(response){
+export function setConversationPicture(conversation){
+  setProfilePicture(
+    `conversation-${conversation.conversationId}-picture`, 
+    conversation.conversationWithProfilePicURL,
+    conversation.conversationWith
+    )
+}
+
+export function setProfilePicture(id, userProfilePictureURL, userName){
+  imgLoad(userProfilePictureURL).then(function(response){
     let imageURL = window.URL.createObjectURL(response);
-    let userPhoto = document.getElementById('userImage');
-    userPhoto.src = imageURL;
-    userPhoto.alt = firstName;
-    userPhoto.hidden = false;
-    document.getElementById('user-photo-caption').innerHTML = firstName;
+    let userImage = document.getElementById(id);
+    userImage.src = imageURL;
+    userImage.alt = userName;
+    userImage.hidden = false;
   }).catch(function(errorurl){
       console.log('Error loading ' + errorurl)
   })
 } 
+
+export function setActiveProfilePicture(conversation){
+  // this image should already have been downloaded
+  let id = `conversation-${conversation.conversationId}-picture`;
+  let userImage = document.getElementById(id);
+  let activeImage = document.getElementById("active-profile-pic");
+  activeImage.src = userImage.src;
+}
