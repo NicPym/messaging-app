@@ -83,7 +83,7 @@ export function getHeaderWithoutUserHtml(message) {
 
 export function getHeaderWithUsernameHtml(username) {
   return `
-        <img src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
+        <img id="active-profile-pic" src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
         <label class="active-profile-name">${username}</label>`;
 }
 
@@ -225,3 +225,11 @@ export function setProfilePicture(id, userProfilePictureURL, userName){
       console.log('Error loading ' + errorurl)
   })
 } 
+
+export function setActiveProfilePicture(conversation){
+  // this image should already have been downloaded
+  let id = `conversation-${conversation.conversationId}-picture`;
+  let userImage = document.getElementById(id);
+  let activeImage = document.getElementById("active-profile-pic");
+  activeImage.src = userImage.src;
+}
