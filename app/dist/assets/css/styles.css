@@ -94,17 +94,17 @@ card {
 
 .green-background-bar {
   height: 25vh;
-  background-color: rgb(0,150,136);
+  background-color: rgb(0, 150, 136);
 }
 
 .grey-background-bar {
   height: 75vh;
-  background-color: rgb(233,233,233);
+  background-color: rgb(233, 233, 233);
 }
 
 .dashboard {
   position: relative;
-  box-shadow: 2px 2px 5px rgb(135,135,135);
+  box-shadow: 2px 2px 5px rgb(135, 135, 135);
   height: 90vh;
   top: 5vh;
   width: 90%;
@@ -117,7 +117,7 @@ card {
 
 .main-bar {
   min-height: 60px;
-  background-color: rgb(238,238,238);
+  background-color: rgb(238, 238, 238);
 }
 
 .right-top-corner {
@@ -155,12 +155,12 @@ card {
 
 .search-bar {
   min-height: 50px;
-  background-color: rgb(255,255,255);
+  background-color: rgb(255, 255, 255);
 }
 
-.icon-box{
-  color: rgb(145,145,145);
-  font-size:20px;
+.icon-box {
+  color: rgb(145, 145, 145);
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -170,22 +170,22 @@ card {
 
 .search-icon::before {
   font-family: "Font Awesome 5 Free Solid";
-  height:20px;
-  width:20px;
-  margin:0 20px;
+  height: 20px;
+  width: 20px;
+  margin: 0 20px;
   content: "\f002";
 }
 
 .plus-icon::before {
   font-family: "Font Awesome 5 Free Solid";
-  height:20px;
-  width:20px;
-  margin:0 20px;
+  height: 20px;
+  width: 20px;
+  margin: 0 20px;
   content: "\f067";
 }
 
 .conversations-bar {
-  background-color: rgb(255,255,255);
+  background-color: rgb(255, 255, 255);
 }
 
 .active-profile-pic {
@@ -206,38 +206,38 @@ card {
   font-size: 20px;
   text-decoration: none;
   color: black;
-  cursor: pointer
+  cursor: pointer;
 }
 
 .messages {
-  background-color: rgb(230,223,217);
+  background-color: rgb(230, 223, 217);
 }
 
 .emoji-icon::before {
   font-family: "Font Awesome 5 Free";
-  margin:0 20px;
+  margin: 0 20px;
   content: "\f580";
   font-style: normal;
 }
 
 .send-icon::before {
   font-family: "Font Awesome 5 Free Solid";
-  margin:0 20px;
+  margin: 0 20px;
   content: "\f1d8";
 }
 
 .message-received-card {
-  margin: 20px;
+  margin: 8px 20px;
   max-width: 50%;
-  background-color: rgb(255,255,255);
-  box-shadow: 1px 1px 5px rgb(135,135,135);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 5px rgb(135, 135, 135);
 }
 
 .message-sent-card {
-  margin: 20px;
+  margin: 8px 20px;
   max-width: 50%;
-  background-color: rgb(220,248,198);
-  box-shadow: 1px 1px 5px rgb(135,135,135)
+  background-color: rgb(220, 248, 198);
+  box-shadow: 1px 1px 5px rgb(135, 135, 135);
 }
 
 .message-body-container {
@@ -284,9 +284,9 @@ card {
 
 .notification-icon::before {
   font-family: "Font Awesome 5 Free Solid";
-  height:20px;
-  width:20px;
-  margin:0 20px;
+  height: 20px;
+  width: 20px;
+  margin: 0 20px;
   content: "\f075";
   color: rgb(228, 129, 0);
 }
