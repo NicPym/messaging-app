@@ -7,7 +7,6 @@ import {
   displayMessage,
   setHeaderWithUserHtml,
   showNotification,
-  incrementNotification,
   setActiveProfilePicture,
 } from "./ui";
 import { formatDate, logout, getToken } from "./helpers";
@@ -85,11 +84,10 @@ class ConversationService {
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
-      setAllMessageToReadInConversation(message.conversationId);
+      this.setAllMessageToReadInConversation(message.conversationId);
     } else {
       conversation.unreadMessages++;
-      showNotification(message.conversationId);
-      incrementNotification(message.conversationId);
+      showNotification(message.conversationId, conversation.unreadMessages);
     }
   }
 
@@ -118,7 +116,6 @@ class ConversationService {
   newConversation(conversation) {
     this.conversations.push(conversation);
     displayActiveConversations(this.conversations);
-    showNotification(conversation.conversationId);
   }
 
   selectConversation(conversationId) {
@@ -130,7 +127,7 @@ class ConversationService {
     loadMessages(conversation.messages);
     setActiveProfilePicture(conversation);
 
-    setAllMessageToReadInConversation(conversationId);
+    this.setAllMessageToReadInConversation(conversationId);
   }
 
   filterConversations(filterValue) {
@@ -148,8 +145,11 @@ class ConversationService {
       .catch((err) => {
         console.log(err);
       });
-    
-    this.conversations.find(conversation => conversation.conversationId === conversationId)?.unreadMessages = 0;
+
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === conversationId
+    );
+    if (conversation) conversation.unreadMessages = 0;
   }
 }
 

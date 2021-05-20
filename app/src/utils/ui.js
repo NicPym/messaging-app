@@ -19,6 +19,9 @@ export function displayActiveConversations(conversations, filterValue) {
   conversations.forEach((conversation) => {
     displayConversation(conversation);
     setConversationPicture(conversation);
+    if (conversation.unreadMessages > 0){
+      showNotification(conversation.conversationId, conversation.unreadMessages);
+    }
   });
 
   // have to set callback afterwards else appendHtml erases them
@@ -76,10 +79,12 @@ export function getConversationHtml(id, name) {
         </li>`;
 }
 
-export function showNotification(id) {
+export function showNotification(id, countUnreadMessages) {
   let icon = document.getElementById(`conversation-${id}-notification`);
   if (icon) {
     icon.hidden = false;
+    let txt = document.getElementById(`conversation-${id}-notification-text`);
+    txt.innerText = countUnreadMessages;
   }
 }
 
@@ -90,11 +95,6 @@ export function resetNotification(id) {
     txt.innerText = "0";
     icon.hidden = true;
   }
-}
-
-export function incrementNotification(id){
-  let txt = document.getElementById(`conversation-${id}-notification-text`);
-  txt.innerText = +txt.innerText + 1;
 }
 
 export function loadMessages(messages) {
