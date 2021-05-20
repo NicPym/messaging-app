@@ -76,11 +76,10 @@ class ConversationService {
       received: message.received,
     };
 
-    this.conversations
-      .find(
-        (conversation) => conversation.conversationId === message.conversationId
-      )
-      .messages.push(newMessage);
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === message.conversationId
+    );
+    conversation.messages.push(newMessage);
 
     sortConversations(this.conversations);
 
@@ -88,6 +87,7 @@ class ConversationService {
       displayMessage(newMessage);
       setAllMessageToReadInConversation(message.conversationId);
     } else {
+      conversation.unreadMessages++;
       showNotification(message.conversationId);
       incrementNotification(message.conversationId);
     }
@@ -148,6 +148,8 @@ class ConversationService {
       .catch((err) => {
         console.log(err);
       });
+    
+    this.conversations.find(conversation => conversation.conversationId === conversationId)?.unreadMessages = 0;
   }
 }
 
