@@ -106,7 +106,10 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
           }
         }
       }
-
+        logger.log({
+            logger: "info",
+            message: '[socket.js],\tGot all conversations for ${req.user.id}',
+        });
       res.status(200).json({
         message: "Got all user conversations",
         success: true,
@@ -115,7 +118,11 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
         ),
       });
     })
-    .catch((reason) => {
+      .catch((reason) => {
+          logger.log({
+              logger: "error",
+              message: '[socket.js],\tFailed to get all conversations for ${req.user.id},',
+          });
       if (!reason.statusCode) {
         reason.statusCode = 500;
       }
@@ -209,7 +216,11 @@ conversations.post(
           ]);
         }
       })
-      .then((_) => {
+        .then((_) => {
+            logger.log({
+                logger: "info",
+                message: '[socket.js]\tCreated Conversation for ${req.user.id}',
+            });
         res.status(200).json({
           message: "Created Conversation",
           success: true,
@@ -266,13 +277,21 @@ conversations.post(
           throw new Error("Invalid Conversation ID");
         }
       })
-      .then((updates) => {
+        .then((updates) => {
+            logger.log({
+                logger: "info",
+                message: '[socket.js]\tMessages updated to read for ${req.user.conversationId}',
+            });
         res.status(200).json({
           message: "Updated all messages to read",
           success: true,
         });
       })
-      .catch((reason) => {
+        .catch((reason) => {
+            logger.log({
+                logger: "error",
+                message: '[socket.js]\tFailed to update messages to read for ${req.user.conversationId}',
+            });
         if (!reason.statusCode) {
           reason.statusCode = 500;
         }
