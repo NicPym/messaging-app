@@ -62,7 +62,7 @@ export function setOnInput(id, callback) {
 }
 
 export function formatDate(date) {
-  return dateFormat(date, "yyyy-mm-dd HH:MM");
+  return dateFormat(date, "yyyy/mm/dd HH:MM");
 }
 
 export function login() {
