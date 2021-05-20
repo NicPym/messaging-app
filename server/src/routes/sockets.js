@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const socketManager = require("../util/socketManager");
 const { sequelize } = require("../models");
+const { dataCleaner, formatDate } = require("../util/helpers");
 const models = sequelize.models;
 
 module.exports = (server) => {
@@ -31,61 +32,132 @@ module.exports = (server) => {
   io.on("connect", (socket) => {
     logger.log({
       logger: "info",
-      message: `[sockets.js]\tNew client connected using websocket`,
+      message: `[sockets.js]\tNew client with id ${socketManager.getSocketClientId(
+        socket.id
+      )} connected using websocket`,
     });
 
     socket.on("disconnect", () => {
-      socketManager.deleteSocket(socket.id);
-
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tClient disconnected from websocket`,
+        message: `[sockets.js]\tClient with id ${socketManager.getSocketClientId(
+          socket.id
+        )} disconnected from websocket`,
       });
+
+      socketManager.deleteSocket(socket.id);
     });
 
     socket.on("send message", (message) => {
       const senderId = socketManager.getSocketClientId(socket.id);
+      let destinationUserID;
+      let senderUserName;
+      let senderProfilePicURL;
+      let messageTimestamp;
 
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tMessage Received from socket ${senderId}: ${message.description}`,
+        message: `[sockets.js]\tMessage Received from user with ID - ${senderId}: ${message.body}`,
       });
 
-      //TODO - Check if user is in the chat with chatID sent.
-
-      models.Message.create({
-        cBody: message.description,
-        fkConversation: message.chatId,
-        fkUser: senderId,
+      models.Participant.findAll({
+        where: {
+          fkConversation: message.conversationId,
+        },
+        include: [
+          {
+            model: models.User,
+            attributes: [
+              [
+                sequelize.fn(
+                  "concat",
+                  sequelize.col("cFirstName"),
+                  " ",
+                  sequelize.col("cLastName")
+                ),
+                "Name",
+              ],
+              "cProfilePicURL",
+            ],
+          },
+        ],
       })
-        .then((message) =>
-          models.Participant.findAll({
-            where: {
-              fkConversation: message.fkConversation,
-            },
-          })
-        )
         .then((participants) => {
-          if (participants.length == 2) {
-            let destinationClientId = null;
+          if (participants.length > 0) {
+            const { rows } = dataCleaner(participants);
 
-            if (participants[0].fkUser == senderId) {
-              destinationClientId = participants[1].fkUser;
-            } else if (participants[1].fkUser == senderId) {
-              destinationClientId = participants[0].fkUser;
+            if (rows[0].fkUser == senderId) {
+              destinationUserID = rows[1].fkUser;
+              senderUserName = rows[0].Name;
+              senderProfilePicURL = rows[0].cProfilePicURL;
+            } else if (rows[1].fkUser == senderId) {
+              destinationUserID = rows[0].fkUser;
+              senderUserName = rows[1].Name;
+              senderProfilePicURL = rows[1].cProfilePicURL;
+            } else {
+              throw new Error(
+                `User with ID ${senderId} is not in the conversation with ID ${message.conversationId}`
+              );
             }
 
-            if (destinationClientId) {
-              const destinationSocketId =
-                socketManager.getDestinationSocket(destinationClientId);
+            return models.Message.create({
+              cBody: message.body,
+              fkConversation: message.conversationId,
+              fkUser: senderId,
+            });
+          } else {
+            throw new Error(
+              `Conversation ID ${message.conversationId} does not exist.`
+            );
+          }
+        })
+        .then((message) => {
+          messageTimestamp = new Date();
+          return models.Conversation.increment("iMessageCount", {
+            by: 1,
+            where: { pkConversation: message.fkConversation },
+          });
+        })
+        .then((update) => {
+          return models.Conversation.findAll({
+            where: { pkConversation: message.conversationId },
+          });
+        })
+        .then((conversations) => {
+          const { rows } = dataCleaner(conversations);
 
-              if (destinationSocketId != undefined) {
-                socket.broadcast.to(destinationSocketId).emit("new message", {
-                  chatId: message.chatId,
-                  description: message.description,
-                  timestamp: message.timestamp, // TODO
+          const destinationSocketId =
+            socketManager.getDestinationSocket(destinationUserID);
+
+          if (destinationSocketId) {
+            logger.log({
+              logger: "info",
+              message: `[sockets.js]\tSending message to user with id - ${destinationUserID}: ${message.body}`,
+            });
+
+            if (rows[0].iMessageCount > 1) {
+              socket.broadcast.to(destinationSocketId).emit("new message", {
+                conversationId: message.conversationId,
+                body: message.body,
+                timestamp: messageTimestamp,
+                received: true,
+              });
+            } else {
+              socket.broadcast
+                .to(destinationSocketId)
+                .emit("new conversation", {
+                  conversationId: message.conversationId,
+                  conversationWith: senderUserName,
+                  conversationWithProfilePicURL: senderProfilePicURL,
+                  unreadMessages: 1,
+                  messages: [
+                    {
+                      body: message.body,
+                      timestamp: messageTimestamp,
+                      received: true,
+                    },
+                  ],
                 });
-              }
             }
           }
         })

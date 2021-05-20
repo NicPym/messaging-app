@@ -1,58 +1,151 @@
-import { displayConversation, loadConversations } from "./ui";
-import { formatDate, deleteAllCookies, logout } from "./helpers";
+import {
+  displayActiveConversations,
+  loadMessages,
+  invalidEmail,
+  validSearchOrEmail,
+  displayMessage,
+  setHeaderWithUserHtml,
+  showNotification,
+  setActiveProfilePicture,
+  sortConversations,
+} from "./ui";
+import { logout, getToken } from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
   constructor() {
     this.conversations = [];
-    this.currentConversationId = null; // TODO:
+    this.currentConversationId = null;
   }
 
   clearConversations() {
     this.conversations = [];
+    this.currentConversationId = null;
   }
 
-  loadConversations(token) {
-    fetch("/chats/conversations", {
+  loadConversations() {
+    fetch("/conversations/getConversations", {
       headers: new Headers({
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + getToken(),
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        // this.conversations = data;
-        loadConversations(this.conversations);
+      .then((body) => {
+        this.conversations = body.data;
+        displayActiveConversations(this.conversations);
       })
-      .catch((_) => logout());
+      .catch((err) => {
+        console.log(err);
+        logout();
+      });
+  }
+
+  createConversation(recipientEmail) {
+    fetch(`/conversations/createConversation/${recipientEmail}`, {
+      method: "POST",
+      headers: new Headers({
+        Authorization: "Bearer " + getToken(),
+      }),
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        else throw new Error(res.status);
+      })
+      .then((body) => {
+        this.conversations.push(body.data);
+        validSearchOrEmail();
+        displayActiveConversations(this.conversations);
+      })
+      .catch((err) => {
+        console.log(err);
+        invalidEmail();
+        displayActiveConversations(this.conversations);
+      });
   }
 
   messageReceived(message) {
-    this.conversations
-      .find((conversation) => conversation.id === message.conversationId)
-      .messages.append({
-        sender: message.sender,
-        description: message.description,
-        timestamp: message.timestamp,
-      });
-
-    this.conversations.forEach((conversation) => {
-      displayConversation(conversation);
-    });
-  }
-
-  sendMessage(description) {
-    let date = formatDate(new Date());
-
-    let messageObj = {
-      conversationId: this.currentConversationId,
-      description: description,
-      timestamp: date,
+    const newMessage = {
+      body: message.body,
+      timestamp: new Date(message.timestamp),
+      received: message.received,
     };
 
-    console.log(`sending message: ${description}`);
-    socketManager.sendMessage(messageObj);
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === message.conversationId
+    );
+    conversation.messages.push(newMessage);
 
-    // displayMessage(messageObj);
+    sortConversations(this.conversations);
+
+    if (message.conversationId == this.currentConversationId) {
+      displayMessage(newMessage);
+      this.setAllMessageToReadInConversation(message.conversationId);
+    } else {
+      conversation.unreadMessages++;
+      showNotification(message.conversationId, conversation.unreadMessages);
+    }
+  }
+
+  sendMessage(body) {
+    if (!body) return;
+
+    const message = {
+      conversationId: this.currentConversationId,
+      body: body,
+      timestamp: new Date(),
+    };
+
+    socketManager.sendMessage(message);
+
+    this.conversations
+      .find(
+        (conversation) =>
+          conversation.conversationId === this.currentConversationId
+      )
+      .messages.push(message);
+
+    displayMessage(message);
+    sortConversations(this.conversations);
+  }
+
+  newConversation(conversation) {
+    this.conversations.push(conversation);
+    displayActiveConversations(this.conversations);
+  }
+
+  selectConversation(conversationId) {
+    this.currentConversationId = conversationId;
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === conversationId
+    );
+    setHeaderWithUserHtml(conversation.conversationWith);
+    loadMessages(conversation.messages);
+    setActiveProfilePicture(conversation);
+
+    if (conversation.unreadMessages > 0)
+      this.setAllMessageToReadInConversation(conversationId);
+  }
+
+  filterConversations(filterValue) {
+    displayActiveConversations(this.conversations, filterValue);
+  }
+
+  setAllMessageToReadInConversation(conversationId) {
+    fetch(`/conversations/readAllMessages/${conversationId}`, {
+      method: "POST",
+      headers: new Headers({
+        Authorization: "Bearer " + getToken(),
+      }),
+    })
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === conversationId
+    );
+    if (conversation) conversation.unreadMessages = 0;
   }
 }
 

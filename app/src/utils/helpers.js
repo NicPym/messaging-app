@@ -1,17 +1,11 @@
-function getInnerHtml(id) {
-  return document.getElementById(id).innerHTML;
-}
+import conversationService from "./conversationService";
+import dateFormat from "dateformat";
 
-function setInnerHtml(id, html) {
-  document.getElementById(id).innerHTML = html;
-}
-
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(";");
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+export const getCookie = (cname) => {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(";");
+  for (let c of ca) {
     while (c.charAt(0) == " ") {
       c = c.substring(1);
     }
@@ -20,58 +14,97 @@ function getCookie(cname) {
     }
   }
   return "";
-}
+};
 
-function deleteAllCookies() {
-  var cookies = document.cookie.split(";");
+export const deleteAllCookies = () => {
+  let cookies = document.cookie.split(";");
 
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i];
-    var eqPos = cookie.indexOf("=");
-    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  for (let cookie of cookies) {
+    let eqPos = cookie.indexOf("=");
+    let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT"; // omg lol
   }
-}
+};
 
-function prependHtml(id, html) {
-  document.getElementById(id).innerHTML =
-    html + document.getElementById(id).innerHTML;
-}
+export const setInnerHtml = (id, html) => {
+  let element = document.getElementById(id);
+  if (element) {
+    element.innerHTML = html;
+  }
+};
 
-function appendHtml(id, html) {
-  document.getElementById(id).innerHTML =
-    document.getElementById(id).innerHTML + html;
-}
+export const prependHtml = (id, html) => {
+  let element = document.getElementById(id);
+  if (element && html) {
+    element.innerHTML = html + element.innerHTML;
+  }
+};
 
-function setOnClick(id, callback) {
-  document.getElementById(id).onclick = callback;
-}
+export const appendHtml = (id, html) => {
+  let element = document.getElementById(id);
+  if (element && html) {
+    element.innerHTML = element.innerHTML + html;
+  }
+};
 
-function formatDate(date) {
-  let d = new Date();
-  let ret = date.toISOString().slice(0, 10);
-  ret += " " + d.getHours() + ":" + d.getMinutes();
-  return ret;
-}
+export const setOnClick = (id, callback) => {
+  let element = document.getElementById(id);
+  if (element && callback) {
+    element.onclick = callback;
+  }
+};
 
-function login() {
+export const setOnInput = (id, callback) => {
+  let element = document.getElementById(id);
+  if (element && callback) {
+    element.oninput = callback;
+  }
+};
+
+export const formatDate = (date) => {
+  return dateFormat(date, "yyyy/mm/dd HH:MM");
+};
+
+export const login = () => {
   document.location.href = "/auth/login";
-}
+};
 
-function logout() {
+export const logout = () => {
   deleteAllCookies();
   document.location.href = "/";
-}
+};
 
-module.exports = {
-  getInnerHtml,
-  setInnerHtml,
-  getCookie,
-  deleteAllCookies,
-  prependHtml,
-  appendHtml,
-  setOnClick,
-  formatDate,
-  login,
-  logout
+export const imgLoad = (url) => {
+  return new Promise((resolve, reject) => {
+    var request = new XMLHttpRequest();
+    request.open("GET", url);
+    request.responseType = "blob";
+    request.onload = () => {
+      if (request.status === 200) {
+        resolve(request.response);
+      } else {
+        reject(
+          Error(
+            "Image didn't load successfully; error code:" + request.statusText
+          )
+        );
+      }
+    };
+    request.onerror = () => {
+      reject(Error("There was a network error."));
+    };
+    request.send();
+  });
+};
+
+export const sendMessage = () => {
+  let input = document.getElementById("messageToSend");
+  if (input) {
+    conversationService.sendMessage(input.value);
+    input.value = "";
+  }
+};
+
+export const getToken = () => {
+  return getCookie("token");
 };

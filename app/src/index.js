@@ -3,53 +3,41 @@ import conversationService from "./utils/conversationService";
 import {
   setInnerHtml,
   setOnClick,
-  getCookie,
   login,
-  logout
+  logout,
+  getToken,
+  getCookie,
 } from "./utils/helpers";
-import {
-  addSmiley,
+import { 
   getHeaderWithoutUserHtml,
-  loadConversations,
+  enableSearchBar,
+  setProfilePicture,
 } from "./utils/ui";
 
-async function init() {
-  const token = getCookie("token");
+const token = getToken();
 
-  if (token) {
-    setInnerHtml(
-      "personTo",
-      getHeaderWithoutUserHtml(
-        "Select a Conversation to see the messages!"
-      )
-    );
-    setInnerHtml("loginBtn", "Logout");
-    setOnClick("loginBtn", logout);
-    setOnClick("emojiButton", addSmiley);
-    setOnClick("sendMessageButton", sendMessage);
-    
-    socketManager.connect(token);
-    socketManager.registerEvent("new message", (message) =>
-      conversationService.messageReceived(message)
-    );
-    conversationService.loadConversations(token);
-  } else {
-    setInnerHtml(
-      "personTo",
-      getHeaderWithoutUserHtml(
-        "Login to see conversations and messages!"
-      )
-    );
-    setInnerHtml("loginBtn", "Login");
-    setOnClick("loginBtn", login);
-  }
-}
-
-function sendMessage() {
-  conversationService.sendMessage(
-    document.getElementById("messageToSend").value
+if (token) {
+  setInnerHtml(
+    "personTo",
+    getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
   );
-  document.getElementById("messageToSend").value = "";
-}
+  setInnerHtml("loginBtn", "Logout");
+  setOnClick("loginBtn", logout);
+  enableSearchBar();
 
-await init();
+  socketManager.connect();
+  socketManager.registerEvent("new message", (message) =>
+    conversationService.messageReceived(message)
+  );
+  socketManager.registerEvent("new conversation", (conversation) => conversationService.newConversation(conversation));
+  conversationService.loadConversations();
+  let profilePicUrl = getCookie("profilePicUrl"); 
+  setProfilePicture("userPicture", profilePicUrl, "me");
+} else {
+  setInnerHtml(
+    "personTo",
+    getHeaderWithoutUserHtml("Login to see conversations and messages!")
+  );
+  setInnerHtml("loginBtn", "Login");
+  setOnClick("loginBtn", login);
+}

@@ -23,11 +23,17 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       cBody: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(2048),
         allowNull: false,
       },
-      createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
-      updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
+      bRead: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      createdAt: {
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.fn("CURRENT_TIMESTAMP"),
+      },
     },
     {
       sequelize,

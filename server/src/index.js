@@ -13,7 +13,15 @@ require("dotenv").config({ path: path.join(root, ".env") });
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "connect-src": ["'self'", "lh3.googleusercontent.com"], // allow downloading user profile images
+      "img-src": ["'self'", "data:", "blob:"],
+    },
+  })
+);
 app.use(
   cors({
     origin: "*",
@@ -28,10 +36,8 @@ app.use(passport.session());
 app.use("/", express.static(path.join(root, "public")));
 app.use("/", express.static(path.join(root, "..", "app", "dist")));
 
-const TestRoutes = require("./routes/testRoutes");
-app.use("/tr", TestRoutes);
 app.use("/auth", require("./routes/auth")(passport));
-app.use("/chats", require("./routes/chats"));
+app.use("/conversations", require("./routes/conversations"));
 
 // Last 'use' call
 app.use((error, req, res, next) => {

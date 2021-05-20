@@ -4,11 +4,19 @@ const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/constants");
 const path = require("path");
 const root = require("../util/root");
-const db = require("../models");
+const { sequelize } = require("../models");
+const models = sequelize.models;
+const logger = require("../util/winston");
 require("dotenv").config(path.join(root, ".env"));
 
 const GOOGLE_CLIENT_ID = process.env.CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.CLIENT_SECRET;
+
+let API_URL = "";
+
+if (process.env.NODE_ENV === "development") API_URL = "http://localhost:8080";
+else if (process.env.NODE_ENV === "production")
+  API_URL = "https://messaging-app-312521.ew.r.appspot.com";
 
 module.exports = (passport) => {
   passport.use(
@@ -16,64 +24,62 @@ module.exports = (passport) => {
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:8080/auth/google/callback",
+        callbackURL: `${API_URL}/auth/google/callback`,
       },
       (accessToken, refreshToken, profile, done) => {
         const loggedInUser = {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
+          photoURL: profile.photos[0].value,
         };
 
-        db["User"]
-          .findAll({
-            where: {
+        models.User.findAll({
+          where: {
+            cEmail: loggedInUser.email,
+          },
+        }).then((users) => {
+          if (users.length == 0) {
+            models.User.create({
+              cFirstName: loggedInUser.firstName,
+              cLastName: loggedInUser.lastName,
               cEmail: loggedInUser.email,
-            },
-          })
-          .then((users) => {
-            if (users.length == 0) {
-              db["User"]
-                .create({
-                  cFirstName: loggedInUser.firstName,
-                  cLastName: loggedInUser.lastName,
-                  cEmail: loggedInUser.email,
-                })
-                .then((createdUser) => {
-                  console.log(
-                    `Created new user with email ${createdUser.cEmail}`
-                  );
-                  return done(null, {
-                    id: createdUser.pkUser,
-                  });
-                });
-            } else {
-              console.log(`${loggedInUser.email} logged in`);
-              return done(null, {
-                id: users[0].pkUser,
+              cProfilePicURL: loggedInUser.photoURL,
+            }).then((createdUser) => {
+              logger.log({
+                logger: "info",
+                message: `[auth.js]\tCreated new user with email ${createdUser.cEmail}`,
               });
-            }
-          });
+              loggedInUser.id = createdUser.pkUser;
+              return done(null, loggedInUser);
+            });
+          } else {
+            logger.log({
+              logger: "info",
+              message: `[auth.js]\t${loggedInUser.email} logged in`,
+            });
+            loggedInUser.id = users[0].pkUser;
+            return done(null, loggedInUser);
+          }
+        });
       }
     )
   );
 
-  passport.serializeUser(function (user, done) {
+  passport.serializeUser((user, done) => {
     return done(null, user);
   });
 
-  passport.deserializeUser(function (user, done) {
-    db["User"]
-      .findAll({
-        where: {
-          pkUser: user.id,
-        },
-      })
-      .then((users) => {
-        if (users.length > 0) {
-          done(null, user);
-        }
-      });
+  passport.deserializeUser((user, done) => {
+    models.User.findAll({
+      where: {
+        pkUser: user.id,
+      },
+    }).then((users) => {
+      if (users.length > 0) {
+        done(null, user);
+      }
+    });
   });
 
   auth.get(
@@ -87,10 +93,18 @@ module.exports = (passport) => {
       failureRedirect: "/error",
     }),
     (req, res, next) => {
-      const token = jwt.sign(req.user, SECRET, {
-        expiresIn: "12h",
-      });
+      const token = jwt.sign(
+        {
+          id: req.user.id,
+        },
+        SECRET,
+        {
+          expiresIn: "12h",
+        }
+      );
       res.cookie("token", token);
+      res.cookie("profilePicUrl", req.user.photoURL);
+      res.cookie("firstName", req.user.firstName);
       res.redirect("/");
     }
   );
