@@ -41,7 +41,6 @@ class ConversationService {
   }
 
   createConversation(recipientEmail) {
-    console.log("Create conversation", recipientEmail);
     fetch(`/conversations/createConversation/${recipientEmail}`, {
       method: "POST",
       headers: new Headers({
@@ -65,8 +64,6 @@ class ConversationService {
   }
 
   messageReceived(message) {
-    console.log(`Message received - ${message.body}`);
-
     const newMessage = {
       body: message.body,
       timestamp: new Date(message.timestamp),
@@ -98,7 +95,6 @@ class ConversationService {
       timestamp: new Date(),
     };
 
-    console.log(`Sending message: ${body}`);
     socketManager.sendMessage(message);
 
     this.conversations
