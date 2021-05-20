@@ -93,16 +93,16 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
           if (values[i].length > 0) {
             const { rows } = dataCleaner(values[i]);
 
-            conversations[i].messages = rows.map((row) => {
-              if (row.userID != req.token.id && !row.read)
-                conversations[i].undreadMessages++;
+            for (let j = 0; j < rows.length; j++) {
+              if (rows[j].userID != req.token.id && !rows[j].read)
+                conversations[i].unreadMessages++;
 
-              return {
-                body: row.body,
-                timestamp: formatDate(row.timestamp, "dateTime"),
-                received: row.userID != req.token.id,
-              };
-            });
+              conversations[i].messages.push({
+                body: rows[j].body,
+                timestamp: formatDate(rows[j].timestamp, "dateTime"),
+                received: rows[j].userID != req.token.id,
+              });
+            }
           }
         }
       }

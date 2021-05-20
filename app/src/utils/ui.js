@@ -1,6 +1,6 @@
-import { 
-  appendHtml, 
-  setInnerHtml, 
+import {
+  appendHtml,
+  setInnerHtml,
   setOnClick,
   setOnInput,
   sendMessage,
@@ -10,7 +10,12 @@ import conversationService from "./conversationService";
 
 export function displayActiveConversations(conversations, filterValue) {
   if (filterValue) {
-    conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
+    conversations = conversations.filter(
+      (element) =>
+        element.conversationWith
+          ?.toLowerCase()
+          .indexOf(filterValue.toLowerCase()) != -1
+    );
   }
 
   conversations.sort((a, b) => compareConversations(a, b));
@@ -19,8 +24,12 @@ export function displayActiveConversations(conversations, filterValue) {
   conversations.forEach((conversation) => {
     displayConversation(conversation);
     setConversationPicture(conversation);
-    if (conversation.unreadMessages > 0){
-      showNotification(conversation.conversationId, conversation.unreadMessages);
+    if (conversation.unreadMessages > 0) {
+      console.log(conversation);
+      showNotification(
+        conversation.conversationId,
+        conversation.unreadMessages
+      );
     }
   });
 
@@ -28,15 +37,14 @@ export function displayActiveConversations(conversations, filterValue) {
   conversations.forEach((conversation) => {
     let id = `conversation-${conversation.conversationId}`;
     setOnClick(id, () => {
-        conversationService.selectConversation(conversation.conversationId);
-        resetNotification(conversation.conversationId);
-        enableSendMessageBar();
-      }
-    );
+      conversationService.selectConversation(conversation.conversationId);
+      resetNotification(conversation.conversationId);
+      enableSendMessageBar();
+    });
   });
 }
 
-export function compareConversations(a, b){
+export function compareConversations(a, b) {
   // compare by time of last message sent
   let aLast = a.messages[a.messages.length - 1];
   let bLast = b.messages[b.messages.length - 1];
@@ -47,11 +55,11 @@ export function compareConversations(a, b){
   return bTime - aTime;
 }
 
-export function sortConversations(conversations){
+export function sortConversations(conversations) {
   let ul = document.getElementById("conversations");
-  let ul_new = ul.cloneNode(false)
-  conversations.sort((a, b) => compareConversations(a, b)  );
-  for (let i=0; i< conversations.length; i++){
+  let ul_new = ul.cloneNode(false);
+  conversations.sort((a, b) => compareConversations(a, b));
+  for (let i = 0; i < conversations.length; i++) {
     let id = `conversation-${conversations[i].conversationId}`;
     let node = document.getElementById(id);
     ul_new.appendChild(node);
@@ -63,7 +71,10 @@ export function sortConversations(conversations){
 export function displayConversation(conversation) {
   appendHtml(
     "conversations",
-    getConversationHtml(conversation.conversationId, conversation.conversationWith)
+    getConversationHtml(
+      conversation.conversationId,
+      conversation.conversationWith
+    )
   );
 }
 
@@ -165,7 +176,7 @@ export function displayMessage(message) {
 }
 
 export function addSmiley() {
-  let input = document.getElementById("messageToSend")
+  let input = document.getElementById("messageToSend");
   if (input) {
     input.value += ":)";
     // input.value += String.fromCodePoint("0X1F600"); // TODO: Smiley emoji causes problems with SQL
@@ -206,22 +217,28 @@ export function validSearchOrEmail() {
 }
 
 export function enableSendMessageBar() {
-  setInnerHtml("sendMessageBar", `
+  setInnerHtml(
+    "sendMessageBar",
+    `
     <p id="emojiButton" class="emoji-icon icon-box"></p>
     <input class="flex-fill" id="messageToSend" placeholder="Type your message here and press the plane icon to send" type="text">
     <p id="sendMessageButton" class="send-icon icon-box"></p>`
   );
   setOnClick("emojiButton", addSmiley);
   setOnClick("sendMessageButton", sendMessage);
-  document.querySelector("#messageToSend").addEventListener("keyup", event => {
-    if(event.key !== "Enter") return;
-    sendMessage(); 
-    event.preventDefault();
-});
+  document
+    .querySelector("#messageToSend")
+    .addEventListener("keyup", (event) => {
+      if (event.key !== "Enter") return;
+      sendMessage();
+      event.preventDefault();
+    });
 }
 
 export function enableSearchBar() {
-  setInnerHtml("searchBar", `
+  setInnerHtml(
+    "searchBar",
+    `
     <p id="searchConversationsButton" class="search-icon icon-box"></p>
     <input class="flex-fill" id="searchOrCreateConversationInput" placeholder="Search or start new conversation" type="text">
     <p id="addConversationButton" class="plus-icon icon-box"></p>`
@@ -236,36 +253,38 @@ export function enableSearchBar() {
       document.getElementById("searchOrCreateConversationInput").value
     )
   );
-  setOnInput("searchOrCreateConversationInput", ()=>{
-        conversationService.filterConversations(
-            document.getElementById("searchOrCreateConversationInput").value
-        );
-        document.getElementById("searchOrCreateConversationInput").placeholder = "Search or start new conversation";
-    }
+  setOnInput("searchOrCreateConversationInput", () => {
+    conversationService.filterConversations(
+      document.getElementById("searchOrCreateConversationInput").value
+    );
+    document.getElementById("searchOrCreateConversationInput").placeholder =
+      "Search or start new conversation";
+  });
+}
+
+export function setConversationPicture(conversation) {
+  setProfilePicture(
+    `conversation-${conversation.conversationId}-picture`,
+    conversation.conversationWithProfilePicURL,
+    conversation.conversationWith
   );
 }
 
-export function setConversationPicture(conversation){
-  setProfilePicture(
-    `conversation-${conversation.conversationId}-picture`, 
-    conversation.conversationWithProfilePicURL,
-    conversation.conversationWith
-    )
+export function setProfilePicture(id, userProfilePictureURL, userName) {
+  imgLoad(userProfilePictureURL)
+    .then(function (response) {
+      let imageURL = window.URL.createObjectURL(response);
+      let userImage = document.getElementById(id);
+      userImage.src = imageURL;
+      userImage.alt = userName;
+      userImage.hidden = false;
+    })
+    .catch(function (errorurl) {
+      console.log("Error loading " + errorurl);
+    });
 }
 
-export function setProfilePicture(id, userProfilePictureURL, userName){
-  imgLoad(userProfilePictureURL).then(function(response){
-    let imageURL = window.URL.createObjectURL(response);
-    let userImage = document.getElementById(id);
-    userImage.src = imageURL;
-    userImage.alt = userName;
-    userImage.hidden = false;
-  }).catch(function(errorurl){
-      console.log('Error loading ' + errorurl)
-  })
-} 
-
-export function setActiveProfilePicture(conversation){
+export function setActiveProfilePicture(conversation) {
   // this image should already have been downloaded
   let id = `conversation-${conversation.conversationId}-picture`;
   let userImage = document.getElementById(id);
