@@ -66,11 +66,11 @@ module.exports = (passport) => {
     )
   );
 
-  passport.serializeUser(function (user, done) {
+  passport.serializeUser((user, done) => {
     return done(null, user);
   });
 
-  passport.deserializeUser(function (user, done) {
+  passport.deserializeUser((user, done) => {
     models.User.findAll({
       where: {
         pkUser: user.id,

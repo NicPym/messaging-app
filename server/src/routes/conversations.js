@@ -11,7 +11,10 @@ const logger = require("../util/winston");
 conversations.get("/getConversations/", authenticate, (req, res, next) => {
   let conversationIds = [];
   let conversations = [];
-
+  logger.log({
+    logger: "info",
+    message: `[${req.originalUrl}]\tFetching Conversations ${req.token.id}`,
+  });
   models.Participant.findAll({
     where: { fkUser: req.token.id },
     attributes: ["fkConversation"],
@@ -59,10 +62,8 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
     .then((values) => {
       if (values) {
         let messagesPromises = [];
-
-        for (let i = 0; i < values.length; i++) {
-          const { rows } = dataCleaner(values[i]);
-
+        values.forEach((element) => {
+          const { rows } = dataCleaner(element);
           conversations.push({
             conversationId: conversationIds[i],
             conversationWith: rows[0].Name,
@@ -82,16 +83,16 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
               ],
             })
           );
-        }
+        });
 
         return Promise.all(messagesPromises);
       }
     })
     .then((values) => {
       if (values) {
-        for (let i = 0; i < values.length; i++) {
-          if (values[i].length > 0) {
-            const { rows } = dataCleaner(values[i]);
+        values.forEach((element) => {
+          if (element.length > 0) {
+            const { rows } = dataCleaner(element);
 
             for (let j = 0; j < rows.length; j++) {
               if (rows[j].userID != req.token.id && !rows[j].read)
@@ -104,7 +105,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
               });
             }
           }
-        }
+        });
       }
 
       logger.log({
@@ -141,7 +142,10 @@ conversations.post(
     let recipientId;
     let recipientName;
     let recipientProfilePicURL;
-
+    logger.log({
+      logger: "info",
+      message: `[${req.originalUrl}]\tCreating new conversation for ID ${req.token.id}`,
+    });
     models.User.findAll({
       where: { cEmail: req.params.recipientEmail },
       attributes: [
@@ -250,6 +254,10 @@ conversations.post(
   "/readAllMessages/:conversationId",
   authenticate,
   (req, res, next) => {
+    logger.log({
+      logger: "info",
+      message: `[${req.originalUrl}]\tReading all messages for ID ${req.token.id}`,
+    });
     models.Participant.findAll({
       where: {
         fkConversation: req.params.conversationId,
