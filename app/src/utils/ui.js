@@ -9,7 +9,7 @@ import {
 } from "./helpers";
 import conversationService from "./conversationService";
 
-export function displayActiveConversations(conversations, filterValue) {
+export const displayActiveConversations = (conversations, filterValue) => {
   if (filterValue) {
     conversations = conversations.filter(
       (element) =>
@@ -42,9 +42,9 @@ export function displayActiveConversations(conversations, filterValue) {
       enableSendMessageBar();
     });
   });
-}
+};
 
-export function compareConversations(a, b) {
+export const compareConversations = (a, b) => {
   // compare by time of last message sent
   if (a.messages.length == 0) return -1;
   if (b.messages.length == 0) return 1;
@@ -53,9 +53,9 @@ export function compareConversations(a, b) {
   const bLast = Date.parse(b.messages[b.messages.length - 1].timestamp);
 
   return bLast - aLast;
-}
+};
 
-export function sortConversations(conversations) {
+export const sortConversations = (conversations) => {
   let ul = document.getElementById("conversations");
   let ul_new = ul.cloneNode(false);
   conversations.sort((a, b) => compareConversations(a, b));
@@ -65,9 +65,9 @@ export function sortConversations(conversations) {
     ul_new.appendChild(node);
   }
   ul.parentNode.replaceChild(ul_new, ul);
-}
+};
 
-export function displayConversation(conversation) {
+export const displayConversation = (conversation) => {
   appendHtml(
     "conversations",
     getConversationHtml(
@@ -75,9 +75,9 @@ export function displayConversation(conversation) {
       conversation.conversationWith
     )
   );
-}
+};
 
-export function getConversationHtml(id, name) {
+export const getConversationHtml = (id, name) => {
   return `
         <li id="conversation-${id}" class="flex-row align-items-center conversation-container">
             <img id="conversation-${id}-picture" src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
@@ -87,49 +87,49 @@ export function getConversationHtml(id, name) {
               <p id="conversation-${id}-notification-text" class="notification-text">0</p>
             </block>
         </li>`;
-}
+};
 
-export function showNotification(id, countUnreadMessages) {
+export const showNotification = (id, countUnreadMessages) => {
   let icon = document.getElementById(`conversation-${id}-notification`);
   if (icon) {
     icon.hidden = false;
     let txt = document.getElementById(`conversation-${id}-notification-text`);
     txt.innerText = countUnreadMessages;
   }
-}
+};
 
-export function resetNotification(id) {
+export const resetNotification = (id) => {
   let icon = document.getElementById(`conversation-${id}-notification`);
   if (icon) {
     let txt = document.getElementById(`conversation-${id}-notification-text`);
     txt.innerText = "0";
     icon.hidden = true;
   }
-}
+};
 
-export function loadMessages(messages) {
+export const loadMessages = (messages) => {
   setInnerHtml("messages", "");
 
   messages.forEach((message) => {
     displayMessage(message);
   });
-}
+};
 
-export function setHeaderWithUserHtml(personTo) {
+export const setHeaderWithUserHtml = (personTo) => {
   setInnerHtml("personTo", getHeaderWithUsernameHtml(personTo));
-}
+};
 
-export function getHeaderWithoutUserHtml(message) {
+export const getHeaderWithoutUserHtml = (message) => {
   return `<label class="active-profile-name">${message}</label>`;
-}
+};
 
-export function getHeaderWithUsernameHtml(username) {
+export const getHeaderWithUsernameHtml = (username) => {
   return `
         <img id="active-profile-pic" src="assets/img/profile_picture.png" class="active-profile-pic" alt="Profile Picture">
         <label class="active-profile-name">${username}</label>`;
-}
+};
 
-export function getMessageReceivedHtml(body, timestamp) {
+export const getMessageReceivedHtml = (body, timestamp) => {
   return `
         <li class="flex-column">
             <message class="flex-row flex-grow align-items-end align-content-start">
@@ -138,14 +138,16 @@ export function getMessageReceivedHtml(body, timestamp) {
                         <p class="message-body">${body}</p>
                     </block>
                     <block class="flex-row justify-content-end align-items-start message-timestamp-container">
-                        <p class="message-timestamp">${formatDate(timestamp)}</p>
+                        <p class="message-timestamp">${formatDate(
+                          timestamp
+                        )}</p>
                     </block>
                 </card>
             </message>
         </li>`;
-}
+};
 
-export function getMessageSentHtml(body, timestamp) {
+export const getMessageSentHtml = (body, timestamp) => {
   return `
         <li class="flex-column">
             <message class="flex-row justify-content-end align-items-end">
@@ -154,14 +156,16 @@ export function getMessageSentHtml(body, timestamp) {
                         <p class="message-body">${body}</p>
                     </block>
                     <block class="flex-row justify-content-end align-items-start message-timestamp-container">
-                        <p class="message-timestamp">${formatDate(timestamp)}</p>
+                        <p class="message-timestamp">${formatDate(
+                          timestamp
+                        )}</p>
                     </block>
                 </card>
             </message>
         </li>`;
-}
+};
 
-export function displayMessage(message) {
+export const displayMessage = (message) => {
   let messageHtml = "";
 
   if (message.received) {
@@ -172,44 +176,44 @@ export function displayMessage(message) {
 
   appendHtml("messages", messageHtml);
   scrollToBottomOfMessages();
-}
+};
 
-export function addSmiley() {
+export const addSmiley = () => {
   let input = document.getElementById("messageToSend");
   if (input) {
     input.value += ":)";
   }
-}
+};
 
-export function clearConversations() {
+export const clearConversations = () => {
   conversationService.clearConversations();
   setInnerHtml("conversations", "");
-}
+};
 
-export function scrollToBottomOfMessages() {
+export const scrollToBottomOfMessages = () => {
   let element = document.getElementById("messages");
   if (element) {
     element.scrollTop = element.scrollHeight;
   }
-}
+};
 
-export function invalidEmail() {
+export const invalidEmail = () => {
   let input = document.getElementById("searchOrCreateConversationInput");
   if (input) {
     input.value = "";
     input.placeholder = "Not a valid email address";
   }
-}
+};
 
-export function validSearchOrEmail() {
+export const validSearchOrEmail = () => {
   let input = document.getElementById("searchOrCreateConversationInput");
   if (input) {
     input.value = "";
     input.placeholder = "Search or start new conversation";
   }
-}
+};
 
-export function enableSendMessageBar() {
+export const enableSendMessageBar = () => {
   setInnerHtml(
     "sendMessageBar",
     `
@@ -226,18 +230,18 @@ export function enableSendMessageBar() {
       sendMessage();
       event.preventDefault();
     });
-}
+};
 
-function filterConversations(inputId) {
+const filterConversations = (inputId) => {
   let input = document.getElementById("searchOrCreateConversationInput");
 
   if (input) {
     conversationService.filterConversations(input.value);
     input.placeholder = "Search or start new conversation"; // For if the invalid email stuff was on
   }
-}
+};
 
-export function enableSearchBar() {
+export const enableSearchBar = () => {
   setInnerHtml(
     "searchBar",
     `
@@ -254,36 +258,36 @@ export function enableSearchBar() {
     filterConversations("searchOrCreateConversationInput")
   );
   setOnInput("searchOrCreateConversationInput", () => {
-    filterConversations("searchOrCreateConversationInput")
+    filterConversations("searchOrCreateConversationInput");
   });
-}
+};
 
-export function setConversationPicture(conversation) {
+export const setConversationPicture = (conversation) => {
   setProfilePicture(
     `conversation-${conversation.conversationId}-picture`,
     conversation.conversationWithProfilePicURL,
     conversation.conversationWith
   );
-}
+};
 
-export function setProfilePicture(id, userProfilePictureURL, userName) {
+export const setProfilePicture = (id, userProfilePictureURL, userName) => {
   imgLoad(userProfilePictureURL)
-    .then(function (response) {
+    .then((response) => {
       let imageURL = window.URL.createObjectURL(response);
       let userImage = document.getElementById(id);
       userImage.src = imageURL;
       userImage.alt = userName;
       userImage.hidden = false;
     })
-    .catch(function (errorurl) {
+    .catch((errorurl) => {
       console.log("Error loading " + errorurl);
     });
-}
+};
 
-export function setActiveProfilePicture(conversation) {
+export const setActiveProfilePicture = (conversation) => {
   // this image should already have been downloaded
   let id = `conversation-${conversation.conversationId}-picture`;
   let userImage = document.getElementById(id);
   let activeImage = document.getElementById("active-profile-pic");
   activeImage.src = userImage.src;
-}
+};

@@ -1,7 +1,7 @@
 import conversationService from "./conversationService";
 import dateFormat from "dateformat";
 
-export function getCookie(cname) {
+export const getCookie = (cname) => {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
   let ca = decodedCookie.split(";");
@@ -14,9 +14,9 @@ export function getCookie(cname) {
     }
   }
   return "";
-}
+};
 
-export function deleteAllCookies() {
+export const deleteAllCookies = () => {
   let cookies = document.cookie.split(";");
 
   for (let cookie of cookies) {
@@ -24,62 +24,62 @@ export function deleteAllCookies() {
     let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT"; // omg lol
   }
-}
+};
 
-export function setInnerHtml(id, html) {
+export const setInnerHtml = (id, html) => {
   let element = document.getElementById(id);
   if (element) {
     element.innerHTML = html;
   }
-}
+};
 
-export function prependHtml(id, html) {
+export const prependHtml = (id, html) => {
   let element = document.getElementById(id);
   if (element && html) {
     element.innerHTML = html + element.innerHTML;
   }
-}
+};
 
-export function appendHtml(id, html) {
+export const appendHtml = (id, html) => {
   let element = document.getElementById(id);
   if (element && html) {
     element.innerHTML = element.innerHTML + html;
   }
-}
+};
 
-export function setOnClick(id, callback) {
+export const setOnClick = (id, callback) => {
   let element = document.getElementById(id);
   if (element && callback) {
     element.onclick = callback;
   }
-}
+};
 
-export function setOnInput(id, callback) {
+export const setOnInput = (id, callback) => {
   let element = document.getElementById(id);
   if (element && callback) {
     element.oninput = callback;
   }
-}
+};
 
-export function formatDate(date) {
+export const formatDate = (date) => {
   return dateFormat(date, "yyyy/mm/dd HH:MM");
-}
+};
 
-export function login() {
+export const login = () => {
   document.location.href = "/auth/login";
-}
+};
 
-export function logout() {
+export const logout = () => {
   deleteAllCookies();
   document.location.href = "/";
-}
+};
 
-export function imgLoad(url) {
-  return new Promise(function (resolve, reject) {
+export const imgLoad = (url) => {
+  return new Promise((resolve, reject) => {
     var request = new XMLHttpRequest();
     request.open("GET", url);
     request.responseType = "blob";
-    request.onload = function () {
+    request.onload = () => {
       if (request.status === 200) {
         resolve(request.response);
       } else {
@@ -90,21 +90,21 @@ export function imgLoad(url) {
         );
       }
     };
-    request.onerror = function () {
+    request.onerror = () => {
       reject(Error("There was a network error."));
     };
     request.send();
   });
-}
+};
 
-export function sendMessage() {
+export const sendMessage = () => {
   let input = document.getElementById("messageToSend");
   if (input) {
     conversationService.sendMessage(input.value);
     input.value = "";
   }
-}
+};
 
-export function getToken() {
+export const getToken = () => {
   return getCookie("token");
-}
+};

@@ -4,20 +4,19 @@
     "password": "BBD123",
     "database": "database_development",
     "host": "35.187.106.163",
-    "dialect": "mysql"
-  },
-  "test": {
-    "username": "root",
-    "password": "BBD123",
-    "database": "database_test",
-    "host": "35.187.106.163",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
   },
   "production": {
     "username": "root",
     "password": "BBD123",
     "database": "database_production",
     "host": "35.187.106.163",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
   }
 }

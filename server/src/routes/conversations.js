@@ -11,7 +11,10 @@ const logger = require("../util/winston");
 conversations.get("/getConversations/", authenticate, (req, res, next) => {
   let conversationIds = [];
   let conversations = [];
-
+  logger.log({
+    logger: "info",
+    message: `[${req.originalUrl}]\tFetching Conversations ${req.token.id}`,
+  });
   models.Participant.findAll({
     where: { fkUser: req.token.id },
     attributes: ["fkConversation"],
@@ -141,7 +144,10 @@ conversations.post(
     let recipientId;
     let recipientName;
     let recipientProfilePicURL;
-
+    logger.log({
+      logger: "info",
+      message: `[${req.originalUrl}]\tCreating new conversation for ID ${req.token.id}`,
+    });
     models.User.findAll({
       where: { cEmail: req.params.recipientEmail },
       attributes: [
@@ -250,6 +256,10 @@ conversations.post(
   "/readAllMessages/:conversationId",
   authenticate,
   (req, res, next) => {
+    logger.log({
+      logger: "info",
+      message: `[${req.originalUrl}]\tReading all messages for ID ${req.token.id}`,
+    });
     models.Participant.findAll({
       where: {
         fkConversation: req.params.conversationId,
