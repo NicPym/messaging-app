@@ -34,7 +34,7 @@ class ConversationService {
       .then((body) => {
         this.conversations = body.data;
         console.log(this.conversations);
-        loadConversations(this.conversations);
+        displayActiveConversations(this.conversations);
       })
       .catch((err) => {
         console.log(err);
