@@ -3,7 +3,7 @@
 **/logfiles/
 **/public/
 
-**/dist/
+**/dist/bundle.js
 **/tmp
 **/out-tsc
 **/bazel-out

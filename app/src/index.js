@@ -1,13 +1,43 @@
-import socketManager from './utils/socketManager';
-import conversationService from './utils/conversationService';
+import socketManager from "./utils/socketManager";
+import conversationService from "./utils/conversationService";
+import {
+  setInnerHtml,
+  setOnClick,
+  login,
+  logout,
+  getToken,
+  getCookie,
+} from "./utils/helpers";
+import { 
+  getHeaderWithoutUserHtml,
+  enableSearchBar,
+  setProfilePicture,
+} from "./utils/ui";
 
-function setInnerHTML(id, innerHTML) {
-    document.getElementById(id).innerHTML = innerHTML;
-}
+const token = getToken();
 
-socketManager.connect();
-socketManager.registerEvent("new message", message => document.getElementById("messageDiv").innerHTML += `<h3>${message}</h3>`);
+if (token) {
+  setInnerHtml(
+    "personTo",
+    getHeaderWithoutUserHtml("Select a Conversation to see the messages!")
+  );
+  setInnerHtml("loginBtn", "Logout");
+  setOnClick("loginBtn", logout);
+  enableSearchBar();
 
-document.getElementById("testButton").onclick = () => {
-    socketManager.sendMessage(document.getElementById("messageInput").value);
+  socketManager.connect();
+  socketManager.registerEvent("new message", (message) =>
+    conversationService.messageReceived(message)
+  );
+  socketManager.registerEvent("new conversation", (conversation) => conversationService.newConversation(conversation));
+  conversationService.loadConversations();
+  let profilePicUrl = getCookie("profilePicUrl"); 
+  setProfilePicture("userPicture", profilePicUrl, "me");
+} else {
+  setInnerHtml(
+    "personTo",
+    getHeaderWithoutUserHtml("Login to see conversations and messages!")
+  );
+  setInnerHtml("loginBtn", "Login");
+  setOnClick("loginBtn", login);
 }

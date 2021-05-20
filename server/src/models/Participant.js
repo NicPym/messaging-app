@@ -2,7 +2,7 @@
 
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Message extends Model {
+  class Participant extends Model {
     static associate(models) {
       this.belongsTo(models.User, {
         foreignKey: "fkUser",
@@ -14,31 +14,19 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Message.init(
+  Participant.init(
     {
-      pkMessage: {
+      pkParticipant: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
       },
-      cBody: {
-        type: DataTypes.STRING(2048),
-        allowNull: false,
-      },
-      bRead: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      createdAt: {
-        type: "TIMESTAMP",
-        defaultValue: Sequelize.fn("CURRENT_TIMESTAMP"),
-      },
     },
     {
       sequelize,
-      modelName: "Message",
+      modelName: "Participant",
     }
   );
-  return Message;
+  return Participant;
 };

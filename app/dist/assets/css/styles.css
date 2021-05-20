@@ -1,0 +1,303 @@
+body {
+  padding: 0px;
+  margin: 0px;
+}
+
+p {
+  padding: 0px;
+  margin: 0px;
+}
+
+ul {
+  padding: 0px;
+  margin: 0px;
+}
+
+input {
+  font-family: RobotoRegular;
+  padding: 2px 5px;
+}
+
+fill {
+  flex: 1 1 auto;
+}
+
+card {
+  border-radius: 10px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.y-scroll {
+  overflow-y: scroll;
+}
+
+.flex-fill {
+  flex: 1 1 auto;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-content-start {
+  justify-content: flex-start;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}
+
+.align-content-start {
+  align-content: flex-start;
+}
+
+.align-content-end {
+  align-content: flex-end;
+}
+
+.span-width {
+  width: 100%;
+}
+
+.span-height {
+  height: 100%;
+}
+
+.green-background-bar {
+  height: 25vh;
+  background-color: rgb(0, 150, 136);
+}
+
+.grey-background-bar {
+  height: 75vh;
+  background-color: rgb(233, 233, 233);
+}
+
+.dashboard {
+  position: relative;
+  box-shadow: 2px 2px 5px rgb(135, 135, 135);
+  height: 90vh;
+  top: 5vh;
+  width: 90%;
+}
+
+.left-column {
+  min-width: 400px;
+  max-width: 400px;
+}
+
+.main-bar {
+  min-height: 60px;
+  background-color: rgb(238, 238, 238);
+}
+
+.right-top-corner {
+  border-radius: 0 10px 0 0;
+}
+
+.right-bottom-corner {
+  border-radius: 0 0 10px 0;
+}
+
+.left-top-corner {
+  border-radius: 10px 0 0 0;
+}
+
+.left-bottom-corner {
+  border-radius: 0 0 0 10px;
+}
+
+.logo {
+  width: 50px;
+  margin: 0 10px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  margin: 0 10px;
+  border-radius: 50%;
+}
+
+.title {
+  font-family: RobotoRegular;
+  font-size: 20px;
+}
+
+.search-bar {
+  min-height: 50px;
+  background-color: rgb(255, 255, 255);
+}
+
+.icon-box {
+  color: rgb(145, 145, 145);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.icon-box:active {
+  opacity: 0.6;
+}
+
+.search-icon::before {
+  font-family: "Font Awesome 5 Free Solid";
+  height: 20px;
+  width: 20px;
+  margin: 0 20px;
+  content: "\f002";
+}
+
+.plus-icon::before {
+  font-family: "Font Awesome 5 Free Solid";
+  height: 20px;
+  width: 20px;
+  margin: 0 20px;
+  content: "\f067";
+}
+
+.conversations-bar {
+  background-color: rgb(255, 255, 255);
+}
+
+.active-profile-pic {
+  width: 40px;
+  height: 40px;
+  margin: 0 10px 0 20px;
+  border-radius: 50%;
+}
+
+.active-profile-name {
+  font-family: RobotoRegular;
+  margin: 0 10px;
+  font-size: 20px;
+}
+
+.login-button {
+  font-family: RobotoLight;
+  margin: 0 10px;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.messages {
+  background-color: rgb(230, 223, 217);
+}
+
+.emoji-icon::before {
+  font-family: "Font Awesome 5 Free";
+  margin: 0 20px;
+  content: "\f580";
+  font-style: normal;
+}
+
+.send-icon::before {
+  font-family: "Font Awesome 5 Free Solid";
+  margin: 0 20px;
+  content: "\f1d8";
+}
+
+.message-received-card {
+  margin: 8px 20px;
+  max-width: 50%;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 5px rgb(135, 135, 135);
+}
+
+.message-sent-card {
+  margin: 8px 20px;
+  max-width: 50%;
+  background-color: rgb(220, 248, 198);
+  box-shadow: 1px 1px 5px rgb(135, 135, 135);
+}
+
+.message-body-container {
+  padding: 10px;
+  height: 90%;
+}
+
+.message-timestamp-container {
+  height: 10%;
+  padding: 5px;
+}
+
+.message-body {
+  font-family: RobotoRegular;
+  font-size: 15px;
+}
+
+.message-timestamp {
+  font-family: RobotoLight;
+  font-size: 12px;
+  margin: 2px 10px;
+}
+
+.conversation-container {
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.conversation-container:hover {
+  backdrop-filter: brightness(94%);
+}
+
+.conversation-profile-pic {
+  width: 40px;
+  height: 40px;
+  margin: 0 20px;
+  border-radius: 50%;
+}
+
+.conversation-profile-name {
+  font-family: RobotoRegular;
+  font-size: 18px;
+}
+
+.notification-icon {
+  position: relative;
+  margin: 0 20px;
+  width: 23px; 
+  height: 23px;
+  border-radius: 50%;
+  background-color: rgb(6, 215, 85);;
+  line-height: 0;
+}
+
+.notification-text {
+  position: absolute;
+  font-size: 13px;
+  bottom: 50%;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
