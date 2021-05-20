@@ -148,8 +148,11 @@ class ConversationService {
       .catch((err) => {
         console.log(err);
       });
-    
-    this.conversations.find(conversation => conversation.conversationId === conversationId)?.unreadMessages = 0;
+
+    const conversation = this.conversations.find(
+      (conversation) => conversation.conversationId === conversationId
+    );
+    if (conversation) conversation.unreadMessages = 0;
   }
 }
 

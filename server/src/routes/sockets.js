@@ -140,7 +140,7 @@ module.exports = (server) => {
                   conversationId: message.conversationId,
                   conversationWith: senderUserName,
                   conversationWithProfilePicURL: senderProfilePicURL,
-                  unreadMessages: 0,
+                  unreadMessages: 1,
                   messages: [
                     {
                       body: message.body,
