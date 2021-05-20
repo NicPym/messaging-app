@@ -8,8 +8,7 @@ class SocketManager {
 
   connect() {
     let url = location.hostname;
-    if (location.port.length > 0)
-      url += `:${location.port}`;
+    if (location.port.length > 0) url += `:${location.port}`;
 
     this.socket = io(url, {
       auth: {

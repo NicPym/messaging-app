@@ -63,7 +63,6 @@ export function sortConversations(conversations) {
     let id = `conversation-${conversations[i].conversationId}`;
     let node = document.getElementById(id);
     ul_new.appendChild(node);
-    console.log(i);
   }
   ul.parentNode.replaceChild(ul_new, ul);
 }
