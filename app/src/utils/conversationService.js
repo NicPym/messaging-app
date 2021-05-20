@@ -7,6 +7,7 @@ import {
   setHeaderWithUserHtml,
   showNotification,
   setActiveProfilePicture,
+  sortConversations,
 } from "./ui";
 import { logout, getToken } from "./helpers";
 import socketManager from "./socketManager";
@@ -77,7 +78,7 @@ class ConversationService {
     );
     conversation.messages.push(newMessage);
 
-    displayActiveConversations(this.conversations);
+    sortConversations(this.conversations);
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
@@ -108,7 +109,7 @@ class ConversationService {
       .messages.push(message);
 
     displayMessage(message);
-    displayActiveConversations(this.conversations);
+    sortConversations(this.conversations);
   }
 
   newConversation(conversation) {
@@ -125,7 +126,8 @@ class ConversationService {
     loadMessages(conversation.messages);
     setActiveProfilePicture(conversation);
 
-    this.setAllMessageToReadInConversation(conversationId);
+    if (conversation.unreadMessages > 0)
+      this.setAllMessageToReadInConversation(conversationId);
   }
 
   filterConversations(filterValue) {

@@ -62,7 +62,7 @@ export const setOnInput = (id, callback) => {
 };
 
 export const formatDate = (date) => {
-  return dateFormat(date, "yyyy-mm-dd HH:MM");
+  return dateFormat(date, "yyyy/mm/dd HH:MM");
 };
 
 export const login = () => {

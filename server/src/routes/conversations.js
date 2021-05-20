@@ -110,7 +110,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
 
       logger.log({
         logger: "info",
-        message: `[conversations.js]\tGot all conversations for ${req.token.id}`,
+        message: `[conversations.js]\tGot all conversations for user with id - ${req.token.id}`,
       });
 
       res.status(200).json({
@@ -124,7 +124,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
     .catch((reason) => {
       logger.log({
         logger: "error",
-        message: `[conversations.js]\tFailed to get all conversations for ${req.token.id}`,
+        message: `[conversations.js]\tFailed to get all conversations for user with id - ${req.token.id}`,
       });
 
       if (!reason.statusCode) {
@@ -226,7 +226,7 @@ conversations.post(
       .then((_) => {
         logger.log({
           logger: "info",
-          message: `[conversations.js]\tCreated Conversation for ${req.user.id}`,
+          message: `[conversations.js]\tCreated Conversation for user with id ${req.token.id} with user with id - ${recipientId}`,
         });
 
         res.status(200).json({
@@ -292,7 +292,7 @@ conversations.post(
       .then((updates) => {
         logger.log({
           logger: "info",
-          message: `[conversations.js]\tMessages updated to read for conversation ${req.params.conversationId} for user ${req.token.id}`,
+          message: `[conversations.js]\tMessages updated to read for conversation ${req.params.conversationId} for user with id - ${req.token.id}`,
         });
 
         res.status(200).json({
@@ -303,7 +303,7 @@ conversations.post(
       .catch((reason) => {
         logger.log({
           logger: "error",
-          message: `[conversations.js]\tFailed to update messages to read for ${req.token.id}`,
+          message: `[conversations.js]\tFailed to update messages to read for user with id - ${req.token.id}`,
         });
 
         if (!reason.statusCode) {
