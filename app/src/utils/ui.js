@@ -218,7 +218,7 @@ export const enableSendMessageBar = () => {
     "sendMessageBar",
     `
     <p id="emojiButton" class="emoji-icon icon-box"></p>
-    <input class="flex-fill" id="messageToSend" placeholder="Type your message here and press the plane icon to send" type="text">
+    <input class="flex-fill" id="messageToSend" placeholder="Type your message here and press the plane icon to send" type="text" maxlength="2048">
     <p id="sendMessageButton" class="send-icon icon-box"></p>`
   );
   setOnClick("emojiButton", addSmiley);
@@ -246,7 +246,7 @@ export const enableSearchBar = () => {
     "searchBar",
     `
     <p id="searchConversationsButton" class="search-icon icon-box"></p>
-    <input class="flex-fill" id="searchOrCreateConversationInput" placeholder="Search or start new conversation" type="text">
+    <input class="flex-fill" id="searchOrCreateConversationInput" placeholder="Search or start new conversation" type="text" maxlength="2048">
     <p id="addConversationButton" class="plus-icon icon-box"></p>`
   );
   setOnClick("addConversationButton", () =>
