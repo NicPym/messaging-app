@@ -283,11 +283,21 @@ card {
   font-size: 18px;
 }
 
-.notification-icon::before {
-  font-family: "Font Awesome 5 Free Solid";
-  height: 20px;
-  width: 20px;
+.notification-icon {
+  position: relative;
   margin: 0 20px;
-  content: "\f075";
-  color: rgb(228, 129, 0);
+  width: 23px; 
+  height: 23px;
+  border-radius: 50%;
+  background-color: rgb(6, 215, 85);;
+  line-height: 0;
+}
+
+.notification-text {
+  position: absolute;
+  font-size: 13px;
+  bottom: 50%;
+  width: 100%;
+  text-align: center;
+  color: white;
 }
