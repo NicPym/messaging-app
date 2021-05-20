@@ -46,9 +46,8 @@ module.exports = (passport) => {
               cProfilePicURL: loggedInUser.photoURL,
             }).then((createdUser) => {
               console.log(`Created new user with email ${createdUser.cEmail}`);
-              return done(null, {
-                id: createdUser.pkUser,
-              });
+              loggedInUser.id = createdUser.pkUser;
+              return done(null, loggedInUser);
             });
           } else {
             console.log(`${loggedInUser.email} logged in`);
@@ -87,9 +86,15 @@ module.exports = (passport) => {
       failureRedirect: "/error",
     }),
     (req, res, next) => {
-      const token = jwt.sign(req.user, SECRET, {
-        expiresIn: "12h",
-      });
+      const token = jwt.sign(
+        {
+          id: req.user.id,
+        },
+        SECRET,
+        {
+          expiresIn: "12h",
+        }
+      );
       res.cookie("token", token);
       res.cookie("profilePicUrl", req.user.photoURL);
       res.cookie("firstName", req.user.firstName);

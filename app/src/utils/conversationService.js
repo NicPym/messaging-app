@@ -112,6 +112,7 @@ class ConversationService {
   newConversation(conversation) {
     this.conversations.push(conversation);
     loadConversations(this.conversations);
+    showNotification(message.conversationId);
   }
 
   selectConversation(conversationId) {
