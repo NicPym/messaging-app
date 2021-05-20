@@ -62,8 +62,10 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
     .then((values) => {
       if (values) {
         let messagesPromises = [];
-        values.forEach((element) => {
-          const { rows } = dataCleaner(element);
+
+        for (let i = 0; i < values.length; i++) {
+          const { rows } = dataCleaner(values[i]);
+
           conversations.push({
             conversationId: conversationIds[i],
             conversationWith: rows[0].Name,
@@ -83,16 +85,16 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
               ],
             })
           );
-        });
+        }
 
         return Promise.all(messagesPromises);
       }
     })
     .then((values) => {
       if (values) {
-        values.forEach((element) => {
-          if (element.length > 0) {
-            const { rows } = dataCleaner(element);
+        for (let i = 0; i < values.length; i++) {
+          if (values[i].length > 0) {
+            const { rows } = dataCleaner(values[i]);
 
             for (let j = 0; j < rows.length; j++) {
               if (rows[j].userID != req.token.id && !rows[j].read)
@@ -105,7 +107,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
               });
             }
           }
-        });
+        }
       }
 
       logger.log({
