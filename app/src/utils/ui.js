@@ -14,7 +14,7 @@ export function loadConversations(conversations, filterValue) {
     conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
   }
 
-  conversations = conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
+  conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
 
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
@@ -27,11 +27,24 @@ export function loadConversations(conversations, filterValue) {
     let id = `conversation-${conversation.conversationId}`;
     setOnClick(id, () => {
         conversationService.selectConversation(conversation.conversationId);
-        hideNotification(conversation.conversationId);
+        resetNotification(conversation.conversationId);
         enableSendMessageBar();
       }
     );
   });
+}
+
+export function sortConversations(conversations){
+  let ul = document.getElementById("conversations");
+  let ul_new = ul.cloneNode(false)
+  conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
+  for (let i=0; i< conversations.length; i++){
+    let id = `conversation-${conversations[i].conversationId}`;
+    let node = document.getElementById(id);
+    ul_new.appendChild(node);
+    console.log(i);
+  }
+  ul.parentNode.replaceChild(ul_new, ul);
 }
 
 export function displayConversation(conversation) {
@@ -47,7 +60,9 @@ export function getConversationHtml(id, name) {
             <img id="conversation-${id}-picture" src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
             <fill></fill>
-            <p id="conversation-${id}-notification" class="notification-icon" hidden></p>
+            <ul id="conversation-${id}-notification" class="notification-icon" hidden> 
+              <p id="conversation-${id}-notification-text" class="notification-text">0</p>
+            </ul>
         </li>`;
 }
 
@@ -58,11 +73,18 @@ export function showNotification(id) {
   }
 }
 
-export function hideNotification(id) {
+export function resetNotification(id) {
   let icon = document.getElementById(`conversation-${id}-notification`);
   if (icon) {
+    let txt = document.getElementById(`conversation-${id}-notification-text`);
+    txt.innerText = "0";
     icon.hidden = true;
   }
+}
+
+export function incrementNotification(id){
+  let txt = document.getElementById(`conversation-${id}-notification-text`);
+  txt.innerText = +txt.innerText + 1;
 }
 
 export function loadMessages(messages) {

@@ -1,11 +1,13 @@
 import {
   loadConversations,
+  sortConversations,
   loadMessages,
   invalidEmail,
   validSearchOrEmail,
   displayMessage,
   setHeaderWithUserHtml,
   showNotification,
+  incrementNotification,
   setActiveProfilePicture,
 } from "./ui";
 import { formatDate, logout, getToken } from "./helpers";
@@ -78,12 +80,13 @@ class ConversationService {
       )
       .messages.push(newMessage);
 
-    loadConversations(this.conversations);
+    sortConversations(this.conversations);
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
     } else {
       showNotification(message.conversationId);
+      incrementNotification(message.conversationId);
     }
   }
 
