@@ -1,5 +1,5 @@
 import {
-  loadConversations,
+  displayActiveConversations,
   sortConversations,
   loadMessages,
   invalidEmail,
@@ -33,7 +33,7 @@ class ConversationService {
       .then((res) => res.json())
       .then((body) => {
         this.conversations = body.data;
-        loadConversations(this.conversations);
+        displayActiveConversations(this.conversations);
       })
       .catch((err) => {
         console.log(err);
@@ -57,12 +57,12 @@ class ConversationService {
         console.log(body);
         this.conversations.push(body.data);
         validSearchOrEmail();
-        loadConversations(this.conversations);
+        displayActiveConversations(this.conversations);
       })
       .catch((err) => {
         console.log(err);
         invalidEmail();
-        loadConversations(this.conversations);
+        displayActiveConversations(this.conversations);
       });
   }
 
@@ -115,7 +115,7 @@ class ConversationService {
 
   newConversation(conversation) {
     this.conversations.push(conversation);
-    loadConversations(this.conversations);
+    displayActiveConversations(this.conversations);
     showNotification(conversation.conversationId);
   }
 
@@ -130,7 +130,7 @@ class ConversationService {
   }
 
   filterConversations(filterValue) {
-    loadConversations(this.conversations, filterValue);
+    displayActiveConversations(this.conversations, filterValue);
   }
 }
 

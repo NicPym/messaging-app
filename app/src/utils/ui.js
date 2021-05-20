@@ -8,7 +8,7 @@ import {
 } from "./helpers";
 import conversationService from "./conversationService";
 
-export function loadConversations(conversations, filterValue) {
+export function displayActiveConversations(conversations, filterValue) {
   if (filterValue) {
     conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
   }
