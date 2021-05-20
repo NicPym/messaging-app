@@ -1,15 +1,14 @@
 import { 
   appendHtml, 
   setInnerHtml, 
-  setOnClick, 
+  setOnClick,
+  setOnInput,
   sendMessage,
   imgLoad,
 } from "./helpers";
 import conversationService from "./conversationService";
 
 export function loadConversations(conversations, filterValue) {
-  console.log("Loading Conversations");
-
   if (filterValue) {
     conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
   }
@@ -203,6 +202,13 @@ export function enableSearchBar() {
     conversationService.filterConversations(
       document.getElementById("searchOrCreateConversationInput").value
     )
+  );
+  setOnInput("searchOrCreateConversationInput", ()=>{
+        conversationService.filterConversations(
+            document.getElementById("searchOrCreateConversationInput").value
+        );
+        document.getElementById("searchOrCreateConversationInput").placeholder = "Search or start new conversation";
+    }
   );
 }
 

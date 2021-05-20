@@ -53,6 +53,13 @@ export function setOnClick(id, callback) {
   }
 }
 
+export function setOnInput(id, callback){
+  let element = document.getElementById(id);
+  if(element && callback){
+    element.oninput = callback;
+  }
+}
+
 export function formatDate(date) {
   let d = new Date();
   let ret = date.toISOString().slice(0, 10);

@@ -60,6 +60,7 @@ class ConversationService {
       .catch((err) => {
         console.log(err);
         invalidEmail();
+        loadConversations(this.conversations);
       });
   }
 
