@@ -14,7 +14,7 @@ export function loadConversations(conversations, filterValue) {
     conversations = conversations.filter((element) => element.conversationWith?.toLowerCase().indexOf(filterValue.toLowerCase()) != -1)
   }
 
-  conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
+  conversations.sort((a, b) => compareConversations(a, b));
 
   setInnerHtml("conversations", "");
   conversations.forEach((conversation) => {
@@ -34,10 +34,21 @@ export function loadConversations(conversations, filterValue) {
   });
 }
 
+export function compareConversations(a, b){
+  // compare by time of last message sent
+  let aLast = a.messages[a.messages.length - 1];
+  let bLast = b.messages[b.messages.length - 1];
+
+  let aTime = Date.parse(aLast.timestamp);
+  let bTime = Date.parse(bLast.timestamp);
+
+  return bTime - aTime;
+}
+
 export function sortConversations(conversations){
   let ul = document.getElementById("conversations");
   let ul_new = ul.cloneNode(false)
-  conversations.sort((a, b) => (a.conversationWith > b.conversationWith) ? 1 : ((b.conversationWith > a.conversationWith) ? -1 : 0)  );
+  conversations.sort((a, b) => compareConversations(a, b)  );
   for (let i=0; i< conversations.length; i++){
     let id = `conversation-${conversations[i].conversationId}`;
     let node = document.getElementById(id);
