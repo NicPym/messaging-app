@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      bRead: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
       updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
     },

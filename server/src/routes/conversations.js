@@ -67,6 +67,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
             conversationId: conversationIds[i],
             conversationWith: rows[0].Name,
             conversationWithProfilePicURL: rows[0].cProfilePicURL,
+            undreadMessages: 0,
             messages: [],
           });
 
@@ -77,6 +78,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
                 ["cBody", "body"],
                 ["createdAt", "timestamp"],
                 ["fkUser", "userID"],
+                ["bRead", "read"],
               ],
             })
           );
@@ -92,6 +94,9 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
             const { rows } = dataCleaner(values[i]);
 
             conversations[i].messages = rows.map((row) => {
+              if (row.userID != req.token.id && !row.read)
+                conversations[i].undreadMessages++;
+
               return {
                 body: row.body,
                 timestamp: formatDate(row.timestamp, "dateTime"),
@@ -214,6 +219,56 @@ conversations.post(
             conversationWithProfilePicURL: recipientProfilePicURL,
             messages: [],
           },
+        });
+      })
+      .catch((reason) => {
+        if (!reason.statusCode) {
+          reason.statusCode = 500;
+        }
+        next(reason);
+      });
+  }
+);
+
+conversations.post(
+  "/readAllMessages/:conversationId",
+  authenticate,
+  (req, res, next) => {
+    models.Participant.findAll({
+      where: {
+        fkConversation: req.params.conversationId,
+      },
+    })
+      .then((participants) => {
+        if (participants.length == 2) {
+          if (
+            participants[0].fkUser != req.token.id &&
+            participants[1].fkUser != req.token.id
+          )
+            throw new Error("User not in the conversation");
+
+          models.Message.update(
+            {
+              bRead: true,
+            },
+            {
+              where: {
+                fkConversation: req.params.conversationId,
+                fkUser:
+                  participants[0].fkUser == req.token.id
+                    ? participants[1].fkUser
+                    : participants[0].fkUser,
+              },
+            }
+          );
+        } else {
+          throw new Error("Invalid Conversation ID");
+        }
+      })
+      .then((updates) => {
+        res.status(200).json({
+          message: "Updated all messages to read",
+          success: true,
         });
       })
       .catch((reason) => {

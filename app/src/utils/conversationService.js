@@ -33,6 +33,7 @@ class ConversationService {
       .then((res) => res.json())
       .then((body) => {
         this.conversations = body.data;
+        console.log(this.conversations);
         loadConversations(this.conversations);
       })
       .catch((err) => {
@@ -127,6 +128,17 @@ class ConversationService {
     setHeaderWithUserHtml(conversation.conversationWith);
     loadMessages(conversation.messages);
     setActiveProfilePicture(conversation);
+
+    fetch(`/conversations/readAllMessages/${conversationId}`, {
+      method: "POST",
+      headers: new Headers({
+        Authorization: "Bearer " + getToken(),
+      }),
+    })
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   filterConversations(filterValue) {
