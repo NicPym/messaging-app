@@ -6,6 +6,7 @@ const path = require("path");
 const root = require("../util/root");
 const { sequelize } = require("../models");
 const models = sequelize.models;
+const logger = require("../util/winston");
 require("dotenv").config(path.join(root, ".env"));
 
 const GOOGLE_CLIENT_ID = process.env.CLIENT_ID;
@@ -45,12 +46,18 @@ module.exports = (passport) => {
               cEmail: loggedInUser.email,
               cProfilePicURL: loggedInUser.photoURL,
             }).then((createdUser) => {
-              console.log(`Created new user with email ${createdUser.cEmail}`);
+              logger.log({
+                logger: "info",
+                message: `[auth.js]\tCreated new user with email ${createdUser.cEmail}`,
+              });
               loggedInUser.id = createdUser.pkUser;
               return done(null, loggedInUser);
             });
           } else {
-            console.log(`${loggedInUser.email} logged in`);
+            logger.log({
+              logger: "info",
+              message: `[auth.js]\t${loggedInUser.email} logged in`,
+            });
             loggedInUser.id = users[0].pkUser;
             return done(null, loggedInUser);
           }

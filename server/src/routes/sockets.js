@@ -126,6 +126,11 @@ module.exports = (server) => {
             socketManager.getDestinationSocket(destinationUserID);
 
           if (destinationSocketId) {
+            logger.log({
+              logger: "info",
+              message: `[sockets.js]\tSending message to ${destinationUserID}: ${message.body}`,
+            });
+
             if (rows[0].iMessageCount > 1) {
               socket.broadcast.to(destinationSocketId).emit("new message", {
                 conversationId: message.conversationId,
