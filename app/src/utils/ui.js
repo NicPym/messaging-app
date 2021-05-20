@@ -59,8 +59,8 @@ export function sortConversations(conversations) {
   let ul = document.getElementById("conversations");
   let ul_new = ul.cloneNode(false);
   conversations.sort((a, b) => compareConversations(a, b));
-  for (let i = 0; i < conversations.length; i++) {
-    let id = `conversation-${conversations[i].conversationId}`;
+  for (let conversation of conversations) {
+    let id = `conversation-${conversation.conversationId}`;
     let node = document.getElementById(id);
     ul_new.appendChild(node);
   }
@@ -83,9 +83,9 @@ export function getConversationHtml(id, name) {
             <img id="conversation-${id}-picture" src="assets/img/profile_picture2.png" class="conversation-profile-pic" alt="Profile Picture">
             <label class="conversation-profile-name">${name}</label>
             <fill></fill>
-            <ul id="conversation-${id}-notification" class="notification-icon" hidden> 
+            <block id="conversation-${id}-notification" class="notification-icon" hidden> 
               <p id="conversation-${id}-notification-text" class="notification-text">0</p>
-            </ul>
+            </block>
         </li>`;
 }
 
@@ -138,9 +138,7 @@ export function getMessageReceivedHtml(body, timestamp) {
                         <p class="message-body">${body}</p>
                     </block>
                     <block class="flex-row justify-content-end align-items-start message-timestamp-container">
-                        <p class="message-timestamp">${formatDate(
-                          timestamp
-                        )}</p>
+                        <p class="message-timestamp">${formatDate(timestamp)}</p>
                     </block>
                 </card>
             </message>
@@ -156,9 +154,7 @@ export function getMessageSentHtml(body, timestamp) {
                         <p class="message-body">${body}</p>
                     </block>
                     <block class="flex-row justify-content-end align-items-start message-timestamp-container">
-                        <p class="message-timestamp">${formatDate(
-                          timestamp
-                        )}</p>
+                        <p class="message-timestamp">${formatDate(timestamp)}</p>
                     </block>
                 </card>
             </message>
@@ -182,13 +178,7 @@ export function addSmiley() {
   let input = document.getElementById("messageToSend");
   if (input) {
     input.value += ":)";
-    // input.value += String.fromCodePoint("0X1F600"); // TODO: Smiley emoji causes problems with SQL
   }
-}
-
-export function clearMessages() {
-  // TODO: where are the messages?
-  setInnerHtml("messages", "");
 }
 
 export function clearConversations() {
@@ -238,6 +228,15 @@ export function enableSendMessageBar() {
     });
 }
 
+function filterConversations(inputId) {
+  let input = document.getElementById("searchOrCreateConversationInput");
+
+  if (input) {
+    conversationService.filterConversations(input.value);
+    input.placeholder = "Search or start new conversation"; // For if the invalid email stuff was on
+  }
+}
+
 export function enableSearchBar() {
   setInnerHtml(
     "searchBar",
@@ -252,16 +251,10 @@ export function enableSearchBar() {
     )
   );
   setOnClick("searchConversationsButton", () =>
-    conversationService.filterConversations(
-      document.getElementById("searchOrCreateConversationInput").value
-    )
+    filterConversations("searchOrCreateConversationInput")
   );
   setOnInput("searchOrCreateConversationInput", () => {
-    conversationService.filterConversations(
-      document.getElementById("searchOrCreateConversationInput").value
-    );
-    document.getElementById("searchOrCreateConversationInput").placeholder =
-      "Search or start new conversation";
+    filterConversations("searchOrCreateConversationInput")
   });
 }
 

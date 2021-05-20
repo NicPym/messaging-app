@@ -1,6 +1,5 @@
 import {
   displayActiveConversations,
-  sortConversations,
   loadMessages,
   invalidEmail,
   validSearchOrEmail,
@@ -9,7 +8,10 @@ import {
   showNotification,
   setActiveProfilePicture,
 } from "./ui";
-import { formatDate, logout, getToken } from "./helpers";
+import { 
+  logout, 
+  getToken,
+} from "./helpers";
 import socketManager from "./socketManager";
 
 class ConversationService {
@@ -90,6 +92,8 @@ class ConversationService {
   }
 
   sendMessage(body) {
+    if (!body) return;
+    
     const message = {
       conversationId: this.currentConversationId,
       body: body,
