@@ -125,7 +125,8 @@ class ConversationService {
     loadMessages(conversation.messages);
     setActiveProfilePicture(conversation);
 
-    this.setAllMessageToReadInConversation(conversationId);
+    if (conversation.unreadMessages > 0)
+      this.setAllMessageToReadInConversation(conversationId);
   }
 
   filterConversations(filterValue) {

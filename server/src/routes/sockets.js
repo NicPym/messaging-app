@@ -32,16 +32,20 @@ module.exports = (server) => {
   io.on("connect", (socket) => {
     logger.log({
       logger: "info",
-      message: `[sockets.js]\tNew client connected using websocket`,
+      message: `[sockets.js]\tNew client with id ${socketManager.getSocketClientId(
+        socket.id
+      )} connected using websocket`,
     });
 
     socket.on("disconnect", () => {
-      socketManager.deleteSocket(socket.id);
-
       logger.log({
         logger: "info",
-        message: `[sockets.js]\tClient disconnected from websocket`,
+        message: `[sockets.js]\tClient with id ${socketManager.getSocketClientId(
+          socket.id
+        )} disconnected from websocket`,
       });
+
+      socketManager.deleteSocket(socket.id);
     });
 
     socket.on("send message", (message) => {
@@ -128,7 +132,7 @@ module.exports = (server) => {
           if (destinationSocketId) {
             logger.log({
               logger: "info",
-              message: `[sockets.js]\tSending message to ${destinationUserID}: ${message.body}`,
+              message: `[sockets.js]\tSending message to user with id - ${destinationUserID}: ${message.body}`,
             });
 
             if (rows[0].iMessageCount > 1) {
