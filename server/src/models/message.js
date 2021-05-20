@@ -30,8 +30,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
-      updatedAt: { type: DataTypes.DATE, defaultValue: Sequelize.fn("NOW") },
+      createdAt: {
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.fn("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.fn("CURRENT_TIMESTAMP"),
+      },
     },
     {
       sequelize,

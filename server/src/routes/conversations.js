@@ -99,7 +99,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
 
               conversations[i].messages.push({
                 body: rows[j].body,
-                timestamp: formatDate(rows[j].timestamp, "dateTime"),
+                timestamp: rows[j].timestamp,
                 received: rows[j].userID != req.token.id,
               });
             }

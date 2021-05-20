@@ -5,6 +5,7 @@ import {
   setOnInput,
   sendMessage,
   imgLoad,
+  formatDate,
 } from "./helpers";
 import conversationService from "./conversationService";
 
@@ -48,13 +49,10 @@ export function compareConversations(a, b) {
   if (a.messages.length == 0) return -1;
   if (b.messages.length == 0) return 1;
 
-  let aLast = a.messages[a.messages.length - 1];
-  let bLast = b.messages[b.messages.length - 1];
+  const aLast = Date.parse(a.messages[a.messages.length - 1].timestamp);
+  const bLast = Date.parse(b.messages[b.messages.length - 1].timestamp);
 
-  let aTime = Date.parse(aLast.timestamp);
-  let bTime = Date.parse(bLast.timestamp);
-
-  return bTime - aTime;
+  return bLast - aLast;
 }
 
 export function sortConversations(conversations) {
@@ -141,7 +139,9 @@ export function getMessageReceivedHtml(body, timestamp) {
                         <p class="message-body">${body}</p>
                     </block>
                     <block class="flex-row justify-content-end align-items-start message-timestamp-container">
-                        <p class="message-timestamp">${timestamp}</p>
+                        <p class="message-timestamp">${formatDate(
+                          timestamp
+                        )}</p>
                     </block>
                 </card>
             </message>
@@ -157,7 +157,9 @@ export function getMessageSentHtml(body, timestamp) {
                         <p class="message-body">${body}</p>
                     </block>
                     <block class="flex-row justify-content-end align-items-start message-timestamp-container">
-                        <p class="message-timestamp">${timestamp}</p>
+                        <p class="message-timestamp">${formatDate(
+                          timestamp
+                        )}</p>
                     </block>
                 </card>
             </message>

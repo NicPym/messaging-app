@@ -1,4 +1,5 @@
 import conversationService from "./conversationService";
+import dateFormat from "dateformat";
 
 export function getCookie(cname) {
   let name = cname + "=";
@@ -53,18 +54,15 @@ export function setOnClick(id, callback) {
   }
 }
 
-export function setOnInput(id, callback){
+export function setOnInput(id, callback) {
   let element = document.getElementById(id);
-  if(element && callback){
+  if (element && callback) {
     element.oninput = callback;
   }
 }
 
 export function formatDate(date) {
-  let d = new Date();
-  let ret = date.toISOString().slice(0, 10);
-  ret += " " + d.getHours() + ":" + d.getMinutes();
-  return ret;
+  return dateFormat(date, "yyyy-mm-dd HH:MM");
 }
 
 export function login() {
@@ -77,20 +75,23 @@ export function logout() {
 }
 
 export function imgLoad(url) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     var request = new XMLHttpRequest();
-    request.open('GET', url);
-    request.responseType = 'blob';
-    request.onload = function() {
+    request.open("GET", url);
+    request.responseType = "blob";
+    request.onload = function () {
       if (request.status === 200) {
         resolve(request.response);
       } else {
-        reject(Error('Image didn\'t load successfully; error code:' 
-                     + request.statusText));
+        reject(
+          Error(
+            "Image didn't load successfully; error code:" + request.statusText
+          )
+        );
       }
     };
-    request.onerror = function() {
-      reject(Error('There was a network error.'));
+    request.onerror = function () {
+      reject(Error("There was a network error."));
     };
     request.send();
   });
@@ -99,9 +100,7 @@ export function imgLoad(url) {
 export function sendMessage() {
   let input = document.getElementById("messageToSend");
   if (input) {
-    conversationService.sendMessage(
-      input.value
-    );
+    conversationService.sendMessage(input.value);
     input.value = "";
   }
 }

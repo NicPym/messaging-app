@@ -69,7 +69,7 @@ class ConversationService {
 
     const newMessage = {
       body: message.body,
-      timestamp: message.timestamp,
+      timestamp: new Date(message.timestamp),
       received: message.received,
     };
 
@@ -78,7 +78,7 @@ class ConversationService {
     );
     conversation.messages.push(newMessage);
 
-    sortConversations(this.conversations);
+    displayActiveConversations(this.conversations);
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
@@ -90,12 +90,10 @@ class ConversationService {
   }
 
   sendMessage(body) {
-    let date = formatDate(new Date());
-
-    let message = {
+    const message = {
       conversationId: this.currentConversationId,
       body: body,
-      timestamp: date,
+      timestamp: new Date(),
     };
 
     console.log(`sending message: ${body}`);
@@ -109,6 +107,7 @@ class ConversationService {
       .messages.push(message);
 
     displayMessage(message);
+    displayActiveConversations(this.conversations);
   }
 
   newConversation(conversation) {
