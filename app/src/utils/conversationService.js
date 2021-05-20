@@ -32,7 +32,6 @@ class ConversationService {
       .then((res) => res.json())
       .then((body) => {
         this.conversations = body.data;
-        console.log(this.conversations);
         displayActiveConversations(this.conversations);
       })
       .catch((err) => {
@@ -54,7 +53,6 @@ class ConversationService {
         else throw new Error(res.status);
       })
       .then((body) => {
-        console.log(body);
         this.conversations.push(body.data);
         validSearchOrEmail();
         displayActiveConversations(this.conversations);

@@ -25,7 +25,6 @@ export function displayActiveConversations(conversations, filterValue) {
     displayConversation(conversation);
     setConversationPicture(conversation);
     if (conversation.unreadMessages > 0) {
-      console.log(conversation);
       showNotification(
         conversation.conversationId,
         conversation.unreadMessages
@@ -46,6 +45,9 @@ export function displayActiveConversations(conversations, filterValue) {
 
 export function compareConversations(a, b) {
   // compare by time of last message sent
+  if (a.messages.length == 0) return -1;
+  if (b.messages.length == 0) return 1;
+
   let aLast = a.messages[a.messages.length - 1];
   let bLast = b.messages[b.messages.length - 1];
 

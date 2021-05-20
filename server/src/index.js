@@ -53,8 +53,8 @@ app.use((error, req, res, next) => {
 
 // Syncs tables to the db
 sequelize
-  .sync({ alter: true })
-  // .sync()
+  // .sync({ alter: true })
+  .sync()
   .then(() => {
     const server = app.listen(port, () => {
       logger.log({
