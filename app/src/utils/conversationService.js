@@ -86,6 +86,7 @@ class ConversationService {
 
     if (message.conversationId == this.currentConversationId) {
       displayMessage(newMessage);
+      setAllMessageToReadInConversation(message.conversationId);
     } else {
       showNotification(message.conversationId);
       incrementNotification(message.conversationId);
@@ -129,6 +130,14 @@ class ConversationService {
     loadMessages(conversation.messages);
     setActiveProfilePicture(conversation);
 
+    setAllMessageToReadInConversation(conversationId);
+  }
+
+  filterConversations(filterValue) {
+    displayActiveConversations(this.conversations, filterValue);
+  }
+
+  setAllMessageToReadInConversation(conversationId) {
     fetch(`/conversations/readAllMessages/${conversationId}`, {
       method: "POST",
       headers: new Headers({
@@ -139,10 +148,6 @@ class ConversationService {
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  filterConversations(filterValue) {
-    displayActiveConversations(this.conversations, filterValue);
   }
 }
 
