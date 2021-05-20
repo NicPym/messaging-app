@@ -67,7 +67,7 @@ conversations.get("/getConversations/", authenticate, (req, res, next) => {
             conversationId: conversationIds[i],
             conversationWith: rows[0].Name,
             conversationWithProfilePicURL: rows[0].cProfilePicURL,
-            undreadMessages: 0,
+            unreadMessages: 0,
             messages: [],
           });
 
@@ -217,6 +217,7 @@ conversations.post(
             conversationId: conversationId,
             conversationWith: recipientName,
             conversationWithProfilePicURL: recipientProfilePicURL,
+            unreadMessages: 0,
             messages: [],
           },
         });
