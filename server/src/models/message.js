@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       cBody: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(2048),
         allowNull: false,
       },
       bRead: {
