@@ -24,6 +24,8 @@ Start the backend by running `npm install` and `npm run dev`. This will serve bo
 
 The application is deployed to the Google Cloud Platform. The `cloud_build.yaml` specifies the scripts that need to be run before the app gets deployed. Also, our Google Cloud Platform app was setup with CI on the main branch.
 
+[Link to the deployed application](https://messaging-app-312521.ew.r.appspot.com).
+
 ## Team Members
 
 - Stuart Barclay
